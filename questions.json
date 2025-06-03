@@ -1,0 +1,57 @@
+[
+  {
+    "question": "What does HTML stand for?",
+    "options": [
+      "Hyperlinks and Text Markup Language",
+      "Hyper Text Markup Language",
+      "Home Tool Markup Language",
+      "Hyper Tool Multi Language"
+    ],
+    "answer": "Hyper Text Markup Language",
+    "explanation": "HTML stands for Hyper Text Markup Language, which is the standard language for creating web pages."
+  },
+   {
+    "question": "Which CSS property controls the size of text?",
+    "options": [
+      "font-style",
+      "text-align",
+      "font-size",
+      "text-decoration"
+    ],
+    "answer": "font-size",
+    "explanation": "The 'font-size' property sets the size of the text in an element."
+  },
+  {
+    "question": "Which CSS property is used to change the text color of an element?",
+    "options": [
+      "font-color",
+      "text-style",
+      "color",
+      "text-color"
+    ],
+    "answer": "color",
+    "explanation": "The 'color' property in CSS is used to change the text color of an element."
+  },
+  {
+    "question": "How do you make a list that lists its items with squares in CSS?",
+    "options": [
+      "list-style-type: square;",
+      "list-shape: square;",
+      "list-style: square;",
+      "list-type: square;"
+    ],
+    "answer": "list-style-type: square;",
+    "explanation": "To display list items with squares, use the CSS rule 'list-style-type: square;'"
+  },
+  {
+  "question": "What is the purpose of CSS in web development?",
+    "options": [
+      "To structure the content of a webpage",
+      "To add interactivity to a webpage",
+      "To apply styles and layout to a webpage",
+      "To store data in a database"
+    ],
+    "answer": "To apply styles and layout to a webpage",
+    "explanation": "CSS (Cascading Style Sheets) is used to style and layout HTML elements on a webpage."
+  }
+]

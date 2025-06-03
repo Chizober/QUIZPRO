@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Results Report</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+   
+
+  
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+    body.dark {
+      background-color: #121212;
+      color: #f9f9f9;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: transparent !important;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .school-header {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .school-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border-radius: 50%;
+    }
+    .school-name {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+    h1 {
+      text-align: center;
+      font-size:clamp(1.5rem, 2vw, 2rem);
+    }
+    select, input[type="date"] {
+      margin: 10px;
+      padding: 8px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    body.dark button {
+      background-color: #333;
+      color: #fff;
+    }
+    details {
+      margin: 1rem 0;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    body.dark details {
+      background: #1a1a1a;
+      color: #ddd;
+    }
+    body.dark summary {
+      color: #fff;
+      background: #333;
+    }
+    summary {
+      font-weight: bold;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #333;
+    padding:15px;
+      
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    td {
+  
+       padding: 10px;
+    }
+     th, td {
+     
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background: #eaeaea;
+      padding:5px;
+    }
+    body.dark th, body.dark td ,body.dark select, body.dark input[type="date"] {
+      background: #1e1e1e;
+      border-color: #444;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle">🌞</button>
+
+  <div class="school-header">
+    <img src="./a.jpg" alt="School Logo" class="school-logo">
+    <div class="school-name">TECHXAGON ACADEMY </div>
+  </div>
+
+  <div id="quizStatsTable">
+    <h1> 📊 Third Term Quiz Results Report</h1>
+    <h2>📚 Grouped by Class</h2>
+    <p><strong>Total Students:</strong> <span id="totalStudents"></span></p>
+    <p><strong>Total Questions:</strong> <span id="totalQuestions"></span></p>
+    <p><strong>Average Score:</strong> <span id="averageScore"></span></p>
+    <a href="index.html" class="btn" style="text-decoration: none;">Start</a>
+    <table>
+      <tbody id="quizStatsBody"></tbody>
+    </table>
+  </div>
+
+  <label for="classFilter">Filter by Class:</label>
+  <select id="classFilter"><option value="all">All</option></select>
+
+  <label for="dateFilter">Filter by Date:</label>
+  <input type="date" id="dateFilter" />
+
+  <button onclick="downloadPDF()">Download PDF</button>
+
+  <div id="resultsContainer"></div>
+
+  <script>
+    const { jsPDF } = window.jspdf;
+    const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+    let questions = [];
+
+    // Theme toggle
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.onclick = () => {
+      document.body.classList.toggle("dark");
+      themeToggle.textContent = document.body.classList.contains("dark") ? "🌙" : "🌞";
+    };
+
+    // Filter references
+    const classFilter = document.getElementById("classFilter");
+    const dateFilter = document.getElementById("dateFilter");
+    classFilter.onchange = () => render();
+    dateFilter.onchange = () => render();
+
+    // Fetch questions and initialize
+    fetch("questions.json")
+      .then(response => response.json())
+      .then(json => {
+        questions = json;
+
+        const uniqueClasses = [...new Set(results.map(r => r.class))].sort();
+        uniqueClasses.forEach(cls => {
+          const opt = document.createElement("option");
+          opt.value = cls;
+          opt.textContent = cls;
+          classFilter.appendChild(opt);
+        });
+
+        renderQuizStatsTable(results, questions);
+        render();
+      })
+      .catch(error => {
+        console.error("Error loading questions:", error);
+        alert("Failed to load questions. Please check questions.json file.");
+      });
+
+    function renderQuizStatsTable(results, questions) {
+      const tbody = document.getElementById("quizStatsBody");
+      const totalQuestions = questions.length;
+      let totalScoreSum = 0;
+
+      results.forEach(r => {
+        const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
+        totalScoreSum += score;
+      });
+
+      document.getElementById("totalStudents").textContent = results.length;
+      document.getElementById("totalQuestions").textContent = totalQuestions;
+      document.getElementById("averageScore").textContent = (totalScoreSum / results.length).toFixed(2);
+    }
+
+    function render() {
+      const filteredResults = results.filter(r => {
+        const classMatch = classFilter.value === "all" || r.class === classFilter.value;
+        const dateMatch = !dateFilter.value || r.date === dateFilter.value;
+        return classMatch && dateMatch;
+      });
+
+      const grouped = {};
+      filteredResults.forEach(r => {
+        const key = r.class;
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(r);
+      });
+
+      const container = document.getElementById("resultsContainer");
+      container.innerHTML = "";
+
+      for (const className in grouped) {
+        const details = document.createElement("details");
+        details.open = true;
+        const summary = document.createElement("summary");
+        summary.textContent = `Class ${className} (${grouped[className].length} students)`;
+        details.appendChild(summary);
+
+        const table = document.createElement("table");
+        table.innerHTML = `
+          <thead>
+            <tr><th>Name</th><th>Class</th><th>Score</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            ${grouped[className]
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map(r => {
+                const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
+                return `<tr>
+                  <td>${r.name}</td>
+                  <td>${r.class}</td>
+                  <td>${score}/${questions.length}</td>
+                  <td>${r.date}</td>
+                </tr>`;
+              })
+              .join("")}
+          </tbody>`;
+        details.appendChild(table);
+        container.appendChild(details);
+      }
+    }
+
+    function downloadPDF() {
+      const pdf = new jsPDF();
+      const img = new Image();
+      img.src = './a.jpg';
+      img.crossOrigin = "Anonymous"; // Handle CORS if needed
+
+      img.onload = function () {
+        const filteredResults = results.filter(r => {
+          const classMatch = classFilter.value === "all" || r.class === classFilter.value;
+          const dateMatch = !dateFilter.value || r.date === dateFilter.value;
+          return classMatch && dateMatch;
+        });
+
+        const grouped = {};
+        filteredResults.forEach(r => {
+          const key = r.class;
+          if (!grouped[key]) grouped[key] = [];
+          grouped[key].push(r);
+        });
+
+        let pageIndex = 0;
+
+        for (const className in grouped) {
+          if (pageIndex > 0) pdf.addPage();
+          pageIndex++;
+
+          
+          pdf.addImage(img, 'JPG', 10, 10, 20, 20);
+          pdf.setFontSize(14);
+          pdf.text("TECHXAGON ACADEMY 3RD RESULT SHEET", 105, 35, { align: "center" });
+          pdf.setFont("helvetica", "normal");
+
+          pdf.setFontSize(12);
+          pdf.setTextColor(40);
+          pdf.text(`Class: ${className}`, 14, 45);
+
+          const body = grouped[className]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((r, index) => {
+              const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
+              return [
+                index + 1,
+                r.name,
+                r.class,
+                `${score}/${questions.length}`,
+                r.date
+              ];
+            });
+
+          pdf.autoTable({
+            startY: 50,
+            head: [["#", "Name", "Class", "Score", "Date"]],
+            body: body,
+            styles: {
+              fontSize: 11,
+              cellPadding: 3,
+            },
+            headStyles: {
+              fillColor: [63, 81, 181],
+              textColor: 255,
+              fontStyle: 'bold',
+            },
+            alternateRowStyles: { fillColor: [245, 245, 245] },
+            theme: "grid"
+          });
+        }
+
+        pdf.save("quiz_results.pdf");
+      };
+    }
+  </script>
+</body>
+</html>
