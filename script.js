@@ -33,8 +33,7 @@
   const adminLoginCancelBtn = document.getElementById("admin-login-cancel-btn");
   const adminLoginError = document.getElementById("admin-login-error");
   const downloadAllBtn = document.getElementById("download-all-btn");
-  const clearAllBtn = document.getElementById("clear-all-btn");
-  const adminLogoutBtn = document.getElementById("admin-logout-btn");
+
   const adminResultsContainer = document.getElementById("admin-results-container");
   const toggleBtn = document.getElementById("theme-toggle");
   const timerDisplay = document.getElementById('timerDisplay');
@@ -80,13 +79,7 @@
     return JSON.parse(localStorage.getItem("quizResults") || "[]");
   }
 
-  function clearAllResults() {
-    if (confirm("Are you sure you want to clear ALL quiz results?")) {
-      localStorage.removeItem("quizResults");
-      alert("All results cleared.");
-      adminResultsContainer.innerHTML = "";
-    }
-  }
+
 
   function userExists(name, cls) {
     const results = getAllResults();
@@ -141,8 +134,8 @@
       if (selectedAnswers[index]) {
         optionButtons.forEach(b => {
           b.disabled = true;
-          if (b.textContent === q.answer) b.classList.add("You selected the correct answer!");
-          else if (b.textContent === selectedAnswers[index]) b.classList.add("Oops! That was the wrong answer. ❌");
+          if (b.textContent === q.answer) b.classList.add("correct answer!");
+          else if (b.textContent === selectedAnswers[index]) b.classList.add("wrong answer. ❌");
         });
         nextBtn.disabled = false;
       }
@@ -174,7 +167,9 @@
       html += `
         <div class="result-question">
           <strong>Q${i + 1}.</strong><strong> ${q.question}</strong>
-          <div class="result-answer" ${correct ? 'correct' : 'wrong'}">
+           <div class="result-answer" ${correct ? 'correct' : 'wrong'}">
+         
+
             ${correct ? '<i class="fa fa-check correct-icon"></i>' : '<i class="fa fa-times wrong-icon"></i>'}
             Your answer: ${userAns || 'No answer'}
           </div>
@@ -189,126 +184,132 @@
 
 
 
- const downloadResultPDF = async () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const downloadResultPDF = async () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
-  const studentName = studentInfo.name || "Student";
-  const studentClass = studentInfo.class || "Class";
-  const resultText = resultSummary.innerText || resultSummary.textContent || "No result found.";
-  const lines = resultText.split('\n').map(l => l.trim()).filter(l => l);
+    const studentName = studentInfo.name || "Student";
+    const studentClass = studentInfo.class || "Class";
+    const resultText = resultSummary.innerText || resultSummary.textContent || "No result found.";
+    const lines = resultText.split('\n').map(l => l.trim()).filter(l => l);
 
-  const loadImageAsBase64 = (url) =>
-    new Promise((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = 80;
-        canvas.height = 80;
-        canvas.getContext("2d").drawImage(img, 0, 0, 60, 60);
-        resolve(canvas.toDataURL("image/png"));
-      };
-      img.onerror = reject;
-      img.src = url;
-    });
+    const loadImageAsBase64 = (url) =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const aspectRatio = img.width / img.height;
+      const width = 100;
+      const height = width / aspectRatio;
 
-  const logoBase64 = await loadImageAsBase64("./logo.png");
-
-  // HEADER
-  doc.setFillColor(255, 140, 0);
-  doc.rect(0, 0, 210, 25, "F");
-  const logoWidth = 20; // You can adjust this
-const aspectRatio = 1; // Set this based on your logo's natural width/height
-
-const logoHeight = logoWidth * aspectRatio;
-doc.addImage(logoBase64, "PNG", 10, 4, logoWidth, logoHeight);
-  // doc.addImage(logoBase64, "PNG", 10, 4, 18, 18);
-  doc.setTextColor(255, 255, 255);
-  doc.setFont("times", "bold");
-  doc.setFontSize(16);
-  doc.text("TECHXAGON ACADEMY", 105, 11, { align: "center" });
-
-  doc.setFont("helvetica", "italic");
-  doc.setFontSize(14);
-  doc.setTextColor(255, 255, 255);
-  doc.text("Quiz Result Summary", 105, 18, { align: "center" });
-
-  // STUDENT INFO (below header with spacing)
-  const infoY = 30;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10.5);
-  doc.setTextColor(50, 50, 50);
-  doc.text(` ${studentName} ${studentClass}`, 14, infoY);
-
-  // RESULT BOX
-  const boxX = 14, boxY = infoY + 4, boxWidth = 182, boxHeight = 246;
-  const padding = 6;
-  doc.setDrawColor(63, 81, 181);
-  doc.setFillColor(250, 250, 250);
-  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, "FD");
-
-  // CONTENT
-  let y = boxY + padding;
-  const maxLineWidth = boxWidth - padding * 2;
-  const lineHeight = 6;
-
-  doc.setFontSize(10);
-
-  lines.forEach(line => {
-    let trimmed = line.trim();
-
-    if (trimmed.startsWith("Q")) {
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(20, 20, 20); // 
-      trimmed = "  " + trimmed;
-    } else if (trimmed.startsWith("Correct Answer:")) {
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(0, 150, 0); // Green
-    } 
-// Detect correct/wrong answers
-  if (trimmed.includes("Correct")) {
-    doc.setTextColor(0, 128, 0); // Green
-  } else if (trimmed.includes("wrong")) {
-    doc.setTextColor(200, 0, 0); // Red
-  } else if (trimmed.startsWith("Explanation")) {
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(0, 0, 120); // blue for explanation
-       trimmed += "\n";
-    } else {
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(20, 20, 20); // reset
-    }
-
-    const wrapped = doc.splitTextToSize(trimmed, maxLineWidth);
-    wrapped.forEach(wrapLine => {
-      if (y + lineHeight > 285) return;
-      doc.text(wrapLine, boxX + padding, y);
-      y += lineHeight;
-    });
-
-    y += 1;
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+    img.src = url;
   });
 
-  // HIGHLIGHT SCORE (if found)
-  const scoreLine = lines.find(line => line.includes("Score:"));
-  if (scoreLine) {
-    doc.setFillColor(240, 248, 255);
-    doc.setDrawColor(0, 102, 204);
-    doc.setTextColor(0, 0, 0);
+
+    const logoBase64 = await loadImageAsBase64("./logo.png");
+
+    // HEADER
+    doc.setFillColor(255, 140, 0);
+    doc.rect(0, 0, 210, 25, "F");
+    
+    doc.addImage(logoBase64, "PNG", 10, 4, 25, 15);
+    // doc.addImage(logoBase64, "PNG", 10, 4, 18, 18);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("times", "bold");
+    doc.setFontSize(16);
+    doc.text("TECHXAGON ACADEMY", 105, 11, { align: "center" });
+
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(14);
+    doc.setTextColor(255, 255, 255);
+    doc.text("Quiz Result Summary", 105, 18, { align: "center" });
+
+    // STUDENT INFO (below header with spacing)
+    const infoY = 30;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10.5);
+    doc.setTextColor(50, 50, 50);
+    doc.text(` ${studentName} ${studentClass}`, 14, infoY);
+
+    // RESULT BOX
+    const boxX = 14, boxY = infoY + 4, boxWidth = 182, boxHeight = 246;
+    const padding = 6;
+    doc.setDrawColor(63, 81, 181);
+    doc.setFillColor(250, 250, 250);
+    doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, "FD");
+
+    // CONTENT
+    let y = boxY + padding;
+    const maxLineWidth = boxWidth - padding * 2;
+    const lineHeight = 6;
+
+    doc.setFontSize(10);
+
+
+   lines.forEach(line => {
+  let trimmed = line.trim();
+  const lower = trimmed.toLowerCase();
+
+  // DEBUG: Log the line to see what's going wrong
+  console.log("LINE:", trimmed);
+
+  if (trimmed.startsWith("Q")) {
     doc.setFont("helvetica", "bold");
-    doc.roundedRect(14, 270, 80, 10, 2, 2, "FD");
-    doc.text(scoreLine.trim(), 16, 276.5);
+    doc.setTextColor(33, 33, 33);
+    trimmed = " " + trimmed;
+  } else if (lower.includes("correct")) {
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 128, 0); // Green
+  } else if (lower.includes("wrong answer")) {
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(200, 0, 0); // Red
+  } else if (trimmed.startsWith("Explanation")) {
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 0, 120); // Blue
+    trimmed += "\n";
+  } else {
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(20, 20, 20); // Default black
   }
 
-  // FOOTER
-  doc.setFontSize(9);
-  doc.setTextColor(120);
-  doc.text(` Generated on: ${new Date().toLocaleString()}`, 110, 293);
+  const wrapped = doc.splitTextToSize(trimmed, maxLineWidth);
+  wrapped.forEach(wrapLine => {
+    if (y + lineHeight > 280) return;
+    doc.text(wrapLine, boxX + padding, y);
+    y += lineHeight;
+  });
 
-  // SAVE
-  doc.save(`${studentName}_${studentClass}_result.pdf`);
-};
+  y += 2;
+});
+
+   
+    // HIGHLIGHT SCORE (if found)
+    const scoreLine = lines.find(line => line.includes("Score:"));
+    if (scoreLine) {
+      doc.setFillColor(240, 248, 255);
+      doc.setDrawColor(0, 102, 204);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("helvetica", "bold");
+      doc.roundedRect(14, 270, 80, 10, 2, 2, "FD");
+      doc.text(scoreLine.trim(), 16, 276.5);
+    }
+
+    // FOOTER
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text(` Generated on: ${new Date().toLocaleString()}`, 110, 293);
+
+    // SAVE
+    doc.save(`${studentName}_${studentClass}_result.pdf`);
+  };
 
 
 
@@ -420,38 +421,31 @@ doc.addImage(logoBase64, "PNG", 10, 4, logoWidth, logoHeight);
     showScreen(adminLoginScreen);
   };
 
+
+
+
   adminLoginSubmitBtn.onclick = () => {
     const pass = adminPassInput.value;
     if (pass === adminPassword) {
       adminLoginError.textContent = "";
-      showScreen(adminPanelScreen);
-      renderAdminResults();
+      // Redirect to another HTML page
+      window.location.href = "adminPage.html";  // <-- change this to your actual admin page
     } else {
       adminLoginError.textContent = "Incorrect password.";
     }
   };
-
   adminLoginCancelBtn.onclick = () => {
     showScreen(startScreen);
   };
 
-  adminLogoutBtn.onclick = () => {
-    showScreen(startScreen);
-  };
+
 
   downloadResultBtn.onclick = () => {
     downloadResultPDF();
   };
 
-  // downloadAllBtn.onclick = () => {
-  //   downloadAllResultsPDF();
-  // };
 
 
-  clearAllBtn.onclick = () => {
-    clearAllResults();
-    renderAdminResults();
-  };
 
   // Initialize
   showScreen(startScreen);

@@ -67,12 +67,12 @@ button {
   margin: 0 auto;
 }
 
-.admindetails {
+/* .admindetails {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
-}
+} */
 
 .adminbtns {
   padding: clamp(.5rem, 2vw, 1rem) 0;
