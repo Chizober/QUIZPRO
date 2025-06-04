@@ -218,7 +218,12 @@
   // HEADER
   doc.setFillColor(255, 140, 0);
   doc.rect(0, 0, 210, 25, "F");
-  doc.addImage(logoBase64, "PNG", 10, 4, 18, 18);
+  const logoWidth = 20; // You can adjust this
+const aspectRatio = 1; // Set this based on your logo's natural width/height
+
+const logoHeight = logoWidth * aspectRatio;
+doc.addImage(logoBase64, "PNG", 10, 4, logoWidth, logoHeight);
+  // doc.addImage(logoBase64, "PNG", 10, 4, 18, 18);
   doc.setTextColor(255, 255, 255);
   doc.setFont("times", "bold");
   doc.setFontSize(16);
@@ -264,7 +269,7 @@
 // Detect correct/wrong answers
   if (trimmed.includes("Correct")) {
     doc.setTextColor(0, 128, 0); // Green
-  } else if (trimmed.includes("Wrong")) {
+  } else if (trimmed.includes("wrong")) {
     doc.setTextColor(200, 0, 0); // Red
   } else if (trimmed.startsWith("Explanation")) {
       doc.setFont("helvetica", "normal");
@@ -438,9 +443,9 @@
     downloadResultPDF();
   };
 
-  downloadAllBtn.onclick = () => {
-    downloadAllResultsPDF();
-  };
+  // downloadAllBtn.onclick = () => {
+  //   downloadAllResultsPDF();
+  // };
 
 
   clearAllBtn.onclick = () => {
