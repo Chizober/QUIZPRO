@@ -4,7 +4,7 @@
   window.onload = () => {
     fetch('questions.json').then(res => res.json()).then(data => {
       quiz = data;
-      document.getElementByClass("center-container").style.display = 'block';
+      document.querySelector(".center-container").style.display = 'block';
     });
   };
 
@@ -18,7 +18,7 @@
   const adminLoginBtn = document.getElementById("admin-login-btn");
   const nextBtn = document.getElementById("next-btn");
 
-  const timerContainer = document.getElementById('timerDisplay');
+  // const timerContainer = document.getElementById('timerDisplay');
   const warningSound = document.getElementById('warningSound');
   const progressBar = document.getElementById("progress");
   const quizContent = document.getElementById("quiz-content");
@@ -189,34 +189,121 @@
 
 
 
-  const downloadResultPDF = () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+ const downloadResultPDF = async () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
-    const studentName = studentInfo.name || "Student";
-    const studentClass = studentInfo.class || "Class";
-    const resultText = resultSummary.innerText || resultSummary.textContent || "No result found.";
-    const lines = [
-      `Quiz Result Summary`,
+  const studentName = studentInfo.name || "Student";
+  const studentClass = studentInfo.class || "Class";
+  const resultText = resultSummary.innerText || resultSummary.textContent || "No result found.";
+  const lines = resultText.split('\n').map(l => l.trim()).filter(l => l);
 
-      ...resultText.split('\n')
-    ];
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    let y = 20;
-    lines.forEach(line => {
-      doc.text(line, 2, y);
-
-      y += 7;
-      if (y > 250) {
-        doc.addPage();
-        y = 5;
-      }
+  const loadImageAsBase64 = (url) =>
+    new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 80;
+        canvas.height = 80;
+        canvas.getContext("2d").drawImage(img, 0, 0, 60, 60);
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.onerror = reject;
+      img.src = url;
     });
 
-    doc.save(`${studentName}_${studentClass}_result.pdf`);
-  };
+  const logoBase64 = await loadImageAsBase64("./logo.png");
 
+  // HEADER
+  doc.setFillColor(255, 140, 0);
+  doc.rect(0, 0, 210, 25, "F");
+  doc.addImage(logoBase64, "PNG", 10, 4, 18, 18);
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("times", "bold");
+  doc.setFontSize(16);
+  doc.text("TECHXAGON ACADEMY", 105, 11, { align: "center" });
+
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(14);
+  doc.setTextColor(255, 255, 255);
+  doc.text("Quiz Result Summary", 105, 18, { align: "center" });
+
+  // STUDENT INFO (below header with spacing)
+  const infoY = 30;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10.5);
+  doc.setTextColor(50, 50, 50);
+  doc.text(` ${studentName} ${studentClass}`, 14, infoY);
+
+  // RESULT BOX
+  const boxX = 14, boxY = infoY + 4, boxWidth = 182, boxHeight = 246;
+  const padding = 6;
+  doc.setDrawColor(63, 81, 181);
+  doc.setFillColor(250, 250, 250);
+  doc.roundedRect(boxX, boxY, boxWidth, boxHeight, 3, 3, "FD");
+
+  // CONTENT
+  let y = boxY + padding;
+  const maxLineWidth = boxWidth - padding * 2;
+  const lineHeight = 6;
+
+  doc.setFontSize(10);
+
+  lines.forEach(line => {
+    let trimmed = line.trim();
+
+    if (trimmed.startsWith("Q")) {
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(20, 20, 20); // 
+      trimmed = "  " + trimmed;
+    } else if (trimmed.startsWith("Correct Answer:")) {
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0, 150, 0); // Green
+    } 
+// Detect correct/wrong answers
+  if (trimmed.includes("Correct")) {
+    doc.setTextColor(0, 128, 0); // Green
+  } else if (trimmed.includes("Wrong")) {
+    doc.setTextColor(200, 0, 0); // Red
+  } else if (trimmed.startsWith("Explanation")) {
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(0, 0, 120); // blue for explanation
+       trimmed += "\n";
+    } else {
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(20, 20, 20); // reset
+    }
+
+    const wrapped = doc.splitTextToSize(trimmed, maxLineWidth);
+    wrapped.forEach(wrapLine => {
+      if (y + lineHeight > 285) return;
+      doc.text(wrapLine, boxX + padding, y);
+      y += lineHeight;
+    });
+
+    y += 1;
+  });
+
+  // HIGHLIGHT SCORE (if found)
+  const scoreLine = lines.find(line => line.includes("Score:"));
+  if (scoreLine) {
+    doc.setFillColor(240, 248, 255);
+    doc.setDrawColor(0, 102, 204);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("helvetica", "bold");
+    doc.roundedRect(14, 270, 80, 10, 2, 2, "FD");
+    doc.text(scoreLine.trim(), 16, 276.5);
+  }
+
+  // FOOTER
+  doc.setFontSize(9);
+  doc.setTextColor(120);
+  doc.text(` Generated on: ${new Date().toLocaleString()}`, 110, 293);
+
+  // SAVE
+  doc.save(`${studentName}_${studentClass}_result.pdf`);
+};
 
 
 
