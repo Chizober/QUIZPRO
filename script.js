@@ -1,4 +1,3 @@
-
 (() => {
   let quiz = [];
   window.onload = () => {
@@ -24,6 +23,7 @@
   const quizContent = document.getElementById("quiz-content");
   const resultSummary = document.getElementById("result-summary");
   const downloadResultBtn = document.getElementById("download-result-btn");
+  
   const newUserBtn = document.getElementById("new-user-btn");
   const studentNameInput = document.getElementById("student-name");
   const studentClassInput = document.getElementById("student-class");
@@ -399,6 +399,11 @@
     });
     showScreen(resultScreen);
     showResult();
+    // Scroll to download button
+  setTimeout(() => {
+    document.getElementById('download-result-btn')?.scrollIntoView({ behavior: 'smooth' });
+    
+  }, 500);
   }
 
 

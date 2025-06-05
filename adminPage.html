@@ -46,7 +46,7 @@
     body.dark th,
     body.dark td,
     body.dark select,
-    body.dark input[type="date"] {
+    body.dark input[type="date"], body.dark input[type="text"] {
       background: #1e1e1e;
       border-color: #444;
       color: #ddd;
@@ -97,16 +97,23 @@
     }
 
     select,
-    input[type="date"] {
+    input[type="date"],input[type="text"] {
       margin: 10px;
       padding: clamp(.5rem, 2vw, .6rem);
       font-size: clamp(.8rem, 2vw, 1rem);
+      outline:none;
+      border:none;
+    }
+    select:focus,
+    input[type="date"]:focus,input[type="text"]:focus {
+      outline:none;
+      border:none;
     }
 
     .btn,
     .blue,
     .btn.red,
-    .download-btn {
+    .csv-btn ,.pdf-btn{
       padding: 0.75rem 1.3rem;
       margin: 0.2rem 0.25rem;
       color: white;
@@ -118,7 +125,7 @@
     }
 
 
-    .download-btn {
+    .csv-btn {
       background-color: #28a745;
     }
 
@@ -129,10 +136,12 @@
     .btn.red {
       background: #b30000;
     }
-
+.pdf-btn{
+    background-color: #934;
+}
     .btn.red:hover,
     .btn:hover,
-    .download-btn:hover {
+    .pdf-btn:hover,.csv-btn:hover {
       opacity: 0.9;
     }
 
@@ -210,11 +219,15 @@ label{
 
   <label for="dateFilter">Filter by Date:</label>
   <input type="date" id="dateFilter" />
+<label for="nameSearch">Search by Name:</label>
+<input type="text" id="nameSearch" placeholder="Enter student name">
+  <button onclick="downloadPDF()" class="pdf-btn">Download PDF</button>
+  <button onclick="downloadCSV()" class="csv-btn">Download CSV</button>
 
-  <button onclick="downloadPDF()" class="download-btn">Download PDF</button>
 
   <button class="btn red" id="clear-all-btn">Clear All</button>
   <button class="btn blue" id="admin-logout-btn">Logout</button>
+  
 
   <div id="resultsContainer"></div>
 
@@ -237,6 +250,8 @@ label{
     const dateFilter = document.getElementById("dateFilter");
     classFilter.onchange = () => render();
     dateFilter.onchange = () => render();
+    document.getElementById("nameSearch").addEventListener("input", render);
+
 
     // Fetch questions and initialize
     fetch("questions.json")
@@ -275,53 +290,81 @@ label{
       document.getElementById("averageScore").textContent = (totalScoreSum / results.length).toFixed(2);
     }
 
-    function render() {
-      const filteredResults = results.filter(r => {
-        const classMatch = classFilter.value === "all" || r.class === classFilter.value;
-        const dateMatch = !dateFilter.value || r.date === dateFilter.value;
-        return classMatch && dateMatch;
-      });
+   function render() {
+  const searchName = document.getElementById("nameSearch").value.toLowerCase();
 
-      const grouped = {};
-      filteredResults.forEach(r => {
-        const key = r.class;
-        if (!grouped[key]) grouped[key] = [];
-        grouped[key].push(r);
-      });
+  const filteredResults = results.filter(r => {
+    const classMatch = classFilter.value === "all" || r.class === classFilter.value;
+    const dateMatch = !dateFilter.value || r.date === dateFilter.value;
+    const nameMatch = r.name.toLowerCase().includes(searchName);
+    return classMatch && dateMatch && nameMatch;
+  });
 
-      const container = document.getElementById("resultsContainer");
-      container.innerHTML = "";
+  const grouped = {};
+  filteredResults.forEach(r => {
+    const key = r.class;
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(r);
+  });
 
-      for (const className in grouped) {
-        const details = document.createElement("details");
-        details.open = true;
-        const summary = document.createElement("summary");
-        summary.textContent = `Class ${className} (${grouped[className].length} students)`;
-        details.appendChild(summary);
+  const container = document.getElementById("resultsContainer");
+  container.innerHTML = "";
 
-        const table = document.createElement("table");
-        table.innerHTML = `
-          <thead>
-            <tr><th>Name</th><th>Class</th><th>Score</th><th>Date</th></tr>
-          </thead>
-          <tbody>
-            ${grouped[className]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map(r => {
-              const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
-              return `<tr>
-                  <td>${r.name}</td>
-                  <td>${r.class}</td>
-                  <td>${score}/${questions.length}</td>
-                  <td>${r.date}</td>
-                </tr>`;
-            })
-            .join("")}
-          </tbody>`;
-        details.appendChild(table);
-        container.appendChild(details);
-      }
-    }
+  for (const className in grouped) {
+    const details = document.createElement("details");
+    details.open = true;
+    const summary = document.createElement("summary");
+    summary.textContent = `Class ${className} (${grouped[className].length} students)`;
+    details.appendChild(summary);
+
+    const table = document.createElement("table");
+    table.innerHTML = `
+      <thead>
+        <tr><th>Name</th><th>Class</th><th>Score</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        ${grouped[className]
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(r => {
+            const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
+            return `<tr>
+              <td>${r.name}</td>
+              <td>${r.class}</td>
+              <td>${score}/${questions.length}</td>
+              <td>${r.date}</td>
+            </tr>`;
+          }).join("")}
+      </tbody>`;
+    details.appendChild(table);
+    container.appendChild(details);
+  }
+}
+function downloadCSV() {
+  const searchName = document.getElementById("nameSearch").value.toLowerCase();
+  const filteredResults = results.filter(r => {
+    const classMatch = classFilter.value === "all" || r.class === classFilter.value;
+    const dateMatch = !dateFilter.value || r.date === dateFilter.value;
+    const nameMatch = r.name.toLowerCase().includes(searchName);
+    return classMatch && dateMatch && nameMatch;
+  });
+
+  const rows = [
+    ["Name", "Class", "Score", "Date"]
+  ];
+
+  filteredResults.forEach(r => {
+    const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
+    rows.push([r.name, r.class, `${score}/${questions.length}`, r.date]);
+  });
+
+  const csvContent = rows.map(e => e.map(cell => `"${cell}"`).join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "quiz_results.csv";
+  link.click();
+}
+
 
     function downloadPDF() {
       const pdf = new jsPDF();
@@ -394,13 +437,16 @@ label{
       };
     }
  
-    function clearAllResults() {
+      function clearAllResults() {
       if (confirm("Are you sure you want to clear ALL quiz results?")) {
         localStorage.removeItem("quizResults");
         alert("All results cleared.");
         adminResultsContainer.innerHTML = "";
       }
     }
+    
+
+
     
     clearAllBtn.onclick = () => {
       clearAllResults();
@@ -411,7 +457,6 @@ label{
        window.location.href = "studentPage.html";  // <-- change this to your actual admin page
      
     };
-    
    
   </script>
   <script src="script.js"></script>
