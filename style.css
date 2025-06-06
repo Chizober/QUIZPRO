@@ -381,17 +381,6 @@ button.btn[disabled] {
 }
 
 
-/* Welcome Screen */
-
-#welcomeScreen {
-
-  color: #333;
-  height: 100vh;
-  width: 100%;
-
-}
-
-
 hr {
   border: 1px solid #ddd;
   margin: 20px 0;

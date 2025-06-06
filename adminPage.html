@@ -437,14 +437,15 @@ function downloadCSV() {
       };
     }
  
-      function clearAllResults() {
-      if (confirm("Are you sure you want to clear ALL quiz results?")) {
-        localStorage.removeItem("quizResults");
-        alert("All results cleared.");
-        adminResultsContainer.innerHTML = "";
-      }
-    }
-    
+    function clearAllResults() {
+  if (confirm("Are you sure you want to clear ALL quiz results?")) {
+    localStorage.removeItem("quizResults");
+    results.length = 0; // Clear the local array too
+    alert("All results cleared.");
+    render();  // <-- re-render after clearing
+    renderQuizStatsTable(results, questions);  // update stats too
+  }
+}
 
 
     
