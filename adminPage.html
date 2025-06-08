@@ -188,7 +188,7 @@ label{
 
     th {
       background: #eaeaea;
-      padding: 5px;
+      padding: 8px;
     }
   </style>
 </head>
@@ -221,13 +221,11 @@ label{
   <input type="date" id="dateFilter" />
 <label for="nameSearch">Search by Name:</label>
 <input type="text" id="nameSearch" placeholder="Enter student name">
-  <button onclick="downloadPDF()" class="pdf-btn">Download PDF</button>
-  <button onclick="downloadCSV()" class="csv-btn">Download CSV</button>
+  <button onclick="downloadAllResults()" class="pdf-btn  px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"> 📄 Download All</button>
+  <button onclick="downloadCSV()" class="csv-btn  px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"> 📊 Download CSV</button>
+  <button class="btn red" id="clear-all-btn  px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800"> 🗑️ Clear All</button>
+  <button class="btn blue" id="admin-logout-btn"> 🔓 Logout</button>
 
-
-  <button class="btn red" id="clear-all-btn">Clear All</button>
-  <button class="btn blue" id="admin-logout-btn">Logout</button>
-  
 
   <div id="resultsContainer"></div>
 
@@ -235,6 +233,12 @@ label{
     const clearAllBtn = document.getElementById("clear-all-btn");
     const adminLogoutBtn = document.getElementById("admin-logout-btn");
     const { jsPDF } = window.jspdf;
+    const getStudentQuiz = (name, cls) => {
+  const key = `${name.toLowerCase()}_${cls.toLowerCase()}`;
+  const stored = localStorage.getItem(`quiz_${key}`);
+  return stored ? JSON.parse(stored) : [];
+};
+
     const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
     let questions = [];
 
@@ -253,12 +257,6 @@ label{
     document.getElementById("nameSearch").addEventListener("input", render);
 
 
-    // Fetch questions and initialize
-    fetch("questions.json")
-      .then(response => response.json())
-      .then(json => {
-        questions = json;
-
         const uniqueClasses = [...new Set(results.map(r => r.class))].sort();
         uniqueClasses.forEach(cls => {
           const opt = document.createElement("option");
@@ -267,30 +265,30 @@ label{
           classFilter.appendChild(opt);
         });
 
-        renderQuizStatsTable(results, questions);
+    // Populate questions from the first result
+
+    function renderQuizStatsTable(results) {
+  const tbody = document.getElementById("quizStatsBody");
+  let totalQuestions = 0;
+  let totalScoreSum = 0;
+
+  results.forEach(r => {
+    const quiz = getStudentQuiz(r.name, r.class);
+    const score = r.answers.filter((a, i) => a === quiz[i]?.answer).length;
+    totalScoreSum += score;
+    totalQuestions = quiz.length; // If all quizzes are same length, fine
+  });
+
+  document.getElementById("totalStudents").textContent = results.length;
+  document.getElementById("totalQuestions").textContent = totalQuestions;
+  document.getElementById("averageScore").textContent = results.length > 0 
+    ? (totalScoreSum / results.length).toFixed(2) 
+    : "0.00";
+}
+ renderQuizStatsTable(results, questions);
         render();
-      })
-      .catch(error => {
-        console.error("Error loading questions:", error);
-        alert("Failed to load questions. Please check questions.json file.");
-      });
-
-    function renderQuizStatsTable(results, questions) {
-      const tbody = document.getElementById("quizStatsBody");
-      const totalQuestions = questions.length;
-      let totalScoreSum = 0;
-
-      results.forEach(r => {
-        const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
-        totalScoreSum += score;
-      });
-
-      document.getElementById("totalStudents").textContent = results.length;
-      document.getElementById("totalQuestions").textContent = totalQuestions;
-      document.getElementById("averageScore").textContent = (totalScoreSum / results.length).toFixed(2);
-    }
-
-   function render() {
+   // Render student results
+function render() {
   const searchName = document.getElementById("nameSearch").value.toLowerCase();
 
   const filteredResults = results.filter(r => {
@@ -326,19 +324,25 @@ label{
         ${grouped[className]
           .sort((a, b) => a.name.localeCompare(b.name))
           .map(r => {
-            const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
+            const quiz = getStudentQuiz(r.name, r.class);
+            const score = r.answers.filter((a, i) => a === quiz[i]?.answer).length;
             return `<tr>
-              <td>${r.name}</td>
-              <td>${r.class}</td>
-              <td>${score}/${questions.length}</td>
-              <td>${r.date}</td>
-            </tr>`;
+  <td>${r.name}</td>
+  <td>${r.class}</td>
+  <td>${score}/${quiz.length}</td>
+ 
+
+  <td>${r.date}</td>
+  <td><button class="pdf-btn" onclick="downloadStudentPDF('${r.name}', '${r.class}')">📄 Download</button></td>
+</tr>`;
           }).join("")}
       </tbody>`;
     details.appendChild(table);
     container.appendChild(details);
   }
 }
+
+// Download CSV using student's stored quizzes
 function downloadCSV() {
   const searchName = document.getElementById("nameSearch").value.toLowerCase();
   const filteredResults = results.filter(r => {
@@ -348,17 +352,18 @@ function downloadCSV() {
     return classMatch && dateMatch && nameMatch;
   });
 
-  const rows = [
-    ["Name", "Class", "Score", "Date"]
-  ];
-
+  const rows = [["Name", "Class", "Score", "Date"]];
   filteredResults.forEach(r => {
-    const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
-    rows.push([r.name, r.class, `${score}/${questions.length}`, r.date]);
+    const quiz = getStudentQuiz(r.name, r.class);
+    const score = r.answers.filter((a, i) => a === quiz[i]?.answer).length;
+
+    
+    
+    rows.push([r.name, r.class, `${score}/${quiz.length}`, r.date]);
   });
 
-  const csvContent = rows.map(e => e.map(cell => `"${cell}"`).join(",")).join("\n");
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const csvContent = rows.map(r => r.join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = "quiz_results.csv";
@@ -366,86 +371,211 @@ function downloadCSV() {
 }
 
 
-    function downloadPDF() {
-      const pdf = new jsPDF();
-      const img = new Image();
-      img.src = './logo.png'; // Path to your logo image
-      img.crossOrigin = "Anonymous"; // Handle CORS if needed
 
-      img.onload = function () {
-        const filteredResults = results.filter(r => {
-          const classMatch = classFilter.value === "all" || r.class === classFilter.value;
-          const dateMatch = !dateFilter.value || r.date === dateFilter.value;
-          return classMatch && dateMatch;
-        });
+async function downloadStudentPDF(name, cls) {
+  const key = `${name.toLowerCase()}_${cls.toLowerCase()}`;
+  const studentData = results.find(r => r.name.toLowerCase() === name.toLowerCase() && r.class.toLowerCase() === cls.toLowerCase());
+  const quiz = getStudentQuiz(name, cls);
 
-        const grouped = {};
-        filteredResults.forEach(r => {
-          const key = r.class;
-          if (!grouped[key]) grouped[key] = [];
-          grouped[key].push(r);
-        });
-
-        let pageIndex = 0;
-
-        for (const className in grouped) {
-          if (pageIndex > 0) pdf.addPage();
-          pageIndex++;
-
-
-          pdf.addImage(img, 'JPG', 10, 10, 20, 20);
-          pdf.setFontSize(14);
-          pdf.text("TECHXAGON ACADEMY 3RD RESULT SHEET", 105, 35, { align: "center" });
-          pdf.setFont("helvetica", "normal");
-
-          pdf.setFontSize(12);
-          pdf.setTextColor(40);
-          pdf.text(`Class: ${className}`, 14, 45);
-
-          const body = grouped[className]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((r, index) => {
-              const score = r.answers.filter((a, i) => a === questions[i]?.answer).length;
-              return [
-                index + 1,
-                r.name,
-                r.class,
-                `${score}/${questions.length}`,
-                r.date
-              ];
-            });
-
-          pdf.autoTable({
-            startY: 50,
-            head: [["#", "Name", "Class", "Score", "Date"]],
-            body: body,
-            styles: {
-              fontSize: 11,
-              cellPadding: 3,
-            },
-            headStyles: {
-              fillColor: [63, 81, 181],
-              textColor: 255,
-              fontStyle: 'bold',
-            },
-            alternateRowStyles: { fillColor: [245, 245, 245] },
-            theme: "grid"
-          });
-        }
-
-        pdf.save("quiz_results.pdf");
-      };
-    }
- 
-    function clearAllResults() {
-  if (confirm("Are you sure you want to clear ALL quiz results?")) {
-    localStorage.removeItem("quizResults");
-    results.length = 0; // Clear the local array too
-    alert("All results cleared.");
-    render();  // <-- re-render after clearing
-    renderQuizStatsTable(results, questions);  // update stats too
+  if (!studentData || !quiz.length) {
+    alert("Quiz data not found for this student.");
+    return;
   }
+
+  const pdf = new jsPDF();
+
+  // Load image as base64
+  const logoBase64 = await loadImageAsBase64("./logo.png");
+
+  // Header Background
+  pdf.setFillColor(255, 140, 0); // Dark Orange
+  pdf.rect(0, 0, 210, 25, "F"); // Full-width header rectangle
+
+  // Logo
+  pdf.addImage(logoBase64, "PNG", 10, 6, 20, 12); // Adjust size and position as needed
+
+  // Header Text
+  pdf.setTextColor(255, 255, 255); // White
+  pdf.setFontSize(14);
+  pdf.text("TECHXAGON ACADEMY RESULT REPORT", 105, 16, { align: "center" });
+
+  // Reset text color for content
+  pdf.setTextColor(0, 0, 0);
+  pdf.setFontSize(12);
+  pdf.text(`Name: ${studentData.name}`, 14, 35);
+  pdf.text(`Class: ${studentData.class}`, 14, 42);
+  pdf.text(`Date: ${studentData.date}`, 14, 49);
+
+  const answers = studentData.answers;
+  let score = 0;
+
+  const body = answers.map((ans, i) => {
+    const question = quiz[i]?.question || `Q${i + 1}`;
+    const correct = quiz[i]?.answer || "";
+    const isCorrect = ans.trim().toLowerCase() === correct.trim().toLowerCase();
+    if (isCorrect) score++;
+
+    return [
+      i + 1,
+      question.length > 60 ? question.slice(0, 57) + "..." : question,
+      ans || "—",
+      correct
+    ];
+  });
+
+
+
+pdf.autoTable({
+  startY: 60,
+  head: [["#", "Question", "Answer", "Correct"]],
+  body: body,
+  styles: { fontSize: 10, cellPadding: 2 },
+  headStyles: { fillColor: [0, 33, 71], textColor:255}, 
+  alternateRowStyles: { fillColor: [245, 245, 245] },
+  columnStyles: {
+    0: { cellWidth: 12 },   // "#"
+    1: { cellWidth: 100 },  // "Question"
+    2: { cellWidth: 38 },   // "Answer"
+    3: { cellWidth: 35 }    // "Correct"
+  }
+});
+
+  pdf.setFontSize(11);
+  pdf.text(`Score: ${score}/${quiz.length} (${((score / quiz.length) * 100).toFixed(1)}%)`, 14, pdf.lastAutoTable.finalY + 10);
+
+  pdf.save(`${studentData.name}_${studentData.class}_result.pdf`);
 }
+async function downloadAllResults() {
+  const pdf = new jsPDF();
+  const logoBase64 = await loadImageAsBase64('./logo.png');
+
+  const filteredResults = results.filter(r => {
+    const classMatch = classFilter.value === "all" || r.class === classFilter.value;
+    const dateMatch = !dateFilter.value || r.date === dateFilter.value;
+    return classMatch && dateMatch;
+  });
+
+  const grouped = {};
+  filteredResults.forEach(r => {
+    const key = r.class;
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(r);
+  });
+
+  const totalPages = Object.keys(grouped).length;
+  let pageIndex = 0;
+
+  for (const className in grouped) {
+    if (pageIndex > 0) pdf.addPage();
+    pageIndex++;
+
+    // HEADER background color
+    pdf.setFillColor(255, 140, 0); // Dark orange
+    pdf.rect(0, 0, 210, 25, 'F');
+
+    // Logo resized (20x12 for compact header)
+    pdf.addImage(logoBase64, 'PNG', 10, 6, 20, 12);
+    
+    pdf.setTextColor(255); // white text
+    pdf.setFontSize(14);
+    pdf.text("TECHXAGON ACADEMY 3RD RESULT SHEET", 105, 16, { align: "center" });
+    pdf.setTextColor(0); // reset to black
+
+    pdf.setFontSize(11);
+    pdf.text(`Date: ${new Date().toLocaleDateString()}`, 160, 30);
+    pdf.setFontSize(12);
+    pdf.text(`Class: ${className}`, 14, 40);
+
+    // Generate result table
+    const body = grouped[className]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((r, index) => {
+        const quizData = getStudentQuiz(r.name, r.class);
+        let score = 0;
+        if (quizData && quizData.length === r.answers.length) {
+          score = r.answers.reduce((acc, ans, i) => {
+            return acc + (ans === quizData[i]?.answer ? 1 : 0);
+          }, 0);
+        }
+        return [
+          index + 1,
+          r.name,
+          r.class,
+          `${score}/${quizData.length}`,
+          `${((score / quizData.length) * 100).toFixed(1)}%`,
+          r.date
+        ];
+      });
+
+    pdf.autoTable({
+      startY: 45,
+      head: [["#", "Name", "Class", "Score", "Percent", "Date"]],
+      body: body,
+      styles: {
+        fontSize: 11,
+        cellPadding: 3,
+      },
+      headStyles: {
+        fillColor: [0, 33, 71],
+        textColor: 255,
+        fontStyle: 'bold',
+      },
+      alternateRowStyles: { fillColor: [245, 245, 245] },
+      theme: "grid"
+    });
+
+
+
+    // Summary section
+    const totalStudents = body.length;
+    const avgPercent = (
+      body.reduce((sum, row) => sum + parseFloat(row[4]), 0) / totalStudents
+    ).toFixed(1);
+
+    pdf.setFontSize(11);
+    pdf.text(`Total Students: ${totalStudents}`, 14, pdf.lastAutoTable.finalY + 10);
+    pdf.text(`Average Score: ${avgPercent}%`, 80, pdf.lastAutoTable.finalY + 10);
+
+    // Page number
+    pdf.setFontSize(10);
+    pdf.text(`Page ${pageIndex} of ${totalPages}`, 195, 290, { align: "right" });
+  }
+
+  pdf.save("quiz_results.pdf");
+}
+
+
+// Load base64 image utility
+function loadImageAsBase64(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const aspectRatio = img.width / img.height;
+      const width = 100;
+      const height = width / aspectRatio;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+
+      function clearAllResults() {
+      if (confirm("Are you sure you want to clear ALL quiz results?")) {
+        localStorage.removeItem("quizResults");
+        alert("All results cleared.");
+        adminResultsContainer.innerHTML = "";
+      }
+    }
+    
 
 
     

@@ -1,11 +1,36 @@
+
+
 (() => {
-  let quiz = [];
-  window.onload = () => {
-    fetch('questions.json').then(res => res.json()).then(data => {
-      quiz = data;
-      document.querySelector(".center-container").style.display = 'block';
-    });
-  };
+
+ 
+  function shuffleArray(array) {
+  let shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+let quiz =[]
+fetch('questions.json')
+  .then(res => res.json())
+  .then(data => {
+    // Check if current student already has a shuffled quiz
+    const name = studentNameInput.value.trim().toLowerCase();
+    const cls = studentClassInput.value.trim().toLowerCase();
+    const studentKey = `${name}_${cls}`;
+    const storedQuiz = localStorage.getItem(`quiz_${studentKey}`);
+
+    if (storedQuiz) {
+      quiz = JSON.parse(storedQuiz);
+    } else {
+      quiz = shuffleArray(data);
+      localStorage.setItem(`quiz_${studentKey}`, JSON.stringify(quiz));
+    }
+
+    document.querySelector(".center-container").style.display = 'block';
+  });
+
 
   // Elements
   const startScreen = document.getElementById("start-screen");
@@ -66,14 +91,18 @@
 
 
 
+function saveResult(result) {
+  let results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+  results.push(result);
+  localStorage.setItem("quizResults", JSON.stringify(results));
+
+  // Save studentKey so Admin can retrieve quiz later
+  const key = `${result.name.toLowerCase()}_${result.class.toLowerCase()}`;
+  localStorage.setItem(`quiz_${key}`, JSON.stringify(quiz)); // Ensure their quiz is saved with answers
+}
 
 
-  // Utility functions
-  function saveResult(result) {
-    let results = JSON.parse(localStorage.getItem("quizResults") || "[]");
-    results.push(result);
-    localStorage.setItem("quizResults", JSON.stringify(results));
-  }
+
 
   function getAllResults() {
     return JSON.parse(localStorage.getItem("quizResults") || "[]");
@@ -134,8 +163,8 @@
       if (selectedAnswers[index]) {
         optionButtons.forEach(b => {
           b.disabled = true;
-          if (b.textContent === q.answer) b.classList.add("correct answer!");
-          else if (b.textContent === selectedAnswers[index]) b.classList.add("wrong answer. ❌");
+          if (b.textContent === q.answer) b.classList.add("correct");
+          else if (b.textContent === selectedAnswers[index]) b.classList.add("wrong");
         });
         nextBtn.disabled = false;
       }
@@ -330,11 +359,23 @@
 
     startError.textContent = "";
     studentInfo = { name, class: cls };
-    currentQuestionIndex = 0;
+
+    const studentKey = `${name}_${cls}`;
+  const storedQuiz = localStorage.getItem(`quiz_${studentKey}`);
+
+  fetch('questions.json')
+    .then(res => res.json())
+    .then(data => {
+      if (storedQuiz) {
+        quiz = JSON.parse(storedQuiz);
+      } else {
+        quiz = shuffleArray(data);
+        localStorage.setItem(`quiz_${studentKey}`, JSON.stringify(quiz));
+      }
+       currentQuestionIndex = 0;
     selectedAnswers = [];
     timer = QUIZ_TIME;
-
-    showScreen(quizScreen);
+      showScreen(quizScreen);
     renderQuestion(currentQuestionIndex);
     updateTimer();
     timerInterval = setInterval(() => {
@@ -350,6 +391,10 @@
         finishQuiz();
       }
     }, 1000);
+    })
+   
+
+  
   };
 
 
@@ -406,18 +451,6 @@
   }, 500);
   }
 
-
-
-  newUserBtn.onclick = () => {
-    studentNameInput.value = "";
-    studentClassInput.value = "";
-    selectedAnswers = [];
-    currentQuestionIndex = 0;
-    timer = QUIZ_TIME;
-    studentInfo = null;
-    startError.textContent = "";
-    showScreen(startScreen);
-  };
 
   // Admin login flow
   adminLoginBtn.onclick = () => {
