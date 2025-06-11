@@ -1,57 +1,100 @@
 [
   {
-    "question": "What does HTML stand for?",
-    "options": [
-      "Hyperlinks and Text Markup Language",
-      "Hyper Text Markup Language",
-      "Home Tool Markup Language",
-      "Hyper Tool Multi Language"
-    ],
-    "answer": "Hyper Text Markup Language",
-    "explanation": "HTML stands for Hyper Text Markup Language, which is the standard language for creating web pages."
+    "question": "What does AI stand for?",
+    "options": ["Artificial Interface", "Advanced Intelligence", "Artificial Intelligence", "Automated Integration"],
+    "answer": "Artificial Intelligence",
+    "explanation": "AI stands for Artificial Intelligence, which refers to the simulation of human intelligence in machines that are programmed to think and learn."
+  },
+  {
+    "question": "What tag is used for creating an unordered list in HTML?",
+    "options": ["<ol>", "<ul>", "<li>", "<list>"],
+    "answer": "<ul>",
+    "explanation": "<ul> is used for unordered (bulleted) lists in HTML."
+  },
+
+   {
+    "question": "Which tag defines a list item in HTML?",
+    "options": ["<li>", "<ul>", "<ol>", "<list>"],
+    "answer": "<li>",
+    "explanation": "The <li> tag defines each item in a list."
+  },
+  {
+    "question": "What is the smallest heading tag in HTML?",
+    "options": ["<h6>", "<h1>", "<h3>", "<h7>"],
+    "answer": "<h6>",
+    "explanation": "HTML headings go from <h1> (largest) to <h6> (smallest)."
+  },
+ {
+    "question": "Which tag is used to write a paragraph in HTML?",
+    "options": ["<p>", "<para>", "<pg>", "<text>"],
+    "answer": "<p>",
+    "explanation": "The <p> tag defines a paragraph in HTML."
+  },
+  {
+    "question": "How do you add an image in HTML?",
+    "options": ["<img>", "<image>", "<src>", "<pic>"],
+    "answer": "<img>",
+    "explanation": "<img> is used to embed images in HTML."
+  },
+  {
+    "question": "In Scratch, what block category is used for movement?",
+    "options": ["Looks", "Control", "Motion", "Events"],
+    "answer": "Motion",
+    "explanation": "The 'Motion' category contains blocks that move sprites."
   },
    {
-    "question": "Which CSS property controls the size of text?",
-    "options": [
-      "font-style",
-      "text-align",
-      "font-size",
-      "text-decoration"
-    ],
-    "answer": "font-size",
-    "explanation": "The 'font-size' property sets the size of the text in an element."
+    "question": "Which block starts a Scratch project when the green flag is clicked?",
+    "options": ["When green flag clicked", "Start", "Begin", "Launch"],
+    "answer": "When green flag clicked",
+    "explanation": "This block starts the program when the green flag is clicked."
   },
   {
-    "question": "Which CSS property is used to change the text color of an element?",
-    "options": [
-      "font-color",
-      "text-style",
-      "color",
-      "text-color"
-    ],
-    "answer": "color",
-    "explanation": "The 'color' property in CSS is used to change the text color of an element."
+    "question": "Which of the following is an example of AI in everyday life?",
+    "options": ["Text messaging", "ChatGPT", "Washing machines", "Calculators"],
+    "answer": "ChatGPT",
+    "explanation": "ChatGPT is an AI language model that can generate human-like text based on input."
+  },
+ {
+    "question": "Which HTML tag defines a title inside the browser tab?",
+    "options": ["<header>", "<title>", "<head>", "<meta>"],
+    "answer": "<title>",
+    "explanation": "<title> is placed inside <head> and appears in the browser tab."
+  },
+
+  {
+    "question": "AI is built with which programming language?",
+    "options": ["Python", "CSS", "Scratch", "HTML"],
+    "answer": "Python",
+    "explanation": "Python is widely used for AI development due to its simplicity and extensive libraries for machine learning and data analysis."
   },
   {
-    "question": "How do you make a list that lists its items with squares in CSS?",
-    "options": [
-      "list-style-type: square;",
-      "list-shape: square;",
-      "list-style: square;",
-      "list-type: square;"
-    ],
-    "answer": "list-style-type: square;",
-    "explanation": "To display list items with squares, use the CSS rule 'list-style-type: square;'"
+    "question": "AI cannot exist without ..........?",
+    "options": ["Machine and Instrument", "Hardware and data", "Software and internet"],
+    "answer": "Hardware and data",
+    "explanation": "AI cannot exist without hardware, as it requires physical components like processors and memory to run algorithms and process data."
+  },
+{
+    "question": "Which Scratch category changes a sprite’s appearance?",
+    "options": ["Motion", "Looks", "Events", "Variables"],
+    "answer": "Looks",
+    "explanation": "'Looks' blocks are used to change how a sprite looks."
   },
   {
-  "question": "What is the purpose of CSS in web development?",
+    "question": "AI is a .........integrated technology?",
+    "options": ["Middleware", "Manware", "Software", "Humanware"],
+    "answer": "Software",
+    "explanation": "ChatGPT is an example of narrow AI, as it is designed to perform specific tasks such as generating text and answering questions based on the input it receives, without possessing general intelligence."  
+  },
+  {
+    "question": "What is the differnce between AI and Human Intelligence?",
     "options": [
-      "To structure the content of a webpage",
-      "To add interactivity to a webpage",
-      "To apply styles and layout to a webpage",
-      "To store data in a database"
+      "AI is slower,but more accurate, while human are faster",
+      "AI learn through experience and feelings, while human beings learn through data",
+      "AI does not get tired, while humans do"
     ],
-    "answer": "To apply styles and layout to a webpage",
-    "explanation": "CSS (Cascading Style Sheets) is used to style and layout HTML elements on a webpage."
+    "answer": "AI does not get tired, while humans do",  
+    "explanation": "AI systems can operate continuously without fatigue, while humans need rest and breaks to function effectively."
+   
   }
+  
 ]
