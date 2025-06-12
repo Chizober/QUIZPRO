@@ -233,6 +233,9 @@ function renderQuestion(index) {
   }
 
 
+
+
+
   // Event handlers
   startBtn.onclick = () => {
     const name = studentNameInput.value.trim();
