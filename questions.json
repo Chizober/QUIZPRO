@@ -1,100 +1,178 @@
 [
   {
+    "type": "mcq",
     "question": "What does AI stand for?",
     "options": ["Artificial Interface", "Advanced Intelligence", "Artificial Intelligence", "Automated Integration"],
     "answer": "Artificial Intelligence",
     "explanation": "AI stands for Artificial Intelligence, which refers to the simulation of human intelligence in machines that are programmed to think and learn."
   },
   {
-    "question": "What tag is used for creating an unordered list in HTML?",
-    "options": ["<ol>", "<ul>", "<li>", "<list>"],
-    "answer": "<ul>",
-    "explanation": "<ul> is used for unordered (bulleted) lists in HTML."
-  },
-
-   {
-    "question": "Which tag defines a list item in HTML?",
-    "options": ["<li>", "<ul>", "<ol>", "<list>"],
-    "answer": "<li>",
-    "explanation": "The <li> tag defines each item in a list."
-  },
-  {
-    "question": "What is the smallest heading tag in HTML?",
-    "options": ["<h6>", "<h1>", "<h3>", "<h7>"],
-    "answer": "<h6>",
-    "explanation": "HTML headings go from <h1> (largest) to <h6> (smallest)."
-  },
- {
-    "question": "Which tag is used to write a paragraph in HTML?",
-    "options": ["<p>", "<para>", "<pg>", "<text>"],
-    "answer": "<p>",
-    "explanation": "The <p> tag defines a paragraph in HTML."
+    "type": "mcq",
+    "question": "What is the correct <meta> tag for responsive design?",
+    "options": [
+      "<meta viewport='device-width'>",
+      "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
+      "<meta responsive='true'>",
+      "<meta width='auto'>"
+    ],
+    "answer": "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
+    "explanation": "The correct <meta> tag for responsive design is <meta name='viewport' content='width=device-width, initial-scale=1.0'>, which ensures that the page scales correctly on different devices."
   },
   {
-    "question": "How do you add an image in HTML?",
-    "options": ["<img>", "<image>", "<src>", "<pic>"],
-    "answer": "<img>",
-    "explanation": "<img> is used to embed images in HTML."
+    "type": "mcq",
+    "question": "What does 'responsive image' mean?",
+    "options": [
+      "An image that responds to user clicks",
+      "An image that resizes to fit different screen sizes",
+      "An image with a fast loading time",
+      "An image with animation"
+    ],
+    "answer": "An image that resizes to fit different screen sizes",
+    "explanation": "A responsive image is one that resizes to fit different screen sizes, ensuring optimal display on various devices without losing quality."
   },
   {
-    "question": "In Scratch, what block category is used for movement?",
-    "options": ["Looks", "Control", "Motion", "Events"],
-    "answer": "Motion",
-    "explanation": "The 'Motion' category contains blocks that move sprites."
-  },
-   {
-    "question": "Which block starts a Scratch project when the green flag is clicked?",
-    "options": ["When green flag clicked", "Start", "Begin", "Launch"],
-    "answer": "When green flag clicked",
-    "explanation": "This block starts the program when the green flag is clicked."
+    "type": "mcq",
+    "question": "What does CSS stand for?",
+    "options": ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+    "answer": "Cascading Style Sheets",
+    "explanation": "CSS stands for Cascading Style Sheets, which is a style sheet language used for describing the presentation of a document written in HTML or XML."
   },
   {
-    "question": "Which of the following is an example of AI in everyday life?",
-    "options": ["Text messaging", "ChatGPT", "Washing machines", "Calculators"],
-    "answer": "ChatGPT",
-    "explanation": "ChatGPT is an AI language model that can generate human-like text based on input."
+    "type": "mcq",
+    "question": "What is the goal of responsive web design?",
+    "options": [
+      "To make websites load faster",
+      "To support only mobile devices",
+      "To ensure websites look good on all devices",
+      "To use only HTML"
+    ],
+    "answer": "To ensure websites look good on all devices",
+    "explanation": "The goal of responsive web design is to ensure that websites look good and function well on all devices, including desktops, tablets, and smartphones, by adapting the layout and content."
   },
- {
-    "question": "Which HTML tag defines a title inside the browser tab?",
-    "options": ["<header>", "<title>", "<head>", "<meta>"],
-    "answer": "<title>",
-    "explanation": "<title> is placed inside <head> and appears in the browser tab."
-  },
-
   {
-    "question": "AI is built with which programming language?",
-    "options": ["Python", "CSS", "Scratch", "HTML"],
+    "type": "mcq",
+    "question": "Which attribute defines alternate text for an image in HTML?",
+    "options": ["alt", "title", "description", "caption"],
+    "answer": "alt",
+    "explanation": "The 'alt' attribute in HTML defines alternate text for an image, which is displayed if the image cannot be loaded and is also used by screen readers for accessibility."
+  },
+  {
+    "type": "mcq",
+    "question": "Which tag is commonly used to wrap navigation menus in HTML?",
+    "options": ["<nav>", "<ul>", "<div>", "<menu>"],
+    "answer": "<nav>",
+    "explanation": "The <nav> tag is commonly used to wrap navigation menus in HTML, providing a semantic way to define navigation links on a webpage."
+  },
+  {
+    "type": "mcq",
+    "question": "AI is like a .........,where humans are the..........,feeding it with ..........,all the time",
+    "options": ["a small house, the builders,concrete", "a giant library,the librarians,information/data", "a pot,potter,clay"],
+    "answer": "a giant library,the librarians,information/data",
+    "explanation": "AI is like a giant library, where humans are the librarians, feeding it with information/data all the time. This analogy illustrates how AI systems learn and improve through continuous input of data."
+  },
+  {
+    "type": "mcq",
+    "question": "Which of the following is NOT an AI assistant?",
+    "options": ["Siri", "Alexa", "Google Assistant", "Excel"],
+    "answer": "Excel",
+    "explanation": "Excel is a spreadsheet application and not an AI assistant. Siri, Alexa, and Google Assistant are examples of AI assistants that use natural language processing to interact with users."
+  },
+  {
+    "type": "mcq",
+    "question": "Which HTML tag is used for dividing content into sections?",
+    "options": ["<br>", "<hr>", "<div>", "<form>"],
+    "answer": "<div>",
+    "explanation": "The <div> tag in HTML is used to divide content into sections, allowing for better organization and styling of web pages."
+  },
+  {
+    "type": "mcq",
+    "question": "Which of these languages is commonly used in AI programming?",
+    "options": ["HTML", "Python", "CSS", "PHP"],
     "answer": "Python",
-    "explanation": "Python is widely used for AI development due to its simplicity and extensive libraries for machine learning and data analysis."
+    "explanation": "Python is commonly used in AI programming due to its simplicity, readability, and extensive libraries for machine learning and data analysis."
   },
   {
+    "type": "mcq",
     "question": "AI cannot exist without ..........?",
     "options": ["Machine and Instrument", "Hardware and data", "Software and internet"],
     "answer": "Hardware and data",
     "explanation": "AI cannot exist without hardware, as it requires physical components like processors and memory to run algorithms and process data."
   },
-{
-    "question": "Which Scratch category changes a sprite’s appearance?",
-    "options": ["Motion", "Looks", "Events", "Variables"],
-    "answer": "Looks",
-    "explanation": "'Looks' blocks are used to change how a sprite looks."
+  {
+    "type": "mcq",
+    "question": "............is not a types of AI?",
+    "options": ["Weak AI", "Super AI", "Basic AI", "General AI"],
+    "answer": "Basic AI",
+    "explanation": "Basic AI is not a recognized type of AI. The main types of AI include Weak AI (narrow AI), General AI (strong AI), and Super AI (hypothetical future AI that surpasses human intelligence)."
   },
   {
-    "question": "AI is a .........integrated technology?",
-    "options": ["Middleware", "Manware", "Software", "Humanware"],
-    "answer": "Software",
-    "explanation": "ChatGPT is an example of narrow AI, as it is designed to perform specific tasks such as generating text and answering questions based on the input it receives, without possessing general intelligence."  
+    "type": "mcq",
+    "question": "What type of AI is used in chatbots?",
+    "options": ["Narrow AI", "General AI", "Super AI", "Creative AI"],
+    "answer": "Narrow AI",
+    "explanation": "Chatbots typically use Narrow AI, which is designed to perform specific tasks such as answering questions or providing customer support, rather than possessing general intelligence."
   },
   {
+    "type": "mcq",
     "question": "What is the differnce between AI and Human Intelligence?",
     "options": [
-      "AI is slower,but more accurate, while human are faster",
-      "AI learn through experience and feelings, while human beings learn through data",
-      "AI does not get tired, while humans do"
+      "AI can learn from experience, while human intelligence cannot",
+      "AI can process data faster than humans, but lacks emotional understanding",
+      "AI gets tired, while humans do not"
     ],
-    "answer": "AI does not get tired, while humans do",  
-    "explanation": "AI systems can operate continuously without fatigue, while humans need rest and breaks to function effectively."
-   
-  }
+    "answer": "AI can process data faster than humans, but lacks emotional understanding",
+    "explanation": "AI can process data at much higher speeds than humans, but it lacks the emotional understanding and intuition that characterize human intelligence."
+  },
+  {
+    "type": "mcq",
+    "question": "What is the goal of Artificial Intelligence?",
+    "options": [
+      "To replace all human workers",
+      "To build systems that can perform tasks that require human intelligence",
+      "To automate everything",
+      "To create human clones"
+    ],
+    "answer": "To build systems that can perform tasks that require human intelligence",
+    "explanation": "The goal of Artificial Intelligence is to build systems that can perform tasks that typically require human intelligence, such as understanding natural language, recognizing patterns, and making decisions."
+  },
+  {
+    "type": "mcq",
+    "question": "Why is clamp() useful in responsive design?",
+    "options": [
+      "It locks the font size",
+      "It allows values to scale within limits based on screen size",
+      "It creates gradients",
+      "It adds fixed padding"
+    ],
+    "answer": "It allows values to scale within limits based on screen size",
+    "explanation": "The clamp() function in CSS allows values to scale within specified limits based on the screen size, making it useful for responsive design by ensuring that elements adapt fluidly to different viewport sizes."
+  },
+  {
+    "type": "mcq",
+    "question": "Which of the following is a valid use of clamp()?",
+    "options": [
+      "clamp(16px, 2vw, 24px)",
+      "clamp(2rem; 5rem; 10rem)",
+      "clamp(10px - 100px)",
+      "clamp: 1vw, 2rem, 5rem"
+    ],
+    "answer": "clamp(16px, 2vw, 24px)",
+    "explanation": "The valid use of clamp() is clamp(16px, 2vw, 24px), which sets a minimum value of 16px, a preferred value that scales with the viewport width (2vw), and a maximum value of 24px. This allows for responsive design while maintaining limits on the size."
+  },
+
   
+  {
+    "type": "subjective",
+    "question": "Explain the importance of accessibility in web development."
+  },
+
+  
+  {
+    "type": "theory",
+    "question": "Discuss the advantages and disadvantages of using Artificial Intelligence in education."
+  },
+  {
+    "type": "theory",
+    "question": "Describe how responsive web design improves the user experience across devices."
+  }
 ]

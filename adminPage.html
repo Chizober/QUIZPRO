@@ -2,17 +2,12 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Quiz Results Report</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Quiz Results</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
-</script>
-
-
+  <!-- <link rel="stylesheet" href="style.css" /> -->
   <style>
     * {
       box-sizing: border-box;
@@ -20,12 +15,6 @@
       padding: 0;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 20px;
-    }
 
     body.dark {
       background-color: #121212;
@@ -51,16 +40,219 @@
     body.dark th,
     body.dark td,
     body.dark select,
-    body.dark input[type="date"], body.dark input[type="text"] {
+    body.dark input[type="date"],
+    body.dark input[type="text"],
+    body.dark #logoutBtn {
       background: #1e1e1e;
       border-color: #444;
       color: #ddd;
     }
 
+    body {
+      font-family: Arial, sans-serif;
+      padding-left: min(4em, 5%);
+      padding-right: min(4em, 5%);
+      font-family: Arial, sans-serif;
+      color: #222;
+      height: 100vh;
+      background-color: #f0f0f0;
+      transition: background-color 0.3s, color 0.3s;
+      line-height: 1.5;
+
+    }
+
+    .dark-mode {
+      background: #111;
+      color: #eee;
+    }
+
+
+    /* main{
+  padding:10px;
+} */
+    h2 {
+      margin-bottom: 5px;
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 5px;
+      border: none;
+
+    }
+
+    .score-input {
+      width: 60px;
+      margin-left: 10px;
+    }
+
+    .section {
+      margin-top: 10px;
+    }
+
+    .student-box {
+      border: 1px solid #ccc;
+      padding: 1em;
+      margin: 1em 0;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+
+    details summary {
+      font-size: 1.1em;
+      cursor: pointer;
+      background: #ddd;
+      padding: 0.5em;
+      border-radius: 4px;
+    }
+
+    .section {
+      margin: 1em 0;
+    }
+
+    .mcq-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1em;
+      min-width: 600px;
+    }
+
+    .mcq-table th,
+    .mcq-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+    }
+
+    .mcq-table th {
+      background-color: #3498db;
+      color: white;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .mcq-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .mcq-table tr:hover {
+      background-color: #f1f1f1;
+    }
+
+
+    .score-input {
+      width: 60px;
+      margin-left: 5px;
+    }
+
+    .class-group>summary {
+      color: #444;
+      padding: 0 20px;
+      font-size: 1.2em;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    .section-group>summary {
+      color: #444;
+      padding: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    textarea,
+    input,
+    input[type="text"] {
+      margin: 10px 2px;
+      padding: clamp(.5rem, 2vw, .6rem);
+      font-size: clamp(.8rem, 2vw, 1rem);
+      outline: none;
+      border: none;
+    }
+
+    textarea,
+    input:focus,
+    input[type="text"]:focus {
+      outline: none;
+      border: none;
+    }
+
+    .btn,
+    .pdf-sec,
+    .blue,
+    .btn.red,
+    .csv-btn,
+    .pdf-btn {
+      margin: 0.2rem 0.25rem;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      transition: background-color 0.3s;
+      padding: clamp(.8rem, 2vw, .8rem);
+
+    }
+
+
+    .csv-btn {
+      background-color: #28a745;
+    }
+
+    .blue {
+      background: #337ab7;
+    }
+
+    .btn.red {
+      background: #b30000;
+    }
+
+    .pdf-sec {
+      background-color: #4A90E2;
+    }
+
+    .pdf-btn {
+      background-color: #934;
+    }
+
+    .btn.red:hover,
+    .btn:hover,
+    .pdf-btn:hover,
+    .csv-btn:hover {
+      opacity: 0.9;
+    }
+
+    .delete-btn {
+      background-color: #4A90E2;
+    }
+
+    .download-btn {
+      background-color: tomato;
+    }
+
+    .btn:focus {
+      outline: none;
+    }
+
+    /* body { display: none; font-family: Arial, sans-serif; }
+    .hidden { display: none; } */
+    #logoutBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #c0392b;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
     .theme-toggle {
       position: fixed;
-      top: 1rem;
-      right: 1rem;
+      top: .6rem;
+      left: 1rem;
       background: transparent !important;
       border: none;
       font-size: clamp(1rem, 2vw, 1.5rem);
@@ -85,1134 +277,1728 @@
       filter: invert(1);
     }
 
-
-    #quizStatsTable p {
-      margin: 2px;
-      font-size: clamp(.8rem, 2vw, 1rem);
-    }
-
-    #quizStatsTable h1 {
-      text-align: center;
-      font-size: clamp(1.2rem, 2vw, 1.7rem);
-    }
-
-    h2 {
-      font-size: clamp(.8rem, 2vw, 1.3rem);
-      margin: 15px 0px 10px -1px;
-    }
-
-    select,
-    input[type="date"],input[type="text"] {
-      margin: 10px;
-      padding: clamp(.5rem, 2vw, .6rem);
-      font-size: clamp(.8rem, 2vw, 1rem);
-      outline:none;
-      border:none;
-    }
-    select:focus,
-    input[type="date"]:focus,input[type="text"]:focus {
-      outline:none;
-      border:none;
-    }
-
-    .btn,
-    .pdf-sec,
-    .blue,
-    .btn.red,
-    .csv-btn ,.pdf-btn{
-      margin: 0.2rem 0.25rem;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: clamp(0.8rem, 2vw, 1rem);
-      transition: background-color 0.3s;
-      padding: clamp(.8rem, 2vw, .8rem);
-
-    }
-
-
-    .csv-btn {
-      background-color: #28a745;
-    }
-
-    .blue {
-      background: #337ab7;
-    }
-
-    .btn.red {
-      background: #b30000;
-    }
-    .pdf-sec{
-    background-color:#4A90E2;
-}
-.pdf-btn{
-    background-color: #934;
-}
-    .btn.red:hover,
-    .btn:hover,
-    .pdf-btn:hover,.csv-btn:hover {
-      opacity: 0.9;
-    }
-
-    .btn:focus {
-      outline: none;
-    }
-
-    details {
-      margin: 1rem 0;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      font-size: clamp(.8rem, 2vw, 1rem);
-    }
-label{
-    font-size: clamp(.8rem, 2vw, 1rem);
-}
-    summary {
-      font-weight: bold;
-      font-size: clamp(.8rem, 2vw, 1rem);
-      cursor: pointer;
-      color: #333;
-      padding: 15px;
-
-    }
-
-    table {
+    .table-responsive {
+      overflow-x: auto;
       width: 100%;
-      border-collapse: collapse;
-      /* margin-top: 1rem; */
-      margin: 1rem 0;
-    }
-
-    td {
-
+      background: white;
+      border-radius: 10px;
       padding: 10px;
     }
 
-    th,
-    td {
-
-      border: 1px solid #ccc;
-      text-align: left;
-      font-size: clamp(0.8rem, 2vw, 1rem);
-    }
-
-    th {
-      background: #eaeaea;
-      padding: 0.5rem;
+    .table-responsive table {
+      width: 100%;
+      border-collapse: collapse;
 
     }
 
+    header {
+      padding-top: 40px;
+      margin-bottom: 5px;
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+    }
 
+    header h3 {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+    }
 
+    header h2 {
+      text-align: center;
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      margin-bottom: 20px;
+    }
 
-table tr:nth-child(even) {
-background-color: #f8f8f8;
-}
+    .summary {
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      cursor: pointer;
+      color: #333;
+      margin: 20px 0px;
 
-table tr:nth-child(odd) {
-background-color: #fff;
-}
+    }
 
+    body.dark .summary,
+    body.dark header {
+
+      color: #fff;
+
+    }
+
+    .student-info {
+      margin: 20px 0px;
+    }
+
+    .mcq-title {
+      margin-top: 20px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2ecc71;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      font-size: 14px;
+      transition: opacity 0.5s ease;
+      z-index: 1000;
+    }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
 </head>
 
 <body>
+  <main>
+    <!-- <body id="admin-body"> -->
+    <header>
+      <h2> 📊 Third Term Exam Results</h2>
+      <h3>📚 Grouped by Class</h3>
+      <!-- <button id="theme-toggle">Toggle Theme</button> -->
+      <button class="theme-toggle" id="theme-toggle">🌞</button>
+    </header>
 
-  <button class="theme-toggle" id="themeToggle">🌞</button>
-
-  <div class="school-header">
-    <img src="./logo-min.png" alt="School Logo" class="school-logo">
-  </div>
-
-  <div id="quizStatsTable">
-    <h1> 📊 Third Term Mid Term Results Report</h1>
-    <h2>📚 Grouped by Class</h2>
-    <p><strong>Total Students:</strong> <span id="totalStudents"></span></p>
-    <p><strong>Total Questions:</strong> <span id="totalQuestions"></span></p>
-    <p><strong>Average Score:</strong> <span id="averageScore"></span></p>
-
-    <table>
-      <tbody id="quizStatsBody"></tbody>
-    </table>
-  </div>
- 
-<!-- Admin Panel UI -->
-<label for="nameSearch">Search by Name:</label>
-<input type="text" id="nameSearch" placeholder="Search by name">
-
-<select id="classFilter"></select>
-<select id="sectionFilter"></select>
-
-<label for="dateFilter">Filter by Date:</label>
-<input type="date" id="dateFilter">
-
-<!-- Action Buttons -->
-
-<button onclick="downloadAllResults()" class="pdf-btn px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">📄 Download All (PDF)</button>
-<button onclick="downloadCSV()" class="csv-btn px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">📊 Download All (CSV)</button>
-<button id="clear-all-results-btn" class="btn red px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800">🗑️ Clear All</button>
- <button onclick="downloadSelectedSectionPDF()" class="pdf-sec">📥 Download Section</button>
- 
-
-<button id="admin-logout-btn" class="btn blue">🔓 Logout</button>
-
- 
+    <!-- <button id="theme-toggle">Toggle Theme</button> -->
+    <button id="download-csv" class="btn csv-btn">Download CSV</button>
+    <!-- <button id="download-pdf" class="btn pdf-btn"> 📊Download PDF</button> -->
+    <button class="btn pdf-btn" onclick="downloadClasswisePDFs()"> 📊 Download All Results by Class</button>
+    <button onclick="clearResults()">Clear All Quiz Results</button>
 
 
+    <button id="download-by-class" class="btn red">Download Class</button>
+    <button id="download-by-section" class="btn pdf-sec"> 📥 Download Section</button>
+    <button class="btn pdf-sec" onclick="downloadAllPDFs()">Download All PDFs</button>
 
-<!-- Results Container -->
-<div id="resultsContainer"></div>
-<div id="hiddenResultContainer"></div>
+    <button id="clear-all-results-btn" class="btn red"> 🗑️ Clear All</button>
+    <!-- <button id="adminLogoutBtn">Logout</button> -->
+    <button id="logoutBtn"> 🔓 Logout</button>
+    <input id="classFilter" placeholder="Filter by Class">
+    <input id="sectionFilter" placeholder="Filter by Section">
+    <input id="searchInput" type="text" placeholder="Search by Name">
+    <div id="summary"></div>
+    <div id="admin-panel"></div>
 
-<script>
-   // Theme toggle
-    const themeToggle = document.getElementById("themeToggle");
-    themeToggle.onclick = () => {
-      document.body.classList.toggle("dark");
-      themeToggle.textContent = document.body.classList.contains("dark") ? "🌙" : "🌞";
-    };
- 
+  </main>
+  <script>
 
-const { jsPDF } = window.jspdf;
- const adminLogoutBtn = document.getElementById("admin-logout-btn");
-const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
-
-const classFilter = document.getElementById("classFilter");
-const sectionFilter = document.getElementById("sectionFilter");
-const dateFilter = document.getElementById("dateFilter");
-const nameSearch = document.getElementById("nameSearch");
-
-nameSearch.addEventListener("input", render);
-classFilter.onchange = () => { populateSectionFilter(); render(); };
-sectionFilter.onchange = render;
-dateFilter.onchange = render;
-
-function getClassRank(className) {
-  const normalized = normalizeClassName(className);
-  if (normalized.startsWith("JSS")) return parseInt(normalized.replace("JSS", "")) || 0;
-  if (normalized.startsWith("SS")) return 3 + (parseInt(normalized.replace("SS", "")) || 0);
-  return 999;
-}
-
-function getSectionColor(section) {
-  const map = {
-    Serenity: "purple",
-    Humility: "teal",
-    Dignity: "blue",
-    Valour: "orange",
-    Creativity: "green",
-    Determination: "red",
-    Gratitude: "maroon",
-    Virtuous: "brown"
-  };
-  return map[section] || "#333";
-}
-
-function getStudentQuiz(name, cls) {
-  const key = `${name.toLowerCase()}_${cls.toLowerCase()}`;
-  const stored = localStorage.getItem(`quiz_${key}`);
-  return stored ? JSON.parse(stored) : [];
-}
-
-function populateClassFilter() {
-  classFilter.innerHTML = '';
-  const allOption = document.createElement('option');
-  allOption.value = 'all';
-  allOption.textContent = 'All Classes';
-  classFilter.appendChild(allOption);
-
-  const uniqueClasses = [...new Set(results.map(r => normalizeClassName(r.class)))];
-  uniqueClasses.sort((a, b) => getClassRank(a) - getClassRank(b));
-
-  uniqueClasses.forEach(cls => {
-    const opt = document.createElement("option");
-    opt.value = cls;
-    opt.textContent = cls;
-    classFilter.appendChild(opt);
-  });
-}
-
-function populateSectionFilter() {
-  sectionFilter.innerHTML = '';
-  const selectedClass = classFilter.value;
-  const allOption = document.createElement('option');
-  allOption.value = 'all';
-  allOption.textContent = 'All Sections';
-  sectionFilter.appendChild(allOption);
-
-  const sections = [...new Set(results
-    .filter(r => selectedClass === 'all' || normalizeClassName(r.class) === selectedClass)
-    .map(r => extractSection(r.class))
-    .filter(Boolean))];
-
-  sections.sort();
-  sections.forEach(sec => {
-    const opt = document.createElement("option");
-    opt.value = sec;
-    opt.textContent = sec;
-    sectionFilter.appendChild(opt);
-  });
-}
-function renderQuizStatsTable(results) {
-  const tbody = document.getElementById("quizStatsBody");
-  let totalQuestions = 0;
-  let totalScoreSum = 0;
-
-  results.forEach(r => {
-    const quiz = getStudentQuiz(r.name, r.class);
-    const score = r.answers.filter((a, i) => a === quiz[i]?.answer).length;
-    totalScoreSum += score;
-    totalQuestions = quiz.length;
-  });
-
-  document.getElementById("totalStudents").textContent = results.length;
-  document.getElementById("totalQuestions").textContent = totalQuestions;
-  document.getElementById("averageScore").textContent = results.length > 0 
-    ? (totalScoreSum / results.length).toFixed(2) 
-    : "0.00";
-}
-
-function render() {
-  const searchName = nameSearch.value.toLowerCase();
-  const classVal = classFilter.value;
-  const sectionVal = sectionFilter.value;
-
-  const filteredResults = results.filter(r => {
-    const classMatch = classVal === "all" || normalizeClassName(r.class) === classVal;
-    const sectionMatch = sectionVal === "all" || extractSection(r.class) === sectionVal;
-    const dateMatch = !dateFilter.value || r.date === dateFilter.value;
-    const nameMatch = r.name.toLowerCase().includes(searchName);
-    return classMatch && sectionMatch && dateMatch && nameMatch;
-  });
-
-
-  const grouped = {};
-  filteredResults.forEach(r => {
-    const cls = normalizeClassName(r.class);
-    const sec = extractSection(r.class);
-    if (!grouped[cls]) grouped[cls] = {};
-    if (!grouped[cls][sec]) grouped[cls][sec] = [];
-    grouped[cls][sec].push(r);
-  });
-
-  const container = document.getElementById("resultsContainer");
-  container.innerHTML = "";
-  const sortedClasses = Object.keys(grouped).sort((a, b) => getClassRank(a) - getClassRank(b));
-
-  sortedClasses.forEach(cls => {
-    const classDetails = document.createElement("details");
-    classDetails.open = true;
-    classDetails.innerHTML = `<summary><strong>Class ${cls}</strong> (${Object.values(grouped[cls]).flat().length} students)</summary>`;
-
-    Object.keys(grouped[cls]).sort().forEach(section => {
-      const sectionDetails = document.createElement("details");
-      sectionDetails.style.marginLeft = "20px";
-      sectionDetails.open = true;
-
-      const sectionColor = getSectionColor(section);
-      sectionDetails.innerHTML = `
-        <summary style="color: ${sectionColor}"><strong>Section ${section}</strong> (${grouped[cls][section].length} students)</summary>
-        <table>
-          <thead><tr><th>Name</th><th>Class</th><th>Score</th><th>Date</th><th>Actions</th></tr></thead>
-          <tbody>
-            ${grouped[cls][section].sort((a, b) => a.name.localeCompare(b.name)).map(r => {
-              const quiz = getStudentQuiz(r.name, r.class);
-              const score = r.answers.filter((a, i) => a === quiz[i]?.answer).length;
-              return `<tr>
-                <td>${r.name}</td>
-                <td>${cls} <span style="color: ${sectionColor}; font-weight: bold;">(${section})</span></td>
-                <td>${score}/${quiz.length}</td>
-                <td>${r.date}</td>
-                
-                <td><button class="pdf-btn" onclick="downloadStudentPDF('${r.name}', '${r.class}')">Download</button></td>
-                
-              </tr>`;
-              
-            
-            }).join('')}
-          </tbody>
-        </table>
-
-      `;
-      classDetails.appendChild(sectionDetails);
-    });
-
-    container.appendChild(classDetails);
-  });
-}
-
-populateClassFilter();
-populateSectionFilter();
-renderQuizStatsTable(results);
-render();
-
-
-
-
-function downloadBySection(sectionName) {
-  if (!sectionName || sectionName === 'all') {
-    alert("Please select a specific section.");
-    return;
-  }
-
-  // Map for proper full class-section names
-  const classNameMap = {
-    'jss1d': 'JSS1 Dignity',
-    'jss1v': 'JSS1 Valour',
-    'jss2h': 'JSS2 Humility',
-    'jss2s': 'JSS2 Serenity',
-    'jss3e': 'JSS3 Excellence',
-    'ss1c': 'SS1 Creativity',
-    'ss1d': 'SS1 Determination',
-    'ss2g': 'SS2 Gratitude',
-    'ss2v': 'SS2 Virtuous'
-    // Add more as needed
-  }
-
-  const filteredResults = results.filter(r => {
-    const section = extractSection(r.class);
-    return section && section.toLowerCase() === sectionName.toLowerCase();
-  });
-
-  if (filteredResults.length === 0) {
-    alert(`No results found for section "${sectionName}".`);
-    return;
-  }
-
-  const fullClassKey = filteredResults[0].class.toLowerCase();
-  const fullClassName = classNameMap[fullClassKey] || `Class ${filteredResults[0].class}`;
-
-  const doc = new jsPDF();
-  const logoImg = "./logo-min.png"; // Replace with the correct path
-
-  // Header with logo and full title
-  doc.addImage(logoImg, 'PNG', 14, 10, 40, 20);
-  doc.setFontSize(16);
-  doc.setFont("helvetica");
-  doc.setTextColor(0, 51, 1);
-  doc.text(`${fullClassName} Mid Term Score Sheet`, 65, 18);
-
-  const columns = ["Name", "Class", "Score", "Date"];
-  let totalScore = 0;
-  let totalQuestions = 0;
-
-  const rows = filteredResults.map(r => {
-    const quiz = getStudentQuiz(r.name, r.class);
-    const score = r.answers.filter((a, i) => a === quiz[i]?.answer).length;
-    totalScore += score;
-    totalQuestions = quiz.length;
-    return [
-      r.name,
-      r.class,
-      `${score}/${quiz.length}`,
-      r.date || ''
-    ];
-  });
-
-  const averageScore = (totalScore / filteredResults.length).toFixed(2);
-
-  doc.autoTable({
-    startY: 40,
-    head: [columns],
-    body: rows,
-    styles: { fontSize: 11, cellPadding: 3 },
-    headStyles: { fillColor: [0, 33, 71], textColor: 255 },
-    alternateRowStyles: { fillColor: [240, 240, 240] },
-    margin: { left: 14, right: 14 },
-    didDrawPage: function (data) {
-      const pageSize = doc.internal.pageSize;
-      const pageHeight = pageSize.height || pageSize.getHeight();
-      const pageWidth = pageSize.width || pageSize.getWidth();
-      const pageNumber = doc.internal.getNumberOfPages();
-
-      // Footer
-      doc.setFontSize(10);
-      doc.setTextColor(0, 51, 1);
-      doc.text(`Page ${pageNumber}`, pageWidth - 30, pageHeight - 10);
-      doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, pageHeight - 10);
+    function normalizeKey(str = "") {
+      return str.trim().toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
     }
-  });
 
-  // Add total & average below the table
-  let summaryY = doc.lastAutoTable.finalY + 10;
-  doc.setFontSize(12);
-  doc.setTextColor(0, 51, 1);
-  doc.text(`Total Students: ${filteredResults.length}`, 14, summaryY);
-  doc.text(`Average Score: ${averageScore}/${totalQuestions}`, 80, summaryY);
-
-  doc.save(`${fullClassName.replace(/\s+/g, '_')}_Results.pdf`);
+    // 🔧 Calculate manual score helper
+    // function getManualScore(scoreObj = {}) {
+    //   return Object.values(scoreObj).reduce((sum, val) => sum + (parseFloat(val) || 0), 0);
+    // }
+// const getManualScore = (scoreObj) => {
+//   return Object.values(scoreObj || {}).reduce((sum, val) => {
+//     const num = parseFloat(val);
+//     return sum + (isNaN(num) ? 0 : num);
+//   }, 0);
+// };
+function getManualScore(scores) {
+  return Object.values(scores || {}).reduce((sum, val) => {
+    const num = parseFloat(val);
+    return sum + (!isNaN(num) ? num : 0);
+  }, 0);
 }
 
-
-
-function downloadSelectedSectionPDF() {
-  const selectedSection = document.getElementById("sectionFilter").value;
-  downloadBySection(selectedSection);
-  
-}
-
-// Download CSV using student's stored quizzes
-
-
-function downloadCSV() {
-  const searchName = document.getElementById("nameSearch").value.toLowerCase();
-  const selectedClass = document.getElementById('classFilter').value;
-  const dateFilter = document.getElementById('dateFilter')?.value || '';
-
-  const classGroups = [
-    { title: "JSS1 Dignity", keywords: ["jss1dignity", "jss1digni", "jss1dign"] },
-    { title: "JSS1 Valour", keywords: ["jss1valour", "jss1valor", "jss1valr", "jss1val"] },
-    { title: "JSS2 Humility", keywords: ["jss2humility", "jss2humili", "jss2humil", "jss2hum"] },
-    { title: "JSS2 Serenity", keywords: ["jss2serenity", "jss2sereni", "jss2seren"] },
-    { title: "JSS3 Excellence", keywords: ["jss3excellence", "jss3excel", "jss3exc"] },
-    { title: "SS1 Creativity", keywords: ["ss1creativity", "ss1creativ", "ss1crtv","c"] },
-    { title: "SS1 Determination", keywords: ["ss1determination", "ss1determin", "ss1detr"] },
-    { title: "SS2 Gratitude", keywords: ["ss2gratitude", "ss2grati", "ss2grt"] },
-    { title: "SS2 Virtuous", keywords: ["ss2virtuous", "ss2virtue", "ss2virt"] }
-  ];
-
-  const normalize = str => (str || "").toLowerCase().replace(/\s+/g, '');
-
-  function classMatches(studentClass, selectedGroup) {
-    if (selectedGroup === "all") return true;
-    const studentNorm = normalize(studentClass);
-    const selectedNorm = normalize(selectedGroup);
-
-    const selectedGroupObj = classGroups.find(group =>
-      group.title.toLowerCase() === selectedNorm
-    );
-
-    if (!selectedGroupObj) return false;
-
-    return selectedGroupObj.keywords.some(kw => studentNorm.includes(kw));
-  }
-
-  const filteredResults = results.filter(r => {
-    const classMatch = classMatches(r.class, selectedClass);
-    const dateMatch = !dateFilter || r.date === dateFilter;
-    const nameMatch = r.name.toLowerCase().includes(searchName);
-    return classMatch && dateMatch && nameMatch;
-  });
-
-  if (filteredResults.length === 0) {
-    alert("No results found for the selected filters.");
-    return;
-  }
-
-  const grouped = {};
-  filteredResults.forEach(r => {
-    const normClass = normalize(r.class);
-    let key = "Other";
-
-    const matchedGroup = classGroups.find(group =>
-      group.keywords.some(kw => normClass.includes(kw))
-    );
-
-    key = matchedGroup ? matchedGroup.title : (r.class || "Unknown Class");
-
-    if (!grouped[key]) grouped[key] = [];
-    grouped[key].push(r);
-  });
-
-  const rows = [];
-
-  for (const classGroup in grouped) {
-    rows.push([`Class Group: ${classGroup}`, '', '', '', '', '']);
-    rows.push(["#", "Name", "Class", "Score", "Date", "Time"]);
-
-    grouped[classGroup]
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .forEach((r, index) => {
-        const quiz = getStudentQuiz(r.name, r.class);
-
-        let score = 0;
-        let total = 0;
-
-        if (quiz && quiz.length > 0) {
-          total = quiz.length;
-          score = r.answers.reduce((acc, ans, i) => {
-            return acc + (ans.trim().toLowerCase() === quiz[i]?.answer?.trim().toLowerCase() ? 1 : 0);
-          }, 0);
-        }
-
-        const scoreStr = total > 0 ? `${score}/${total}` : "N/A";
-
-        rows.push([
-          index + 1,
-          r.name,
-          r.class,
-          scoreStr,
-          r.date || "",
-          r.time || ""
-        ]);
-      });
-
-    rows.push(['', '', '', '', '', '']);
-  }
-
-  const csvContent = rows.map(row =>
-    row.map(cell => `"${cell.toString().replace(/"/g, '""')}"`).join(",")
-  ).join("\n");
-
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "quiz_results.csv";
-  link.click();
-}
-
-
-async function downloadStudentPDF(name, cls) {
-  const key = `${name.toLowerCase()}_${cls.toLowerCase()}`;
-  const studentData = results.find(r =>
-    r.name.toLowerCase() === name.toLowerCase() &&
-    r.class.toLowerCase() === cls.toLowerCase()
-  );
-  const quiz = getStudentQuiz(name, cls);
-
-  if (!studentData || !quiz.length) {
-    alert("Quiz data not found for this student.");
-    return;
-  }
-
-  const pdf = new jsPDF();
-  const logoUrl = './logo-min.png';
-  const imgWidth = 40;
-  const imgHeight = 20;
-
-  const image = new Image();
-  image.src = logoUrl;
-image.onload = () => {
-  // Header background (height increased a bit too)
-  pdf.setFillColor(255, 255, 255);
-  pdf.rect(0, 0, 210, 36, 'F'); // increase height from 30 to 36
-
-  // Draw logo (shifted down)
-  pdf.addImage(image, 'PNG', 10, 14, imgWidth, imgHeight); // y: 14
-
-  // Title (shifted down)
-  pdf.setFont("helvetica", "bold");
-  pdf.setTextColor(255, 140, 0);
-  pdf.setFontSize(20);
-  pdf.text("TECHXAGON", 105, 20, { align: "center" }); // y: 20
-
-  pdf.setFont("helvetica", "normal");
-  pdf.setTextColor(0, 51, 1);
-  pdf.setFontSize(16);
-  pdf.text("MID-TERM SCORE SHEET", 105, 27, { align: "center" }); // y: 27
-
-  // Student info (also shifted slightly to match)
-  pdf.setFontSize(12);
-  pdf.setTextColor(0);
-  pdf.text(`Name: ${studentData.name}`, 14, 44);
-  pdf.text(`Class: ${studentData.class}`, 14, 51);
-  pdf.text(`Date: ${studentData.date}`, 14, 58);
-
-
-    // Score calculation and top-right display
-    const answers = studentData.answers || [];
-    let score = 0;
-
-    const body = quiz.map((q, i) => {
-      const studentAnswer = answers[i] || "—";
-      const correctAnswer = q.answer || "—";
-      const isCorrect = studentAnswer.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
-      if (isCorrect) score++;
-
-      return [
-        { content: `${i + 1}` },
-        { content: q.question || `Q${i + 1}` },
-        {
-          content: studentAnswer,
-          styles: {
-            textColor: isCorrect ? [0, 128, 0] : [200, 0, 0],
-            fontStyle: isCorrect ? 'light' : 'normal'
-          }
-        },
-        {
-          content: correctAnswer,
-          styles: {
-            textColor: [0, 0, 0]
-          }
-        }
-      ];
-    });
-
-    const scoreText = `Score: ${score}/${quiz.length} (${((score / quiz.length) * 100).toFixed(1)}%)`;
-    pdf.setFontSize(12);
-    pdf.text(scoreText, 210 - pdf.getTextWidth(scoreText) - 14, 58); // right-align
-
-    // Table with color-coded answers
-    pdf.autoTable({
-      startY: 62,
-      head: [["#", "Question", "Student's Answer", "Correct Answer"]],
-      body: body,
-      styles: {
-        fontSize: 11,
-        cellPadding: { top: 4, right: 3, bottom: 4, left: 3 }
-      },
-      headStyles: {
-        fillColor: [0, 33, 71],
-        textColor: [255, 255, 255],
-        fontStyle: 'bold',
-        halign: 'center'
-      },
-      alternateRowStyles: { fillColor: [245, 245, 245] },
-      columnStyles: {
-        0: { cellWidth: 15 },
-        1: { cellWidth: 80 },
-        2: { cellWidth: 48 },
-        3: { cellWidth: 48 }
-      },
-      margin: { left: 10, right: 10 }
-    });
-
-    // Footer
-    const pageHeight = pdf.internal.pageSize.height;
-    pdf.setFontSize(10);
-    pdf.setTextColor(100);
-    pdf.text("© " + new Date().getFullYear() + " Techxagon Academy. All rights reserved.", 105, pageHeight - 10, { align: "center" });
-
-    // Save file
-    pdf.save(`${studentData.name}_${studentData.class}_result.pdf`);
-  };
-}
-
-
-
-
-// async function downloadAllResults() {
-//   const pdf = new jsPDF();
-//   const logoUrl = './logo-min.png';
-//   const selectedClass = document.getElementById('classFilter').value;
-
-//   const imgWidth = 40;
-//   const imgHeight = 20;
-
-//   const classGroups = [
-//     { title: "JSS1 Dignity", keywords: ["jss1dignity", "jss1-dignity","jss1d","jss1"] },
-//     { title: "JSS1 Valour", keywords: ["jss1valour", "jss1-valor", "jss1valor","jss1v","jss1"] },
-//     { title: "JSS2 Humility", keywords: ["jss2humility","jss2h","jss2"] },
-//     { title: "JSS2 Serenity", keywords: ["jss2serenity","jss2s","jss2"] },
-//     { title: "JSS3 Excellence", keywords: ["jss3excellence","jss3e","jss3"] },
-//     { title: "SS1 Creativity", keywords: ["ss1creativity","ss1creativi","ss1c"] },
-//     { title: "SS1 Determination", keywords: ["ss1determination","ss1d"] },
-//     { title: "SS2 Gratitude", keywords: ["ss2gratitude","ss2g"] },
-//     { title: "SS2 Virtuous", keywords: ["ss2virtuous","ss2v"] }
-//   ];
-
-//   const normalize = str => (str || "").toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
-
-//   function classMatches(studentClass, selectedGroup) {
-//     const normStudentClass = normalize(studentClass);
-//     const normSelected = normalize(selectedGroup);
-//     return classGroups.some(group => {
-//       return group.keywords.includes(normStudentClass) && group.title.toLowerCase().includes(normSelected);
-//     });
-//   }
-
-//   const filtered = selectedClass === "all"
-//     ? results
-//     : results.filter(r => {
-//         const normStudentClass = normalize(r.class);
-//         return classGroups.some(group =>
-//           group.keywords.includes(normStudentClass) &&
-//           normalize(group.title).includes(normalize(selectedClass))
-//         );
-//       });
-
-//   if (filtered.length === 0) {
-//     alert("No results found for this class.");
-//     return;
-//   }
-
-//   const image = new Image();
-//   image.src = logoUrl;
-//   image.onload = () => {
-//     pdf.addImage(image, 'PNG', 10, 10, imgWidth, imgHeight);
-//     pdf.setFontSize(16);
-//     pdf.setTextColor(0, 51, 1);
-//     const reportTitle = selectedClass === "all" ? "Lina Teresa Students Mid-Term Score Sheet" : selectedClass;
-//     pdf.text(reportTitle, 60, 20);
-
-//     let y = 40;
-//     let overallTotal = 0;
-
-//     classGroups.forEach(group => {
-//       const groupStudents = filtered.filter(r =>
-//         group.keywords.includes(normalize(r.class))
-//       );
-
-//       if (groupStudents.length === 0) return;
-
-//       if (y > 240) {
-//         pdf.addPage();
-//         y = 20;
-//       }
-
-//       pdf.setFontSize(12);
-//       pdf.setTextColor(0, 51, 102);
-//       pdf.text(`${group.title} (${groupStudents.length} Students)`, 10, y);
-//       y += 6;
-
-//       pdf.setDrawColor(0);
-//       pdf.setFillColor(0, 33, 71);
-//       pdf.rect(10, y, 190, 10, 'F');
-//       pdf.setTextColor(255, 255, 255);
-//       pdf.setFontSize(11);
-//       pdf.text("No", 12, y + 7);
-//       pdf.text("Name", 25, y + 7);
-//       pdf.text("Class", 100, y + 7);
-//       pdf.text("Score", 170, y + 7);
-//       y += 12;
-
-//       let totalScore = 0;
-//       let totalPossible = 0;
-
-//       groupStudents.forEach((r, i) => {
-//         if (y > 270) {
-//           pdf.addPage();
-//           y = 20;
-//         }
-
-//         if (i % 2 === 0) {
-//           pdf.setFillColor(245, 245, 245);
-//           pdf.rect(10, y - 1, 190, 8, 'F');
-//         }
-
-//         const quiz = getStudentQuiz(r.name, r.class);
-//         let score = 0;
-//         let total = 0;
-
-//         if (quiz && Array.isArray(quiz) && quiz.length > 0) {
-//           total = quiz.length;
-//           score = r.answers.reduce((acc, ans, idx) => {
-//             const correct = quiz[idx]?.answer || "";
-//             return acc + (ans?.trim().toLowerCase() === correct.trim().toLowerCase() ? 1 : 0);
-//           }, 0);
-//         }
-
-//         const scoreStr = total > 0 ? `${score}/${total}` : "N/A";
-//         totalScore += score;
-//         totalPossible += total;
-
-//         pdf.setTextColor(0, 0, 0);
-//         pdf.text(`${i + 1}`, 12, y + 5);
-//         pdf.text(`${r.name}`, 25, y + 5);
-//         pdf.text(`${r.class}`, 100, y + 5);
-//         pdf.text(scoreStr, 170, y + 5);
-//         y += 10;
-//       });
-
-//       y += 4;
-//       const avgScore = totalPossible > 0 ? `${(totalScore / totalPossible * 100).toFixed(1)}%` : "N/A";
-//       if (y > 270) {
-//         pdf.addPage();
-//         y = 20;
-//       }
-//       pdf.setFontSize(11);
-//       pdf.setTextColor(0, 100, 0);
-//       pdf.text(`Total: ${groupStudents.length} students`, 25, y);
-//       pdf.text(`Average Score: ${avgScore}`, 100, y);
-//       y += 20;
-
-//       overallTotal += groupStudents.length;
-//     });
-
-//     if (y > 270) {
-//       pdf.addPage();
-//       y = 20;
-//     }
-
-//     const date = new Date().toLocaleDateString();
-//     pdf.setTextColor(100);
-//     pdf.setFontSize(12);
-//     pdf.text(`Report generated on: ${date}`, 10, y);
-//     pdf.text(`Total students: ${overallTotal}`, 150, y);
-
-//     const filename = selectedClass === "all" ? "All_Results" : selectedClass.replace(/\s+/g, "_");
-//     pdf.save(`${filename}_Results.pdf`);
-//   };
-// }
-
-async function downloadAllResults() {
-  const pdf = new jsPDF();
-  const logoUrl = './logo-min.png';
-  const selectedClass = document.getElementById('classFilter').value;
-
-  const imgWidth = 40;
-  const imgHeight = 20;
-
-  // Normalize input to only two class titles
-  function normalizeClass(str) {
-    const s = (str || "").replace(/\s+/g, "").toLowerCase();
-    if (["jss1valor", "jss1valour", "jss1v"].includes(s)) return "JSS1 Valour";
-    if (["jss1dignity", "jss1d"].includes(s)) return "JSS1 Dignity";
-    if (["jss2humility", "jss2h"].includes(s)) return "JSS2 Humility";  
-    if (["jss2serenity", "jss2s"].includes(s)) return "JSS2 Serenity";
-    if (["jss3excellence", "jss3e"].includes(s)) return "JSS3 Excellence";
-    if (["ss1creativity", "ss1c"].includes(s)) return "SS1 Creativity";
-    if (["ss1determination", "ss1d"].includes(s)) return "SS1 Determination";
-    if (["ss2gratitude", "SS2g"].includes(s)) return "SS2 Gratitude";
-     if (["SS2virtuous", "ss2v"].includes(s)) return "SS2 Virtuous";
-    return null; // exclude others
-  }
-
-  const filtered = selectedClass === "all"
-    ? results.filter(r => normalizeClass(r.class))
-    : results.filter(r => normalizeClass(r.class) === selectedClass);
-
-  if (filtered.length === 0) {
-    alert("No results found for this class.");
-    return;
-  }
-
-  // Group results by normalized class
-  const grouped = {};
-  filtered.forEach(r => {
-    const norm = normalizeClass(r.class);
-    if (!grouped[norm]) grouped[norm] = [];
-    grouped[norm].push(r);
-  });
-
-  const image = new Image();
-  image.src = logoUrl;
-
-  image.onload = () => {
-    let firstPage = true;
-    let overallTotal = 0;
-
-    for (const [groupTitle, groupStudents] of Object.entries(grouped)) {
-      if (!firstPage) pdf.addPage();
-      firstPage = false;
-
-      // Header
-      pdf.addImage(image, 'PNG', 10, 10, imgWidth, imgHeight);
-      pdf.setFontSize(16);
-      pdf.setTextColor(0, 51, 1);
-      pdf.text(groupTitle + " Mid-Term Score Sheet", 60, 20);
-
-      let y = 40;
-      pdf.setFontSize(12);
-      pdf.setTextColor(0, 51, 102);
-      pdf.text(`${groupTitle} (${groupStudents.length} Students)`, 10, y);
-      y += 6;
-
-      pdf.setDrawColor(0);
-      pdf.setFillColor(0, 33, 71);
-      pdf.rect(10, y, 190, 10, 'F');
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(11);
-      pdf.text("No", 12, y + 7);
-      pdf.text("Name", 25, y + 7);
-      pdf.text("Class", 100, y + 7);
-      pdf.text("Score", 170, y + 7);
-      y += 12;
-
-      let totalScore = 0;
-      let totalPossible = 0;
-
-      groupStudents.forEach((r, i) => {
-        if (y > 270) {
-          pdf.addPage();
-          y = 20;
-        }
-
-        if (i % 2 === 0) {
-          pdf.setFillColor(245, 245, 245);
-          pdf.rect(10, y - 1, 190, 8, 'F');
-        }
-
-        const quiz = getStudentQuiz(r.name, r.class);
-        let score = 0;
-        let total = 0;
-
-        if (quiz && Array.isArray(quiz) && quiz.length > 0) {
-          total = quiz.length;
-          score = r.answers.reduce((acc, ans, idx) => {
-            const correct = quiz[idx]?.answer || "";
-            return acc + (ans?.trim().toLowerCase() === correct.trim().toLowerCase() ? 1 : 0);
-          }, 0);
-        }
-
-        const scoreStr = total > 0 ? `${score}/${total}` : "N/A";
-        totalScore += score;
-        totalPossible += total;
-
-        pdf.setTextColor(0, 0, 0);
-        pdf.text(`${i + 1}`, 12, y + 5);
-        pdf.text(`${r.name}`, 25, y + 5);
-        pdf.text(`${r.class}`, 100, y + 5);
-        pdf.text(scoreStr, 170, y + 5);
-        y += 10;
-      });
-
-      const avgScore = totalPossible > 0 ? `${(totalScore / totalPossible * 100).toFixed(1)}%` : "N/A";
-      if (y > 260) {
-        pdf.addPage();
-        y = 20;
+    // Theme toggle
+    const modeToggle = document.getElementById("theme-toggle");
+    modeToggle.onclick = () => {
+      document.body.classList.toggle("dark");
+      modeToggle.textContent = document.body.classList.contains("dark") ? "🌙" : "🌞";
+    };
+    // if (localStorage.getItem("adminLoggedIn") !== "yes") {
+    //       window.location.href = "login.html";
+    //     }
+    document.addEventListener("DOMContentLoaded", async () => {
+      const container = document.getElementById("admin-panel");
+      const summary = document.getElementById("summary");
+      const classFilter = document.getElementById("classFilter");
+      const sectionFilter = document.getElementById("sectionFilter");
+      const searchInput = document.getElementById("searchInput");
+
+      let questions = [];
+      try {
+        questions = await fetch("questions.json").then(res => res.json());
+      } catch (err) {
+        container.innerHTML = "<p>Failed to load questions.json</p>";
+        console.error(err);
+        return;
       }
 
-      pdf.setFontSize(11);
-      pdf.setTextColor(0, 100, 0);
-      pdf.text(`Total: ${groupStudents.length} students`, 25, y);
-      pdf.text(`Average Score: ${avgScore}`, 100, y);
-      y += 20;
+      let results = JSON.parse(localStorage.getItem("quizResults") || "[]");
 
-      overallTotal += groupStudents.length;
+      // Ensure uniqueness by combining name, class, and date
+      const seen = new Set();
+      results = results.filter(r => {
+        const key = `${r.name.toLowerCase()}|${r.class.toLowerCase()}|${r.date}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      window.results = results;
+      function normalizeClassSection(input = "") {
+        const raw = (input || "")
+          .toLowerCase()
+          .replace(/\s+/g, '')     // remove all spaces
+          .replace(/[^a-z0-9]/g, ''); // remove non-alphanumerics
+
+        const sectionCorrections = {
+          dignity: ["d", "dignity"],
+          valor: ["v", "valour", "valor"],
+          humility: ["h", "humility"],
+          serenity: ["s", "serenity"],
+          excellence: ["e", "excellence"],
+          creativity: ["c", "creativity", "creativi", "creativ"],
+          determination: ["de", "determination", "detemination", "determin"],
+          gratitude: [
+            "g", "gratitude", "gratitutde", "grdtitude", "gratitide", "gradtitude", "gratitdude",
+            "grdtitutde", "gratitute", "grdtude", "gratitud", "graditud"
+          ],
+          virtuous: ["vir", "virtue", "virtuous", "virtos"],
+          chastity: ["chas", "chast", "chastity", "chaste"]
+        };
+
+        const classMap = {
+          jss1: "JSS1",
+          jss2: "JSS2",
+          jss3: "JSS3",
+          ss1: "SS1",
+          ss2: "SS2",
+          ss3: "SS3"
+        };
+
+        let classKey = "UNKNOWN";
+        let sectionKey = "Unknown";
+
+        for (let key in classMap) {
+          if (raw.includes(key)) {
+            classKey = classMap[key];
+            break;
+          }
+        }
+
+        for (let section in sectionCorrections) {
+          if (sectionCorrections[section].some(alt => raw.includes(alt))) {
+            sectionKey = capitalize(section);
+            break;
+          }
+        }
+
+        return {
+          classKey,
+          section: sectionKey,
+          classFull: `${classKey} ${capitalize(sectionKey)}`
+        };
+      }
+
+
+      function capitalize(s = "") {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+      }
+      const sectionColors = {
+        "JSS1 Dignity": "#D0E6A5",
+        "JSS1 Valor": "#FFDD94",
+        "JSS2 Humility": "#FCAB64",
+        "JSS2 Serenity": "#ACD8AA",
+        "JSS3 Excellence": "#FFD3B5",
+        "SS1 Creativity": "#FFAAA6",
+        "SS1 Determination": "#B5EAD7",
+        "SS2 Gratitude": "#C7CEEA",
+        "SS2 Virtuous": "#FFDAC1",
+        "SS3 Chastity": "#E2F0CB"
+      };
+
+      function groupAndSortResults(results) {
+        const classOrder = ["JSS1", "JSS2", "JSS3", "SS1", "SS2", "SS3"];
+        const grouped = {};
+
+        results.forEach(r => {
+          const { classKey, section } = normalizeClassSection(r.class);
+          if (!grouped[classKey]) grouped[classKey] = {};
+          if (!grouped[classKey][section]) grouped[classKey][section] = [];
+          grouped[classKey][section].push(r);
+        });
+
+        // Sort students by name inside each section
+        for (let cls in grouped) {
+          for (let sec in grouped[cls]) {
+            grouped[cls][sec].sort((a, b) => a.name.localeCompare(b.name));
+          }
+        }
+
+        // Flatten the grouped object into a sorted array
+        const sorted = [];
+        classOrder.forEach(cls => {
+          if (grouped[cls]) {
+            Object.keys(grouped[cls]).sort().forEach(sec => {
+              sorted.push(...grouped[cls][sec]);
+            });
+          }
+        });
+
+        return sorted;
+      }
+
+      // === Apply Grouping & Render ===
+      results = groupAndSortResults(results);
+      // renderResults(results);
+      renderGroupedResultsWithCounts(results);
+
+      updateSummary(results);
+
+      function normalize(str = "") {
+        return str.toLowerCase()
+          .replace(/\s+/g, '')
+          .replace(/[^a-z0-9]/g, '')
+          .replace(/[^a-z0-9]/g, '')                 // remove special chars
+          .replace(/^jsss/, 'jss')                   // fix overtyped jsss
+          .replace(/^sss/, 'ss')                     // fix sss → ss
+          .replace('gradtitude', 'gratitude', 'Gradtitutde')        // typo fix
+          .replace('detemination', 'determination');
+      }
+
+      function normalizeClassName(classStr = "") {
+        const clean = classStr.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+
+        // Map common patterns to standard form
+        if (clean.startsWith("jss1")) return "jss1";
+        if (clean.startsWith("jss2")) return "jss2";
+        if (clean.startsWith("jss3")) return "jss3";
+        if (clean.startsWith("ss1")) return "ss1";
+        if (clean.startsWith("ss2")) return "ss2";
+        if (clean.startsWith("ss3")) return "ss3";
+        return clean;
+      }
+
+
+     
+      function escapeHTML(str = "") {
+        const div = document.createElement("div");
+        div.textContent = str;
+        return div.innerHTML;
+      }
+      function keyToTitle(key) {
+        return key.charAt(0).toUpperCase() + key.slice(1);
+      }
+
+      function groupByClassAndSection(results) {
+        const grouped = {};
+
+        results.forEach(r => {
+          const { classKey, section } = normalizeClassSection(r.class);
+          if (!grouped[classKey]) grouped[classKey] = {};
+          if (!grouped[classKey][section]) grouped[classKey][section] = [];
+          grouped[classKey][section].push(r);
+        });
+
+        return grouped;
+      }
+
+
+      // ✅ Render each student
+      function renderStudentBox(r) {
+        const subjScores = r.subjScores || {};
+        const theoryScores = r.theoryScores || {};
+        const manualScore = getManualScore(subjScores) + getManualScore(theoryScores);
+        const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+
+        const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+        // const mcq = shuffled.filter(q => q.type === "mcq").slice(0, 18);
+        const mcq = shuffled.filter(q => q.type === "mcq");
+
+
+
+        let mcqScore = 0;
+        (r.answers || []).forEach((ans, i) => {
+          if (mcq[i] && mcq[i].answer === ans) mcqScore++;
+        });
+
+        const totalScore = mcqScore + manualScore;
+
+        return `
+    <details class="student-box" data-key="${key}" open>
+      <summary><strong>${r.name} (${r.class})</strong> — <em>${r.date}</em></summary>
+      <div class="student-info">
+        <p><strong>MCQ Score:</strong> <span class="mcq-score">${mcqScore}</span> / ${mcq.length}</p>
+        <p><strong>Manual Score:</strong> <span class="manual-score">${manualScore}</span></p>
+        <p><strong>Total Score:</strong> <span class="total-score">${totalScore}</span></p>
+      </div>
+
+      <div class="table-responsive">
+        <table class="mcq-table">
+          <thead><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th></tr></thead>
+          <tbody>
+            ${mcq.map((q, i) => `
+          
+             
+              <tr>
+                <td><strong>Q${i + 1}:</strong> ${escapeHTML(q.question || "Unknown")}</td>
+                <td>${escapeHTML(r.answers?.[i] || "None")}</td>
+                <td style="color:green">${escapeHTML(q.answer || "?")}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <label>Subjective Scores:</label>
+        ${Object.entries(r.subjective || {}).map(([id, ans]) => `
+          <div>
+            <textarea readonly rows="2">${ans}</textarea>
+            <input type="number" min="0" max="10" value="${subjScores[id] || 0}"
+              data-type="subj" data-id="${id}">
+          </div>`).join("")}
+
+        <label>Theory Scores:</label>
+        ${Object.entries(r.theory || {}).map(([id, ans]) => `
+          <div>
+            <textarea readonly rows="2">${ans}</textarea>
+            <input type="number" min="0" max="10" value="${theoryScores[id] || 0}"
+              data-type="theory" data-id="${id}">
+          </div>`).join("")}
+        <button class="update-btn">Update Score</button>
+      </div>
+    </details>
+  `;
+      }
+
+      // ✅ Update manual score
+      function updateManualScore(container) {
+        const key = container.dataset.key;
+        const [nameKey, classKey] = key.split("_");
+        const results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+        const student = results.find(r =>
+          `${r.name.toLowerCase()}_${r.class.toLowerCase()}` === key
+        );
+
+
+        if (!student) return showToast("❌ Student record not found");
+
+        const subjScores = {};
+        const theoryScores = {};
+
+        container.querySelectorAll("input[data-type='subj']").forEach(input => {
+          // subjScores[input.dataset.id] = parseFloat(input.value || 0);
+          const val = parseFloat(input.value);
+subjScores[input.dataset.id] = isNaN(val) ? 0 : val;
+
+        });
+        container.querySelectorAll("input[data-type='theory']").forEach(input => {
+          const val = parseFloat(input.value);
+ theoryScores[input.dataset.id] = isNaN(val) ? 0 : val;
+
+        });
+
+        student.subjScores = subjScores;
+        student.theoryScores = theoryScores;
+
+        // Update score and save
+        const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+        const mcq = shuffled.filter(q => q.type === "mcq").slice(0, 18);
+
+        let mcqScore = 0;
+        (student.answers || []).forEach((ans, i) => {
+          if (mcq[i] && mcq[i].answer === ans) mcqScore++;
+        });
+
+        const manualScore = getManualScore(subjScores) + getManualScore(theoryScores);
+        const totalScore = mcqScore + manualScore;
+
+        student.score = mcqScore;
+student.totalScore = totalScore;
+
+localStorage.setItem("quizResults", JSON.stringify(results));
+
+
+        // Re-render the updated student box
+        const newHTML = renderStudentBox(student);
+        container.outerHTML = newHTML;
+        showToast("✅ Score updated");
+
+        // Rebind event listener
+        setTimeout(() => bindUpdateButtons(), 100);
+      }
+
+      // ✅ Toast
+      function showToast(msg) {
+        let toast = document.getElementById("toast");
+        if (!toast) {
+          toast = document.createElement("div");
+          toast.id = "toast";
+          toast.style.position = "fixed";
+          toast.style.bottom = "20px";
+          toast.style.left = "50%";
+          toast.style.transform = "translateX(-50%)";
+          toast.style.background = "#333";
+          toast.style.color = "#fff";
+          toast.style.padding = "10px 20px";
+          toast.style.borderRadius = "5px";
+          toast.style.zIndex = "9999";
+          document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.display = "block";
+        setTimeout(() => toast.style.display = "none", 2000);
+      }
+
+      // ✅ Bind update buttons
+      function bindUpdateButtons() {
+        document.querySelectorAll(".update-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const box = btn.closest(".student-box");
+            updateManualScore(box);
+          });
+        });
+      }
+
+      // ✅ Load and render all student results
+      document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById("admin-panel") || document.body;
+        const results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+        container.innerHTML = results.map(renderStudentBox).join("");
+        bindUpdateButtons();
+      });
+
+      window.deleteStudent = function (key) {
+        const confirmDelete = confirm("Are you sure you want to delete this student's result?");
+        if (!confirmDelete) return;
+
+        let results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+        // Filter out the student by key
+        results = results.filter(r => {
+          const resultKey = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+          return resultKey !== key;
+        });
+
+        // Save updated results
+        localStorage.setItem("quizResults", JSON.stringify(results));
+
+        // Re-render
+        renderGroupedResultsWithCounts(results);  // Make sure this function is available
+        updateSummary(results);         // Optional: update summary if you have one
+      }
+
+
+
+      function renderGroupedResultsWithCounts(results) {
+        const grouped = groupByClassAndSection(results);
+        const container = document.getElementById("admin-panel")
+        container.innerHTML = "";
+
+        const classOrder = ["JSS1", "JSS2", "JSS3", "SS1", "SS2", "SS3"];
+        classOrder.forEach(cls => {
+          const sections = grouped[cls];
+          if (sections) {
+            let totalClassCount = 0;
+            const classDiv = document.createElement("div");
+            classDiv.innerHTML = `<h2>${cls}</h2>`;
+
+            Object.entries(sections).sort().forEach(([section, students]) => {
+              totalClassCount += students.length;
+              const color = sectionColors[`${cls} ${section}`] || "#f0f0f0";
+              const sectionDiv = document.createElement("div");
+              sectionDiv.style.background = color;
+              sectionDiv.style.padding = "10px";
+              sectionDiv.style.margin = "5px 0";
+              sectionDiv.style.border = "1px solid #ccc";
+              sectionDiv.innerHTML = `<h3>${section} (${students.length} students)</h3>`;
+
+              students.forEach(student => {
+                sectionDiv.innerHTML += renderStudentBox(student);
+              });
+
+              classDiv.appendChild(sectionDiv);
+            });
+
+            // Append total next to the class title
+            const header = classDiv.querySelector("h2");
+            header.innerHTML = `${cls} <span style="font-size: 14px; color: #666;">(${totalClassCount} students)</span>`;
+
+            container.appendChild(classDiv);
+          }
+        });
+      }
+
+      function updateSummary(data) {
+        const totalStudents = data.length;
+        const totalQuestions = questions.length;
+        const avgScore = (data.reduce((sum, r) => sum + (r.score || 0) + getManualScore(r.subjScores) + getManualScore(r.theoryScores), 0) / totalStudents).toFixed(1);
+
+        summary.innerHTML = `
+    <div class="summary">
+      <p>Total Students: ${totalStudents}</p>
+      <p>Average Score: ${avgScore}</p>
+      <p>Total Questions: ${totalQuestions}</p>
+      </div>
+    `;
+      }
+      function getFullClassNameFromSection(sectionInput) {
+        const section = normalize(sectionInput);
+        const map = {
+          dignity: 'JSS1 Dignity',
+          valor: 'JSS1 Valor',
+          humility: 'JSS2 Humility',
+          serenity: 'JSS2 Serenity',
+          excellence: 'JSS3 Excellence',
+          creativity: 'SS1 Creativity',
+          determination: 'SS1 Determination',
+          gratitude: 'SS2 Gratitude',
+          virtuous: 'SS2 Virtuous'
+
+          // Add more mappings as needed
+        };
+
+        // Try direct match
+        for (const key in map) {
+          if (section.includes(key)) return map[key];
+        }
+
+        // Fallback
+        return `Section: ${sectionInput}`;
+      }
+
+      function applyFilters() {
+        const classVal = normalize(classFilter.value);    // e.g., ss1
+        const sectionVal = normalize(sectionFilter.value); // e.g., dignity
+        const searchVal = normalize(searchInput.value);   // e.g., john
+
+        const filtered = results.filter(r => {
+          const fullClass = normalize(r.class);           // e.g., ss1dignity, ss1creativity
+          const name = normalize(r.name);                 // e.g., john
+
+          const classMatch = classVal ? fullClass.startsWith(classVal) : true;
+
+          let sectionMatch = true;
+          if (sectionVal) {
+            // Match if section keyword exists anywhere in class string
+            sectionMatch = fullClass.includes(sectionVal);
+          }
+
+          const searchMatch = !searchVal || name.includes(searchVal);
+
+          return classMatch && sectionMatch && searchMatch;
+        });
+
+        renderGroupedResultsWithCounts(filtered);
+        updateSummary(filtered);
+      }
+
+
+
+
+
+      classFilter.oninput = sectionFilter.oninput = searchInput.oninput = applyFilters;
+      // renderResults(results);
+      renderGroupedResultsWithCounts(results);
+
+      updateSummary(results);
+
+      document.querySelectorAll(".score-input").forEach(input => {
+        input.addEventListener("input", () => {
+          const index = +input.dataset.index;
+          const id = input.dataset.id;
+          const type = input.dataset.type;
+          const val = parseInt(input.value) || 0;
+
+          if (!results[index][`${type}Scores`]) results[index][`${type}Scores`] = {};
+          results[index][`${type}Scores`][id] = val;
+
+          const subjScores = results[index].subjScores || {};
+          const theoryScores = results[index].theoryScores || {};
+          const manual = getManualScore(subjScores) + getManualScore(theoryScores);
+          const total = (results[index].score || 0) + manual;
+
+          document.getElementById(`manual-${index}`).textContent = manual;
+          document.getElementById(`total-${index}`).textContent = total;
+
+          localStorage.setItem("quizResults", JSON.stringify(results));
+        });
+      });
+      // Export results by class
+      document.getElementById("download-by-class").onclick = () => {
+        const classVal = normalize(classFilter.value);
+        if (!classVal) return alert("Please enter a class name to filter and download.");
+
+        const filtered = results.filter(r =>
+          normalize(r.class).startsWith(classVal)
+        );
+
+        if (!filtered.length) return alert("No results found for that class.");
+
+        exportToPDF(filtered, `results_by_class_${classVal}.pdf`);
+      };
+
+      // Export results by section
+      document.getElementById("download-by-section").onclick = () => {
+        const sectionVal = normalize(sectionFilter.value);
+        if (!sectionVal) return alert("Please enter a section name.");
+
+        const filtered = results.filter(r => normalize(r.class).includes(sectionVal));
+        if (!filtered.length) return alert("No results found for that section.");
+
+        const fullClassTitle = getFullClassNameFromSection(sectionFilter.value.trim());
+
+        exportToPDF(filtered, `results_by_${sectionVal}.pdf`, fullClassTitle);
+      };
+
+
+      window.downloadIndividualPDF = (index) => {
+        const r = results[index];
+        const logo = new Image();
+        logo.src = 'logo-min.png';
+        logo.onload = () => {
+          const doc = new jspdf.jsPDF();
+
+          const schoolFooter = "© Your School Name - All Rights Reserved";
+
+          const addFooter = () => {
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+              doc.setPage(i);
+              const pageHeight = doc.internal.pageSize.height;
+              doc.setFontSize(9);
+              doc.setTextColor(150);
+              doc.text(schoolFooter, 10, pageHeight - 10);
+              doc.text(`Page ${i} of ${pageCount}`, 180, pageHeight - 10, { align: "right" });
+            }
+          };
+
+          doc.addImage(logo, 'PNG', 10, 10, 30, 15);
+          doc.setFontSize(14);
+          doc.text(`Name: ${r.name}`, 10, 30);
+          doc.text(`Class: ${r.class}`, 10, 38);
+          doc.text(`Date: ${r.date}`, 10, 46);
+
+          const subjScore = getManualScore(r.subjScores || {});
+          const theoryScore = getManualScore(r.theoryScores || {});
+          const mcqScore = typeof r.score === "number" ? r.score : 0;
+const total = typeof r.totalScore === "number" ? r.totalScore : (mcqScore + subjScore + theoryScore);
+
+
+          doc.setFontSize(12);
+          doc.text(`MCQ Score: ${mcqscore}`, 10, 56);
+          doc.text(`Manual Score: ${subjScore + theoryScore}`, 10, 64);
+          doc.text(`Total Score: ${total}`, 10, 72);
+
+          const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+          const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+          const mcq = shuffled.filter(q => q.type === "mcq");
+
+          const mcqData = mcq.map((q, i) => {
+            const studentAns = r.answers[i] || "None";
+            return [
+              `Q${i + 1}: ${q.question || 'Unknown'}`,
+              studentAns,
+              q.answer || '?'
+            ];
+          });
+
+          doc.autoTable({
+            startY: 80,
+            head: [["Question", "Your Answer", "Correct Answer"]],
+            body: mcqData,
+            styles: { fontSize: 9, cellPadding: 3 },
+            headStyles: { fillColor: [41, 128, 185], textColor: 255, halign: 'center' },
+            alternateRowStyles: { fillColor: [240, 240, 240] },
+            margin: { top: 10 },
+            didDrawPage: function (data) {
+              if (data.pageCount > 1 && data.cursor.y < 90) {
+                doc.setPage(data.pageNumber);
+                doc.setFontSize(10);
+                doc.text(`Continued...`, 10, 8);
+              }
+            }
+          });
+
+          let finalY = doc.lastAutoTable.finalY + 5;
+
+          function renderAnswerTable(title, answers = {}, scores = {}, color = [92, 184, 92]) {
+            const rows = Object.entries(answers).map(([q, ans]) => [
+              q,
+              ans,
+              scores[q] !== undefined ? scores[q] : '0'
+            ]);
+
+            if (!rows.length) return;
+
+            doc.autoTable({
+              startY: finalY,
+              head: [[title + " Question", "Answer", "Score"]],
+              body: rows,
+              styles: { fontSize: 9, cellPadding: 3 },
+              headStyles: { fillColor: color, textColor: 255, halign: 'center' },
+              alternateRowStyles: { fillColor: [250, 250, 250] },
+              margin: { top: 10 }
+            });
+
+            finalY = doc.lastAutoTable.finalY + 5;
+          }
+
+          renderAnswerTable("Subjective", r.subjective, r.subjScores || {}, [52, 152, 219]); // blue header
+          renderAnswerTable("Theory", r.theory, r.theoryScores || {}, [155, 89, 182]); // purple header
+
+          addFooter();
+          console.log("Download clicked for index:", index, "Student:", results[index]);
+
+          doc.save(`${r.name}_${r.class}_result.pdf`);
+        };
+      };
+
+
+
+
+//       function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle = "Filtered Student Results") {
+//         const doc = new jspdf.jsPDF();
+//         const logo = new Image();
+//         logo.src = 'logo-min.png';
+
+//         logo.onload = () => {
+//           let y = 10;
+//           const pageHeight = doc.internal.pageSize.height;
+//           const lineSpacing = 6;
+//           const studentGap = 10;
+//           let totalScoreSum = 0;
+
+//           doc.addImage(logo, 'PNG', 10, y, 25, 12);
+//           doc.setFontSize(16);
+//           doc.text(customTitle, 40, y + 9);
+//           y += 25;
+
+//           studentList.forEach((r, index) => {
+//             if (y > pageHeight - 60) {
+//               doc.addPage();
+//               y = 10;
+//             }
+
+//             doc.setFontSize(13);
+//             doc.setTextColor(0);
+//             const leftY = y;
+//             doc.text(`Name: ${r.name}`, 10, leftY);
+//             doc.text(`Class: ${r.class}`, 10, leftY + lineSpacing);
+//             doc.text(`Date: ${r.date}`, 10, leftY + lineSpacing * 2);
+
+//             const subjScore = getManualScore(r.subjScores || {});
+//             const theoryScore = getManualScore(r.theoryScores || {});
+//             const manualScore = subjScore + theoryScore;
+
+//             const mcqScore = typeof r.score === "number" ? r.score : 0;
+//             const total = typeof r.totalScore === "number" ? r.totalScore : (mcqScore + manualScore);
+//             totalScoreSum += total;
+
+//             const scoreLines = [
+//               `MCQ Score: ${mcqScore}`,
+//               `Manual Score: ${manualScore}`,
+//               `Total Score: ${total}`
+//             ];
+
+//             const rightX = 140;
+//             scoreLines.forEach((line, idx) => {
+//               doc.text(line, rightX, leftY + idx * lineSpacing);
+//             });
+
+//             y = leftY + scoreLines.length * lineSpacing + 8;
+
+//             const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+//             const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+//             const mcq = shuffled.filter(q => q.type === "mcq");
+
+//             // const mcqData = mcq.map((q, i) => [
+//             //   `Q${i + 1}: ${q.question || 'Unknown'}`,
+//             //   r.answers?.[i] || "None",
+//             //   q.answer || '?'
+//             // ]);
+
+
+
+// const mcqData = (r.answers || []).reduce((sum, ans, i) => {
+//   return mcq[i] && mcq[i].answer === ans ? sum + 1 : sum;
+// }, 0);
+//             doc.autoTable({
+//               startY: y,
+//               head: [["Question", "Your Answer", "Correct"]],
+//               body: mcqData,
+//               styles: { fontSize: 9, cellPadding: 2 },
+//               headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+//               alternateRowStyles: { fillColor: [245, 245, 245] },
+//               margin: { top: 0 },
+//               didDrawPage: data => {
+//                 y = data.cursor.y + 5;
+//               }
+//             });
+
+//             const addAnswerTable = (title, typeKey, scores, color) => {
+//               const questions = shuffled.filter(q => q.type === typeKey);
+//               const answers = typeKey === "subjective" ? r.subjective || {} : r.theory || {};
+
+//               let sectionTotalScore = 0;
+
+//               const rows = questions.map((q, idx) => {
+//                 const questionText = q.question || `Q${idx + 1}`;
+
+//                 const prefix = typeKey === "subjective" ? "subj" : "theory";
+//                 const key = `${prefix}_${idx}`;
+
+//                 const answerRaw = answers[key];
+//                 const scoreRaw = scores[key];
+
+//                 const answered = typeof answerRaw !== "undefined" && answerRaw !== "";
+//                 const scoreNum = typeof scoreRaw === "number" ? scoreRaw : parseInt(scoreRaw) || 0;
+
+//                 sectionTotalScore += scoreNum;
+
+//                 const answer = answered ? `${answerRaw}` : `Not answered`;
+//                 const scoreDisplay = scoreNum.toString();
+
+//                 return [
+//                   questionText,
+//                   answer,
+//                   { content: scoreDisplay, styles: { textColor: scoreNum === 0 ? [192, 57, 43] : [39, 174, 96] } }
+//                 ];
+//               });
+
+//               if (!rows.length) return;
+
+//               doc.setFontSize(12);
+//               doc.text(`${title} Section`, 10, y + 5);
+//               y += 8;
+
+//               doc.autoTable({
+//                 startY: y,
+//                 head: [["Question", "Your Answer", "Score"]],
+//                 body: rows,
+//                 styles: { fontSize: 9, cellPadding: 2 },
+//                 headStyles: { fillColor: color, textColor: 255 },
+//                 alternateRowStyles: { fillColor: [250, 250, 250] },
+//                 margin: { top: 0 },
+//                 didDrawPage: data => {
+//                   y = data.cursor.y + 5;
+//                 }
+//               });
+
+//               doc.setFontSize(10);
+//               doc.setTextColor(44, 62, 80);
+//               doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 10, y);
+//               y += 8;
+//             };
+
+//             addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
+//             addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
+
+//             y += studentGap;
+
+//             if (y > pageHeight - 60 && index < studentList.length - 1) {
+//               doc.addPage();
+//               y = 10;
+//             }
+//           });
+
+//           const avg = (totalScoreSum / studentList.length).toFixed(2);
+//           if (y > pageHeight - 40) {
+//             doc.addPage();
+//             y = 10;
+//           }
+
+//           doc.setFontSize(13);
+//           doc.text(`Total Students: ${studentList.length}`, 10, y);
+//           doc.text(`Average Total Score: ${avg}`, 100, y);
+
+//           const pageCount = doc.internal.getNumberOfPages();
+//           for (let i = 1; i <= pageCount; i++) {
+//             doc.setPage(i);
+//             doc.setFontSize(9);
+//             doc.setTextColor(150);
+//             doc.text("© Your School Name - All Rights Reserved", 10, pageHeight - 10);
+//             doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
+//           }
+
+//           doc.save(filename);
+//         };
+//       }
+function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle = "Filtered Student Results") {
+  const doc = new jspdf.jsPDF();
+  const logo = new Image();
+  logo.src = 'logo-min.png';
+
+  logo.onload = () => {
+    let y = 10;
+    const pageHeight = doc.internal.pageSize.height;
+    const lineSpacing = 6;
+    const studentGap = 10;
+    let totalScoreSum = 0;
+
+    doc.addImage(logo, 'PNG', 10, y, 25, 12);
+    doc.setFontSize(16);
+    doc.text(customTitle, 40, y + 9);
+    y += 25;
+
+    studentList.forEach((r, index) => {
+      if (y > pageHeight - 60) {
+        doc.addPage();
+        y = 10;
+      }
+
+      doc.setFontSize(13);
+      doc.setTextColor(0);
+      const leftY = y;
+      doc.text(`Name: ${r.name}`, 10, leftY);
+      doc.text(`Class: ${r.class}`, 10, leftY + lineSpacing);
+      doc.text(`Date: ${r.date}`, 10, leftY + lineSpacing * 2);
+
+      const getManualScore = obj => Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
+
+      const subjScore = getManualScore(r.subjScores || {});
+      const theoryScore = getManualScore(r.theoryScores || {});
+      const manualScore = subjScore + theoryScore;
+
+      const mcqScore = typeof r.score === "number" ? r.score : 0;
+      // const total = typeof r.totalScore === "number" ? r.totalScore : (mcqScore + manualScore);
+      const total = mcqScore + manualScore;
+
+      // totalScoreSum += total;
+
+      const scoreLines = [
+        `MCQ Score: ${mcqScore}`,
+        `Manual Score: ${manualScore}`,
+        `Total Score: ${total}`
+      ];
+
+      const rightX = 140;
+      scoreLines.forEach((line, idx) => {
+        doc.text(line, rightX, leftY + idx * lineSpacing);
+      });
+
+      y = leftY + scoreLines.length * lineSpacing + 8;
+
+      const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+      const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+      const mcq = shuffled.filter(q => q.type === "mcq");
+
+      const mcqData = mcq.map((q, i) => [
+        `Q${i + 1}: ${q.question || 'Unknown'}`,
+        r.answers?.[i] || "Not answered",
+        q.answer || "?"
+      ]);
+
+      doc.autoTable({
+        startY: y,
+        head: [["Question", "Your Answer", "Correct"]],
+        body: mcqData,
+        styles: { fontSize: 9, cellPadding: 2 },
+        headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
+        margin: { top: 0 },
+        didDrawPage: data => {
+          y = data.cursor.y + 5;
+        }
+      });
+
+      const addAnswerTable = (title, typeKey, scores, color) => {
+        const questions = shuffled.filter(q => q.type === typeKey);
+        const answers = typeKey === "subjective" ? r.subjective || {} : r.theory || {};
+
+        let sectionTotalScore = 0;
+
+        const rows = questions.map((q, idx) => {
+          const questionText = q.question || `Q${idx + 1}`;
+          const prefix = typeKey === "subjective" ? "subj" : "theory";
+          const key = `${prefix}_${idx}`;
+
+          const answerRaw = answers[key];
+          const scoreRaw = scores[key];
+
+          const answered = typeof answerRaw !== "undefined" && answerRaw !== "";
+          const scoreNum = typeof scoreRaw === "number" ? scoreRaw : parseInt(scoreRaw) || 0;
+
+          sectionTotalScore += scoreNum;
+
+          const answer = answered ? `${answerRaw}` : `Not answered`;
+          const scoreDisplay = scoreNum.toString();
+
+          return [
+            questionText,
+            answer,
+            { content: scoreDisplay, styles: { textColor: scoreNum === 0 ? [192, 57, 43] : [39, 174, 96] } }
+          ];
+        });
+
+        if (!rows.length) return;
+
+        doc.setFontSize(12);
+        doc.text(`${title} Section`, 10, y + 5);
+        y += 8;
+
+        doc.autoTable({
+          startY: y,
+          head: [["Question", "Your Answer", "Score"]],
+          body: rows,
+          styles: { fontSize: 9, cellPadding: 2 },
+          headStyles: { fillColor: color, textColor: 255 },
+          alternateRowStyles: { fillColor: [250, 250, 250] },
+          margin: { top: 0 },
+          didDrawPage: data => {
+            y = data.cursor.y + 5;
+          }
+        });
+
+        doc.setFontSize(10);
+        doc.setTextColor(44, 62, 80);
+        doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 10, y);
+        y += 8;
+      };
+
+      addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
+      addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
+
+      y += studentGap;
+
+      if (y > pageHeight - 60 && index < studentList.length - 1) {
+        doc.addPage();
+        y = 10;
+      }
+    });
+
+    const avg = (totalScoreSum / studentList.length).toFixed(2);
+    if (y > pageHeight - 40) {
+      doc.addPage();
+      y = 10;
     }
 
-    const date = new Date().toLocaleDateString();
-    pdf.setTextColor(100);
-    pdf.setFontSize(12);
-    pdf.text(`Report generated on: ${date}`, 10, 280);
-    pdf.text(`Total students: ${overallTotal}`, 150, 280);
+    doc.setFontSize(13);
+    doc.text(`Total Students: ${studentList.length}`, 10, y);
+    doc.text(`Average Total Score: ${avg}`, 100, y);
 
-    const filename = selectedClass === "all" ? "JSS1_Combined" : selectedClass.replace(/\s+/g, "_");
-    pdf.save(`${filename}_Results.pdf`);
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(9);
+      doc.setTextColor(150);
+      doc.text("© Your School Name - All Rights Reserved", 10, pageHeight - 10);
+      doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
+    }
+
+    doc.save(filename);
   };
 }
 
 
+      // document.getElementById("download-pdf").onclick = () => {
+      //   const fullClassTitle = "All Classes";
+      //   exportToPDF(results, `quiz_results.pdf`, fullClassTitle);
+      // };
+      window.downloadClasswisePDFs = async () => {
+        const classOrder = [
+          "JSS1 Dignity", "JSS1 Valor",
+          "JSS2 Humility", "JSS2 Serenity",
+          "JSS3 Excellence",
+          "SS1 Creativity", "SS1 Determination",
+          "SS2 Gratitude", "SS2 Virtuous",
+          "SS3 Chastity"
+        ];
+
+        const normalize = str => (str || "").toLowerCase().replace(/\s+/g, "");
+        const doc = new jspdf.jsPDF();
+        const schoolFooter = "© Your School Name - All Rights Reserved";
+        const logo = new Image();
+        logo.src = 'logo-min.png';
+
+        const addFooter = () => {
+          const pageCount = doc.internal.getNumberOfPages();
+          for (let p = 1; p <= pageCount; p++) {
+            doc.setPage(p);
+            const pageHeight = doc.internal.pageSize.height;
+            doc.setFontSize(9);
+            doc.setTextColor(150);
+            doc.text(schoolFooter, 10, pageHeight - 10);
+            doc.text(`Page ${p} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
+          }
+        };
+
+        const getManualScore = obj => Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
+
+        logo.onload = () => {
+          let y = 0;
+          for (const classGroup of classOrder) {
+            const filteredResults = results.filter(r => normalize(r.class).includes(normalize(classGroup)));
+            if (filteredResults.length === 0) continue;
+
+            y += 15;
+            doc.setFontSize(16);
+            doc.setTextColor(0);
+            doc.addImage(logo, 'PNG', 10, y, 40, 20); // Left-aligned logo
+            y += 25;
+
+            doc.setFontSize(14);
+            doc.setTextColor(0);
+            doc.text(`${classGroup.toUpperCase()} RESULTS (Total: ${filteredResults.length})`, 105, y, { align: "center" });
+            y += 12;
+
+            for (let i = 0; i < filteredResults.length; i++) {
+              const r = filteredResults[i];
+              const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+              const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+
+              const subjScore = getManualScore(r.subjScores);
+              const theoryScore = getManualScore(r.theoryScores);
+//               const subjScore = getManualScore(r.subjScores || {});
+// const theoryScore = getManualScore(r.theoryScores || {});
+              
+// const mcqScore = typeof r.score === "number" ? r.score : 0;
+// const manualScore = subjScore + theoryScore;
+// const totalScore = typeof r.totalScore === "number" ? r.totalScore : (mcqScore + manualScore);
 
 
-const clearAllResultsBtn = document.getElementById("clear-all-results-btn");
+const mcq = shuffled.filter(q => q.type === "mcq");
+const mcqScore = (r.answers || []).reduce((sum, ans, i) => {
+  return mcq[i] && mcq[i].answer === ans ? sum + 1 : sum;
+}, 0);
+const manualScore = subjScore + theoryScore;
+const totalScore = mcqScore + manualScore;
 
-if (clearAllResultsBtn) {
-  clearAllResultsBtn.addEventListener("click", () => {
-    const confirmClear = confirm("Are you sure you want to delete all quiz data?");
-    if (confirmClear) {
-      localStorage.removeItem("quizResults");
 
-      // Optional: remove all stored quizzes per student if applicable
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith("quiz_")) {
-          localStorage.removeItem(key);
-        }
-      });
+              doc.setFontSize(12);
+              doc.setTextColor(0);
+              doc.text(`Name: ${r.name}`, 16, y);
+              doc.text(`MCQ Score: ${mcqScore}`, 140, y);
+              y += 6;
+              doc.text(`Class: ${r.class}`, 16, y);
+              doc.text(`Manual Score: ${manualScore}`, 140, y);
+              y += 6;
+              doc.text(`Date: ${r.date}`, 16, y);
+              doc.text(`Total Score: ${totalScore}`, 140, y);
+              y += 5;
 
-      alert("All quiz results and student quizzes have been cleared.");
-      location.reload(); // Optional: refresh the page to reflect changes
-    }
+
+
+              const mcqData = mcq.map((q, i) => {
+                const studentAns = r.answers[i] || "Not answered";
+                const correctAns = q.answer || "?";
+                return [
+                  `Q${i + 1}: ${q.question || 'Unknown'}`,
+                  studentAns,
+                  correctAns
+                ];
+              });
+
+              doc.autoTable({
+                startY: y,
+                head: [["Question", "Your Answer", "Correct Answer"]],
+                body: mcqData,
+                styles: { fontSize: 10, cellPadding: 2 },
+                headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+                margin: { top: 8 }
+              });
+
+              y = doc.lastAutoTable.finalY + 3;
+
+              const addAnswerTable = (title, typeKey, scores = {}, color) => {
+                const questions = shuffled.filter(q => q.type === typeKey);
+                const answers = typeKey === "subjective" ? r.subjective || {} : r.theory || {};
+
+                let sectionTotalScore = 0;
+
+                const rows = questions.map((q, idx) => {
+                  const questionText = q.question || `Q${idx + 1}`;
+                  const prefix = typeKey === "subjective" ? "subj" : "theory";
+                  const key = `${prefix}_${idx}`;
+
+                  const answerRaw = answers[key];
+                  const scoreRaw = scores[key];
+
+                  const answered = typeof answerRaw !== "undefined" && answerRaw !== "";
+                  const scoreNum = typeof scoreRaw === "number" ? scoreRaw : parseInt(scoreRaw) || 0;
+
+                  sectionTotalScore += scoreNum;
+
+                  const answer = answered ? answerRaw : "Not answered";
+                  const scoreDisplay = scoreNum.toString();
+
+                  return [
+                    questionText,
+                    answer,
+                    { content: scoreDisplay, styles: { textColor: scoreNum === 0 ? [192, 57, 43] : [39, 174, 96] } }
+                  ];
+                });
+
+                if (!rows.length) return;
+
+                doc.setFontSize(12);
+                doc.text(`${title} Section`, 18, y + 5);
+                y += 8;
+
+                doc.autoTable({
+                  startY: y,
+                  head: [["Question", "Your Answer", "Score"]],
+                  body: rows,
+                  styles: { fontSize: 10, cellPadding: 2 },
+                  headStyles: { fillColor: color, textColor: 255 },
+                  alternateRowStyles: { fillColor: [250, 250, 250] },
+                  margin: { top: 0 },
+                  didDrawPage: data => {
+                    y = data.cursor.y + 3;
+                  }
+                });
+
+                doc.setFontSize(10);
+                doc.setTextColor(44, 62, 80);
+                doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 18, y);
+                y += 6;
+              };
+
+              addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
+              addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
+
+              y += 6;
+            }
+
+            if (classGroup !== classOrder[classOrder.length - 1]) {
+              doc.addPage();
+              y = 0;
+            }
+          }
+
+          addFooter();
+          doc.save(`All_Classes_Results.pdf`);
+        };
+        if (logo.complete) logo.onload();
+      };
+
+
+
+
+//       document.getElementById("download-csv").onclick = () => {
+//         let csv = "Name,Class,Score,Manual,Total,Date\n";
+//         results.forEach(r => {
+//           const subjScores = r.subjScores || {};
+//           const theoryScores = r.theoryScores || {};
+//           const manual = getManualScore(subjScores) + getManualScore(theoryScores);
+//           const mcq = typeof r.score === "number" ? r.score : 0;
+// const total = typeof r.totalScore === "number" ? r.totalScore : (mcq + manual);
+
+//           csv += `${r.name},${r.class},${r.score},${manual},${total},${r.date}\n`;
+//         });
+//         const blob = new Blob([csv], { type: "text/csv" });
+//         const url = URL.createObjectURL(blob);
+//         const a = document.createElement("a");
+//         a.href = url;
+//         a.download = "quiz_results.csv";
+//         a.click();
+//         URL.revokeObjectURL(url);
+//       };
+
+document.getElementById("download-csv").onclick = () => {
+  let csv = "Name,Class,MCQ,Manual,Total,Date\n";
+
+  const getManualScore = obj =>
+    Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
+
+  results.forEach(r => {
+    const subjScores = r.subjScores || {};
+    const theoryScores = r.theoryScores || {};
+    const manual = getManualScore(subjScores) + getManualScore(theoryScores);
+    const mcq = typeof r.score === "number" ? r.score : 0;
+    const total = mcq + manual;
+
+    csv += `${r.name},${r.class},${mcq},${manual},${total},${r.date}\n`;
   });
-}
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quiz_results.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+};
 
 
-    adminLogoutBtn.onclick = () => {
-  const confirmLogout = confirm("Are you sure you want to logout?");
-  if (confirmLogout) {
-    // Redirect to student page or login page
-    window.location.href = "studentPage.html"; // Replace with the actual logout target
-  } else {
-    // Do nothing, user cancelled logout
-    alert("Logout cancelled.");
+
+
+      // window.downloadAllPDFs = async () => {
+      //   for (let i = 0; i < results.length; i++) {
+      //     const r = results[i];
+
+      //     await new Promise((resolve) => {
+      //       const logo = new Image();
+      //       logo.src = 'logo-min.png';
+
+      //       logo.onload = () => {
+      //         const doc = new jspdf.jsPDF();
+      //         const schoolFooter = "© Your School Name - All Rights Reserved";
+
+      //         const addFooter = () => {
+      //           const pageCount = doc.internal.getNumberOfPages();
+      //           for (let p = 1; p <= pageCount; p++) {
+      //             doc.setPage(p);
+      //             const pageHeight = doc.internal.pageSize.height;
+      //             doc.setFontSize(9);
+      //             doc.setTextColor(150);
+      //             doc.text(schoolFooter, 10, pageHeight - 10);
+      //             doc.text(`Page ${p} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
+      //           }
+      //         };
+
+      //         const getManualScore = obj => Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
+
+      //         const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+      //         const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+
+      //         const subjScore = getManualScore(r.subjScores);
+      //         const theoryScore = getManualScore(r.theoryScores);
+      //         const mcqScore = typeof r.score === "number" ? r.score : 0;
+      //         const totalScore = typeof r.totalScore === "number" ? r.totalScore : (mcqScore + subjScore + theoryScore);
+
+
+      //         doc.addImage(logo, 'PNG', 10, 10, 30, 15);
+      //         doc.setFontSize(14);
+      //         doc.text(`Name: ${r.name}`, 10, 30);
+      //         doc.text(`Class: ${r.class}`, 10, 38);
+      //         doc.text(`Date: ${r.date}`, 10, 46);
+
+      //         doc.setFontSize(12);
+      //         doc.text(`MCQ Score: ${mcqScore}`, 10, 56);
+      //         doc.text(`Manual Score: ${subjScore + theoryScore}`, 10, 64);
+      //         doc.text(`Total Score: ${total}`, 10, 72);
+              
+
+
+      //         let y = 80;
+
+      //         const mcq = shuffled.filter(q => q.type === "mcq");
+      //         const mcqData = mcq.map((q, i) => {
+      //           const studentAns = r.answers[i] || "Not answered";
+      //           const correctAns = q.answer || "?";
+      //           return [
+      //             `Q${i + 1}: ${q.question || 'Unknown'}`,
+      //             studentAns,
+      //             correctAns
+      //           ];
+      //         });
+
+      //         doc.autoTable({
+      //           startY: y,
+      //           head: [["Question", "Your Answer", "Correct Answer"]],
+      //           body: mcqData,
+      //           styles: { fontSize: 9, cellPadding: 3 },
+      //           headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      //           alternateRowStyles: { fillColor: [245, 245, 245] },
+      //           margin: { top: 10 }
+      //         });
+
+      //         y = doc.lastAutoTable.finalY + 5;
+
+      //         const addAnswerTable = (title, typeKey, scores = {}, color) => {
+      //           const questions = shuffled.filter(q => q.type === typeKey);
+      //           const answers = typeKey === "subjective" ? r.subjective || {} : r.theory || {};
+
+      //           let sectionTotalScore = 0;
+
+      //           const rows = questions.map((q, idx) => {
+      //             const questionText = q.question || `Q${idx + 1}`;
+      //             const prefix = typeKey === "subjective" ? "subj" : "theory";
+      //             const key = `${prefix}_${idx}`;
+
+      //             const answerRaw = answers[key];
+      //             const scoreRaw = scores[key];
+
+      //             const answered = typeof answerRaw !== "undefined" && answerRaw !== "";
+      //             const scoreNum = typeof scoreRaw === "number" ? scoreRaw : parseInt(scoreRaw) || 0;
+
+      //             sectionTotalScore += scoreNum;
+
+      //             const answer = answered ? answerRaw : "Not answered";
+      //             const scoreDisplay = scoreNum.toString();
+
+      //             return [
+      //               questionText,
+      //               answer,
+      //               { content: scoreDisplay, styles: { textColor: scoreNum === 0 ? [192, 57, 43] : [39, 174, 96] } }
+      //             ];
+      //           });
+
+      //           if (!rows.length) return;
+
+      //           doc.setFontSize(12);
+      //           doc.text(`${title} Section`, 10, y + 5);
+      //           y += 8;
+
+      //           doc.autoTable({
+      //             startY: y,
+      //             head: [["Question", "Your Answer", "Score"]],
+      //             body: rows,
+      //             styles: { fontSize: 9, cellPadding: 2 },
+      //             headStyles: { fillColor: color, textColor: 255 },
+      //             alternateRowStyles: { fillColor: [250, 250, 250] },
+      //             margin: { top: 0 },
+      //             didDrawPage: data => {
+      //               y = data.cursor.y + 5;
+      //             }
+      //           });
+
+      //           doc.setFontSize(10);
+      //           doc.setTextColor(44, 62, 80);
+      //           doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 10, y);
+      //           y += 8;
+      //         };
+
+      //         addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
+      //         addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
+
+      //         addFooter();
+      //         doc.save(`${r.name}_${r.class}_result.pdf`);
+      //         resolve();
+      //       };
+      //     });
+      //   }
+      // };
+
+window.downloadAllPDFs = async () => {
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i];
+
+    await new Promise((resolve) => {
+      const logo = new Image();
+      logo.src = 'logo-min.png';
+
+      logo.onload = () => {
+        const doc = new jspdf.jsPDF();
+        const schoolFooter = "© Your School Name - All Rights Reserved";
+
+        const addFooter = () => {
+          const pageCount = doc.internal.getNumberOfPages();
+          for (let p = 1; p <= pageCount; p++) {
+            doc.setPage(p);
+            const pageHeight = doc.internal.pageSize.height;
+            doc.setFontSize(9);
+            doc.setTextColor(150);
+            doc.text(schoolFooter, 10, pageHeight - 10);
+            doc.text(`Page ${p} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
+          }
+        };
+
+        const getManualScore = obj => Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
+
+        const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+        const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+
+        const mcq = shuffled.filter(q => q.type === "mcq");
+        const mcqScore = (r.answers || []).reduce((sum, ans, i) => {
+          return mcq[i] && mcq[i].answer === ans ? sum + 1 : sum;
+        }, 0);
+
+        const subjScore = getManualScore(r.subjScores);
+        const theoryScore = getManualScore(r.theoryScores);
+        const totalScore = mcqScore + subjScore + theoryScore;
+
+        doc.addImage(logo, 'PNG', 10, 10, 30, 15);
+        doc.setFontSize(14);
+        doc.text(`Name: ${r.name}`, 10, 30);
+        doc.text(`Class: ${r.class}`, 10, 38);
+        doc.text(`Date: ${r.date}`, 10, 46);
+
+        doc.setFontSize(12);
+        doc.text(`MCQ Score: ${mcqScore}`, 10, 56);
+        doc.text(`Manual Score: ${subjScore + theoryScore}`, 10, 64);
+        doc.text(`Total Score: ${totalScore}`, 10, 72);
+
+        let y = 80;
+
+        const mcqData = mcq.map((q, i) => {
+          const studentAns = r.answers[i] || "Not answered";
+          const correctAns = q.answer || "?";
+          return [
+            `Q${i + 1}: ${q.question || 'Unknown'}`,
+            studentAns,
+            correctAns
+          ];
+        });
+
+        doc.autoTable({
+          startY: y,
+          head: [["Question", "Your Answer", "Correct Answer"]],
+          body: mcqData,
+          styles: { fontSize: 9, cellPadding: 3 },
+          headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+          alternateRowStyles: { fillColor: [245, 245, 245] },
+          margin: { top: 10 }
+        });
+
+        y = doc.lastAutoTable.finalY + 5;
+
+        const addAnswerTable = (title, typeKey, scores = {}, color) => {
+          const questions = shuffled.filter(q => q.type === typeKey);
+          const answers = typeKey === "subjective" ? r.subjective || {} : r.theory || {};
+
+          let sectionTotalScore = 0;
+
+          const rows = questions.map((q, idx) => {
+            const questionText = q.question || `Q${idx + 1}`;
+            const prefix = typeKey === "subjective" ? "subj" : "theory";
+            const key = `${prefix}_${idx}`;
+
+            const answerRaw = answers[key];
+            const scoreRaw = scores[key];
+
+            const answered = typeof answerRaw !== "undefined" && answerRaw !== "";
+            const scoreNum = typeof scoreRaw === "number" ? scoreRaw : parseInt(scoreRaw) || 0;
+
+            sectionTotalScore += scoreNum;
+
+            const answer = answered ? answerRaw : "Not answered";
+            const scoreDisplay = scoreNum.toString();
+
+            return [
+              questionText,
+              answer,
+              { content: scoreDisplay, styles: { textColor: scoreNum === 0 ? [192, 57, 43] : [39, 174, 96] } }
+            ];
+          });
+
+          if (!rows.length) return;
+
+          doc.setFontSize(12);
+          doc.text(`${title} Section`, 10, y + 5);
+          y += 8;
+
+          doc.autoTable({
+            startY: y,
+            head: [["Question", "Your Answer", "Score"]],
+            body: rows,
+            styles: { fontSize: 9, cellPadding: 2 },
+            headStyles: { fillColor: color, textColor: 255 },
+            alternateRowStyles: { fillColor: [250, 250, 250] },
+            margin: { top: 0 },
+            didDrawPage: data => {
+              y = data.cursor.y + 5;
+            }
+          });
+
+          doc.setFontSize(10);
+          doc.setTextColor(44, 62, 80);
+          doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 10, y);
+          y += 8;
+        };
+
+        addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
+        addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
+
+        addFooter();
+        doc.save(`${r.name}_${r.class}_result.pdf`);
+        resolve();
+      };
+    });
   }
 };
 
-// Normalize to base class (e.g., "JSS2SERENITY" → "JSS2")
-function normalizeClassName(className) {
-  const cls = className.trim().toUpperCase();
-  if (cls.startsWith("JSS")) return "JSS" + (cls.match(/\d+/)?.[0] || "");
-  if (cls.startsWith("SS")) return "SS" + (cls.match(/\d+/)?.[0] || "");
-  return cls;
-}
+
+      document.getElementById("clear-all-results-btn").onclick = () => {
+        if (confirm("Are you sure you want to clear all results?")) {
+          localStorage.removeItem("quizResults");
+          location.reload();
+        }
+      };
+
+      // document.getElementById("adminLogoutBtn").onclick = () => {
+      //   if (confirm("Logout?")) window.location.href = "studentPage.html";
+      // };
+      document.getElementById("logoutBtn").onclick = () => {
+        if (confirm("Logout?")) window.location.href = "login.html";
+        localStorage.removeItem("adminLoggedIn");
+        // location.href = "login.html";
+      };
+      // 🔧 Utility function to normalize keys
+      function normalizeKey(str = "") {
+        return str.trim().toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '');
+      }
+
+      // ✅ Manual score update handler with UI refresh
 
 
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("update-btn")) {
+          const container = e.target.closest(".student-box");
+          const key = container.dataset.key || "";
+          const [nameKey, classKey] = key.split("_");
+
+          const inputs = container.querySelectorAll("input[data-type]");
+          const subjScores = {};
+          const theoryScores = {};
+
+          inputs.forEach(input => {
+            const id = input.dataset.id;
+            const type = input.dataset.type;
+            const val = +input.value;
+
+            if (type === "subj") subjScores[id] = val;
+            else if (type === "theory") theoryScores[id] = val;
+          });
+
+          const records = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+          // ✅ Fix: Use plain lowercase comparison to find the student
+          const recordIndex = records.findIndex(r =>
+            r.name.toLowerCase() === nameKey &&
+            r.class.toLowerCase() === classKey
+          );
+
+          if (recordIndex === -1) {
+            showToast("❌ Student record not found");
+            return;
+          }
+
+          // ✅ Update scores
+          records[recordIndex].subjScores = subjScores;
+          records[recordIndex].theoryScores = theoryScores;
+
+          // ✅ Save back to localStorage
+          localStorage.setItem("quizResults", JSON.stringify(records));
+
+          // ✅ Re-render the updated student box
+          const updatedRecord = records[recordIndex];
+          const newBoxHTML = renderStudentBox(updatedRecord);
+          container.outerHTML = newBoxHTML;
+
+          // ✅ Rebind the Update button on the re-rendered box
+          document.querySelectorAll(".update-btn").forEach(btn => {
+            btn.addEventListener("click", () =>
+              updateManualScore(btn.closest(".student-box"))
+            );
+          });
+
+          showToast("✅ Score updated successfully");
+        }
+      });
 
 
-function normalizeSection(sectionName) {
-  const s = sectionName.replace(/\s+/g, "").toLowerCase();
-  if (["valor"].includes(s)) return "Valour";
-  if (["dignity", "d"].includes(s)) return "Dignity";
-  if (["creativi", "c", "creativity"].includes(s)) return "Creativity";
-  if (["s", "serenity"].includes(s)) return "Serenity";
-  if (["humility","h"].includes(s)) return "Humility";
-  if (["gratitude","g"].includes(s)) return "Gratitude";
-  if (["virtuous","virtous","v"].includes(s)) return "Virtuous";
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-
-
-
-function extractSection(className) {
-  const clean = className.trim();
-  const base = normalizeClassName(className);
-  const suffix = clean.slice(base.length).trim();
-  return normalizeSection(suffix);
-}
-
-function getClassRank(className) {
-  const normalized = normalizeClassName(className);
-  if (normalized.startsWith("JSS")) return parseInt(normalized.replace("JSS", "")) || 0;
-  if (normalized.startsWith("SS")) return 3 + (parseInt(normalized.replace("SS", "")) || 0);
-  return 999;
-}
-
-
-
-const classGroups = [
-    { title: "JSS1 Dignity", keywords: ["jss1dignity", "jss1-dignity","jss1d"] },
-    { title: "JSS1 Valour", keywords: ["jss1valour", "jss1-valor", "jss1valor","jss1v"] },
-    { title: "JSS2 Humility", keywords: ["jss2humility","jss2h"] },
-    { title: "JSS2 Serenity", keywords: ["jss2serenity","jss2s"] },
-    { title: "JSS3 Excellence", keywords: ["jss3excellence","jss3e"] },
-    { title: "SS1 Creativity", keywords: ["ss1creativity","ss1creativi","ss1c"] },
-    { title: "SS1 Determination", keywords: ["ss1determination","ss1d"] },
-    { title: "SS2 Gratitude", keywords: ["ss2gratitude","ss2g"] },
-    { title: "SS2 Virtuous", keywords: ["ss2virtuous","ss2v"] }
-  ];
-
-// Finds the correct group title for display
-function getClassDisplayTitle(inputClass) {
-  const normalized = normalizeClassName(inputClass);
-  const group = classGroups.find(group =>
-    group.keywords.some(keyword => normalized === normalizeClassName(keyword))
-  );
-  return group ? group.title : inputClass;
-}
-
-// Strictly matches a student’s class to the selected group
-function classMatches(studentClass, selectedGroup) {
-  const normalizedStudentClass = normalizeClassName(studentClass);
-  const normalizedSelectedGroup = normalizeClassName(selectedGroup);
-
-  return (
-    normalizedStudentClass.includes(normalizedSelectedGroup) ||
-    normalizedSelectedGroup.includes(normalizedStudentClass)
-  );
-}
-
-
-
-// Load base64 image utility
-function loadImageAsBase64(url) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      const aspectRatio = img.width / img.height;
-      const width = 100;
-      const height = width / aspectRatio;
-
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL("image/png"));
-    };
-    img.onerror = reject;
-    img.src = url;
-  });
-}
-document.addEventListener('DOMContentLoaded', () => {
-  populateClassFilter();
-});
+    });
+    function clearResults() {
+      localStorage.removeItem("quizResults"); // use your unified key
+      alert("All quiz results have been cleared.");
+    }
 
   </script>
-  <script src="script.js"></script>
+  <!-- <script src="adminPage.js"></script>  -->
+  <div id="toast" style="
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2ecc71;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: none;
+  font-weight: bold;
+  z-index: 1000;
+"></div>
+
 </body>
 
 </html>

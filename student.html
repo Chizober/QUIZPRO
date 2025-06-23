@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Quiz</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      color: #222;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .dark-mode {
+      background: #111;
+      color: #f0f0f0;
+    }
+    .hidden { display: none; }
+    .option-btn {
+      margin: 3px 0 15px 5px;
+      padding: 6px 10px;
+      background: #ddd;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      color:#333;
+    }
+    .option-btn.selected {
+      background: green;
+      color: white;
+    }
+    textarea {
+      width: 100%;
+      margin: 10px 0;
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .section-tab {
+      margin: 0 5px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  padding-left: min(4em, 5%);
+  padding-right: min(4em, 5%);
+  font-family: Arial, sans-serif;
+  color: #222;
+  height: 100vh;
+  background-color: #f0f0f0;
+  transition: background-color 0.3s, color 0.3s;
+  line-height: 1.6;
+
+}
+
+body.dark {
+  background: #121212;
+  color: #eee;
+  transition: background-color 0.3s, color 0.3s;
+}
+/* Theme Toggle Button */
+.theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  cursor: pointer;
+}
+
+
+/* Form Container */
+.center-container .container {
+  background-color: #f9fafb;
+  padding: 2rem 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+
+}
+
+
+/* Title */
+.center-container .container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+/* Input Group (with icon) */
+.input-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+ .input-icon{
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  color: #6b7280;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #aaa !important;
+  transition: border 0.3s;
+  border: none;
+}
+
+.input-group input:focus {
+  outline: none;
+
+}
+.btn{
+  color:#fff;
+  background-color: #fff;
+}
+
+
+.btn-blue,button{
+      margin: 0.2rem 0.25rem;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      transition: background-color 0.3s ease;
+      padding: clamp(.8rem, 2vw, .8rem);
+      background: #337ab7;
+    }
+  .btn-blue:hover,button:hover,.btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-blue:focus,button:focus, .btn:focus {
+      outline: none;
+    }
+/* Buttons */
+.center-container .btn {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+  background-color: #337ab7;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.center-container .btn:hover {
+  background-color: #285a8e;
+}
+
+.center-container .btn.secondary {
+  background-color: #6b7280;
+}
+
+.center-container .btn.secondary:hover {
+  background-color: #4b5563;
+}
+body.dark .center-container .container {
+  background: #1e1e1e;
+  box-shadow: 0 0 15px #444;
+}
+
+body.dark .center-container .container h2 {
+  color: #f3f4f6;
+}
+
+
+body.dark .input-group input:focus {
+
+  outline: none;
+}
+
+body.dark .input-icon {
+  color: #9ca3af;
+}
+body.dark {
+  background: #121212;
+  color: #eee;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark input[type=text],
+body.dark input[type=password] {
+  background-color: #333;
+  outline: none;
+  color: #eee;
+}
+#return-home-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #return-home-btn:hover {
+    background-color: #2c80b4;
+  }
+  /* styling for student info */
+/* Animation */
+.fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+#timer-container {
+  text-align: center;
+  margin-bottom: 20px;
+  position: fixed;
+  top: 2rem;
+  right:4rem;
+  font-weight: bold;
+  
+}
+
+/* .progress-container {
+  position: fixed;
+   top: 3rem;
+   right: 0px;
+  width: 60%;
+  background: #ddd;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 10px auto;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, #337ab7, #3498db);
+  transition: width 0.5s;
+} */
+.step-indicator {
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+ .circle-timer {
+  position: fixed;
+  top: 2rem;
+  right:4rem;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+}
+
+.circle-timer svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+} 
+ .circle-timer circle {
+  fill: none;
+  stroke-width: 10;
+  stroke: #ddd;
+}
+
+#circleProgress {
+  stroke: #2196f3;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.circle-label {
+  position: absolute;
+  top: 35%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  transform: rotate(90deg);
+} 
+select#student-class {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  color: #333;
+  appearance: none;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+select#student-class:focus {
+ outline:none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+select#student-class option {
+  font-size: 16px;
+}
+#quiz-screen{
+  margin-top: 2.5rem;
+}
+
+body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+  .hidden { display: none; }
+  .btn {
+    padding: 10px 15px;
+    margin: 10px 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: dodgerblue;
+    color: white;
+    transition: 0.3s;
+  }
+  .btn:hover { background-color: royalblue; }
+  .option-btn {
+    display: block;
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .option-btn:hover { background-color: #ddd; }
+  .selected { background-color: green; color: white !important; }
+  textarea { width: 100%; margin-bottom: 15px; padding: 8px; font-size: 1em; }
+  .controls { text-align: center; margin-top: 20px; }
+  .fade-in { animation: fadeIn 0.5s ease-in; }
+  .step-indicator { font-weight: bold; margin-bottom: 10px; text-align: center; }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .dark { background-color: #121212; color: #eee; }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Student Quiz</h2>
+   <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌞</button>
+    <!-- <div id="timerDisplay" style="float:right;"></div> -->
+  </header>
+ <div class="center-container fade-in">
+  <div id="start-screen" class="container">
+    
+     <div class="input-group">
+      <span class="input-icon">👤</span>
+      <input type="text" id="student-name" placeholder=" Please Enter your name" autocomplete="off" />
+    </div>
+    <!-- <p><label>Name: <input id="student-name" type="text" /></label></p>
+    <p><label>Class: <input id="student-class" type="text" /></label></p> -->
+    <div class="input-group">
+  <span class="input-icon" >🏫</span>
+  <select id="student-class" required>
+    <option value="">-----Select your class --</option>
+    <option value="JSS1 Dignity">JSS1 Dignity</option>
+    <option value="JSS1 Valor">JSS1 Valor</option>
+    <option value="JSS2 Serenity">JSS2 Serenity</option>
+    <option value="JSS2 Humility">JSS2 Humility</option>
+    <option value="JSS3 Excellence">JSS3 Excellence</option>
+    <option value="SS1 Creativity">SS1 Creativity</option>
+    <option value="SS1 Determination">SS1 Determination</option>
+    <option value="SS2 Gratitude">SS2 Gratitude</option>
+    <option value="SS2 Virtuous">SS2 Virtuous</option>
+    <option value="SS3 Chastity">SS3 Chastity</option>
+
+   
+  </select>
+</div>
+
+
+    <!-- <button id="start-btn">Start Quiz</button> -->
+    <button class="btn" id="start-btn">🚀 Start Quiz</button>
+  </div>
+ </div>
+  <div id="quiz-screen" class="hidden">
+
+   <div id="step-indicator" style="text-align:center; position:fixed; font-weight:bold; margin-bottom:10px;"></div>
+      <div id="timer-container">
+  <div id="timerDisplay">Time: 300s</div>
+  
+  <!-- <div class="progress-container">
+    <div id="progressBar"></div>
+  </div> -->
+  
+   <!-- <div class="circle-timer">
+    <svg>
+      <circle cx="50" cy="50" r="45"></circle>
+      <circle id="circleProgress" cx="50" cy="50" r="45"></circle>
+    </svg>
+    <div class="circle-label" id="circleLabel">300s</div>
+  </div>  -->
+</div>
+    <div>
+      <span class="section-tab" data-section="mcq">MCQ</span>
+      <span class="section-tab" data-section="subjective">Subjective</span>
+      <span class="section-tab" data-section="theory">Theory</span>
+    </div>
+    <div id="quiz-content-mcq" class="quiz-section"></div>
+   <div style="text-align:center; margin-top: 20px;" id="step-buttons">
+ <div id="quiz-controls" class="controls">
+  <div id="step-indicator" class="step-indicator">Step 1 of 3</div>
+  <button id="continue-subjective-btn" class="btn hidden">Continue to Subjective</button>
+  <button id="continue-theory-btn" class="btn hidden">Continue to Theory</button>
+  <button id="finish-btn" class="btn btn-blue hidden">Finish Quiz</button>
+</div>
+
+
+</div>
+
+
+    <div id="quiz-content-subjective" class="quiz-section hidden"></div>
+    <div id="quiz-content-theory" class="quiz-section hidden"></div>
+    <br>
+  
+
+    <button id="finish-btn" class=" btn btn-blue">Finish Quiz</button>
+  </div>
+
+  <div id="result-screen" class="hidden">
+    <div id="result-summary"></div>
+    <div style="text-align:center; margin-top: 20px;">
+  <!-- <button id="return-home-btn" class=" btn btn-blue" style="display: none;">Return to Home</button> -->
+  <button id="return-home-btn" class="btn">Return Home</button>
+
+</div>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
