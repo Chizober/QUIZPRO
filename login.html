@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -23,6 +23,9 @@
       padding: 8px;
       width: 220px;
     }
+    input:focus{
+      outline:none;
+    }
     button {
       background: #2980b9;
       color: white;
@@ -42,8 +45,8 @@
   </form>
 
   <script>
-    const adminUser = "admin";
-    const adminPass = "1234"; // Change this as needed
+    const adminUser = "zobs";
+    const adminPass = "zobs1212"; // Change this as needed
 
     document.getElementById("loginForm").onsubmit = function(e) {
       e.preventDefault();
@@ -52,11 +55,11 @@
 
       if (u === adminUser && p === adminPass) {
         localStorage.setItem("adminLoggedIn", "yes");
-        window.location.href = "admin.html";
+        window.location.href = "adminPage.html";
       } else {
         alert("Invalid username or password.");
       }
     };
   </script>
 </body>
-</html> -->
+</html>
