@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
   function startQuiz() {
     timer = QUIZ_TIME;
     updateTimer();
@@ -114,8 +115,10 @@ function renderMCQ() {
 
 function renderTextArea(section, data, answers, prefix) {
   const sectionTitle = prefix === "subj" ? "Subjective Section" : "Theory Section";
-  section.innerHTML = `<h3 class='mcq'>${sectionTitle}</h3>`;
 
+ section.innerHTML = `
+    <h3 class='mcq'>${sectionTitle}</h3>
+  `;
   const normalized = assignIdsIfMissing(data, prefix);
   normalized.forEach((q, i) => {
     const div = document.createElement("div");

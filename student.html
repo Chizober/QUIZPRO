@@ -484,8 +484,54 @@
       text-align: center;
     }
     .mcq{
-      text-align: center;
+      text-decoration: underline;
+      margin-bottom:10px;
     }
+    .school{
+      margin:-15px 0px 10px 0px;
+      font-size:clamp(1.5rem, 2vw, 2.0rem);
+      word-spacing: 8px;
+      font-weight: 900;
+    }
+    .numbers{
+      margin-bottom:10px;
+    }
+    .subject{
+      color:#222;
+    }
+    .className{
+       color:#222;
+    }
+    .info{
+      display: flex;
+      justify-content: space-between;
+      margin-top:10px;
+    }
+    .instruct{
+      text-align: left;
+        margin-top:10px;
+    }
+    .details{
+      display:grid;
+      grid-template-columns: 2% 98%;
+      /* gap:10px; */
+    }
+    .details img{
+      width: 150px;
+      height:80px;
+       margin-left:7rem;
+    }
+    .stat{
+      margin-right:-20px;
+    }
+    .student-info-box {
+  margin-bottom: 10px;
+  font-weight: bold;
+  background: #f2f2f2;
+  padding: 10px;
+  border-radius: 8px;
+}
+
   </style>
 </head>
 
@@ -525,14 +571,20 @@
   </div>
   <div id="quiz-screen" class="hidden">
     <div class="instructions">
-<h3>LINA TERESA FOUNDATION COLLEGE</h3>
+<h3 class="school">LINA TERESA FOUNDATION COLLEGE</h3>
+<div class="details">
+  <img src="./logo-min.png" alt="">
+  <div class="stat">
 <P>NO 16 GEO NWOSU AVENUE CORRIDOR L/O,ENUGU</P>
-<small>LinateresafSS360@gmail.com</small>
-<small>07030168785, 08064376241, 08035092149</small>
-<h3>THIRD TERM EXAMS, 2024/2025 SESSION</h3>
-<H4>SUBJECT:DATA PROCESSING</H4>
-<H4>CLASS:SSS2</H4>
-<P>Instruction:Read each question carefully and select the correct answer from the options</P></div>
+<p><small>LinateresafSS360@gmail.com</small></p>
+<p class="numbers"><small>07030168785, 08064376241, 08035092149</small></p>
+</div>
+</div>
+<h3>THIRD TERM EXAMINATION, 2024/2025 SESSION</h3>
+<div class="info">
+<H4 class="subject">SUBJECT:DATA PROCESSING</H4>
+<H4 class="className">CLASS:SSS2</H4></div>
+<P class="instruct">Instruction:Read each question carefully and select the correct answer from the options below</P></div>
     <div id="step-indicator" class="step-indicator"></div>
     <div id="timer-container">
       <div id="timerDisplay">Time: 300s</div>
