@@ -34,8 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
     themeToggle.textContent = document.body.classList.contains("dark") ? "🌙" : "🌞";
   };
 
-  // Initial button visibility
-  // btnFinish.classList.add("hidden");
   btnReturnHome.classList.add("hidden");
   btnToSubj.classList.add("hidden");
   btnToTheory.classList.add("hidden");
@@ -83,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 function renderMCQ() {
-  quizContentMCQ.innerHTML = "<h3>MCQ Section</h3>";
+  quizContentMCQ.innerHTML = "<h3 class='mcq'>MCQ Section</h3>";
   mcqQuestions.forEach((q, i) => {
     const div = document.createElement("div");
     div.innerHTML = `<p><strong>Q${i + 1}. ${q.question}</strong></p>`;
@@ -105,7 +103,6 @@ function renderMCQ() {
   quizContentMCQ.classList.remove("hidden");
   quizContentSubj.classList.add("hidden");
   quizContentTheory.classList.add("hidden");
-  // document.getElementById("finish-btn").style.display = "none";
 
 
   updateStep(1);
@@ -113,12 +110,11 @@ function renderMCQ() {
   // Show only the "Continue to Subjective" button
   btnToSubj.classList.remove("hidden");
   btnToTheory.classList.add("hidden");
-  // btnFinish.classList.add("hidden")
 }
 
 function renderTextArea(section, data, answers, prefix) {
   const sectionTitle = prefix === "subj" ? "Subjective Section" : "Theory Section";
-  section.innerHTML = `<h3>${sectionTitle}</h3>`;
+  section.innerHTML = `<h3 class='mcq'>${sectionTitle}</h3>`;
 
   const normalized = assignIdsIfMissing(data, prefix);
   normalized.forEach((q, i) => {
@@ -183,20 +179,25 @@ btnFinish.onclick = () => finishQuiz();
       <p><strong>Score:</strong> ${result.score} / ${result.total}</p>
       <h4>MCQ Answers</h4>`;
     mcqQuestions.forEach((q, i) => {
-      const isCorrect = result.answers[i] === q.answer;
-      const color = isCorrect ? "green" : "red";
-      html += `<p class="fade-in"><strong>${q.question}</strong><br>
-      <span style="color:${color}">Your Answer: ${result.answers[i] || 'None'}</span> | 
-      <span style="color:green">Correct: ${q.answer}</span></p>`;
-    });
-    html += `<h4>Subjective</h4>`;
-    subjectiveQuestions.forEach(q => {
-      html += `<p class="fade-in"><strong>${q.question}</strong><br>Answer: ${result.subjective[q.id] || 'None'}</p>`;
-    });
-    html += `<h4>Theory</h4>`;
-    theoryQuestions.forEach(q => {
-      html += `<p class="fade-in"><strong>${q.question}</strong><br>Answer: ${result.theory[q.id] || 'None'}</p>`;
-    });
+  const isCorrect = result.answers[i] === q.answer;
+  const answerColor = isCorrect ? "green" : "red";
+  const correctness = isCorrect ? "✔ Correct" : "✘ Incorrect";
+  html += `<p class="fade-in"><strong style="color:black">${q.question}</strong><br>
+  <span style="color:black">Your Answer: ${result.answers[i] || 'None'}</span> | 
+  <span style="color:${answerColor}">${correctness}</span> | 
+  <span style="color:green">Correct: ${q.answer}</span></p>`;
+});
+html += `<h4>Subjective</h4>`;
+subjectiveQuestions.forEach(q => {
+  html += `<p class="fade-in"><strong style="color:black">${q.question}</strong><br>
+  <span style="color:black">Answer: ${result.subjective[q.id] || 'None'}</span></p>`;
+});
+
+html += `<h4>Theory</h4>`;
+theoryQuestions.forEach(q => {
+  html += `<p class="fade-in"><strong style="color:black">${q.question}</strong><br>
+  <span style="color:black">Answer: ${result.theory[q.id] || 'None'}</span></p>`;
+});
 
     const allResults = JSON.parse(localStorage.getItem("quizResults") || "[]");
     const classResults = allResults.filter(r => r.class.toLowerCase() === result.class.toLowerCase());

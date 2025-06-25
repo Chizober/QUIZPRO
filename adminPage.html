@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,8 +58,9 @@
       background-color: #f0f0f0;
       transition: background-color 0.3s, color 0.3s;
       line-height: 1.5;
-
+      /* display: none; */
     }
+
 
     .dark-mode {
       background: #111;
@@ -180,7 +180,9 @@
       outline: none;
       border: none;
     }
-.update-btn,.delete-btn,
+
+    .update-btn,
+    .delete-btn,
     .btn,
     .pdf-sec,
     .blue,
@@ -198,7 +200,8 @@
     }
 
 
-   .update-btn, .csv-btn {
+    .update-btn,
+    .csv-btn {
       background-color: #28a745;
     }
 
@@ -237,8 +240,11 @@
       outline: none;
     }
 
-    /* body { display: none; font-family: Arial, sans-serif; }
-    .hidden { display: none; } */
+
+    .hidden {
+      display: none;
+    }
+
     #logoutBtn {
       position: fixed;
       top: 10px;
@@ -351,9 +357,8 @@
 
 </head>
 
-<body>
+<body id="admin-body">
   <main>
-    <!-- <body id="admin-body"> -->
     <header>
       <h2> 📊 Third Term Exam Results</h2>
       <h3>📚 Grouped by Class</h3>
@@ -378,6 +383,7 @@
     <input id="sectionFilter" placeholder="Filter by Section">
     <input id="searchInput" type="text" placeholder="Search by Name">
     <div id="summary"></div>
+    <div id="toast" style="position:fixed; bottom:20px; right:20px; background:green; color:#fff; padding:10px 20px; border-radius:5px; display:none; z-index:1000;"></div>
     <div id="admin-panel"></div>
 
   </main>
@@ -387,12 +393,12 @@
       return str.trim().toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
     }
 
-function getManualScore(scores) {
-  return Object.values(scores || {}).reduce((sum, val) => {
-    const num = parseFloat(val);
-    return sum + (!isNaN(num) ? num : 0);
-  }, 0);
-}
+    function getManualScore(scores) {
+      return Object.values(scores || {}).reduce((sum, val) => {
+        const num = parseFloat(val);
+        return sum + (!isNaN(num) ? num : 0);
+      }, 0);
+    }
 
     // Theme toggle
     const modeToggle = document.getElementById("theme-toggle");
@@ -400,9 +406,9 @@ function getManualScore(scores) {
       document.body.classList.toggle("dark");
       modeToggle.textContent = document.body.classList.contains("dark") ? "🌙" : "🌞";
     };
-    // if (localStorage.getItem("adminLoggedIn") !== "yes") {
-    //       window.location.href = "login.html";
-    //     }
+    if (localStorage.getItem("adminLoggedIn") !== "yes") {
+      window.location.href = "login.html";
+    }
     document.addEventListener("DOMContentLoaded", async () => {
       const container = document.getElementById("admin-panel");
       const summary = document.getElementById("summary");
@@ -544,7 +550,7 @@ function getManualScore(scores) {
           .replace(/[^a-z0-9]/g, '')                 // remove special chars
           .replace(/^jsss/, 'jss')                   // fix overtyped jsss
           .replace(/^sss/, 'ss')                     // fix sss → ss
-         
+
       }
 
       function normalizeClassName(classStr = "") {
@@ -561,7 +567,7 @@ function getManualScore(scores) {
       }
 
 
-     
+
       function escapeHTML(str = "") {
         const div = document.createElement("div");
         div.textContent = str;
@@ -585,73 +591,171 @@ function getManualScore(scores) {
       }
 
 
-      // ✅ Render each student
-      function renderStudentBox(r) {
-        const subjScores = r.subjScores || {};
-        const theoryScores = r.theoryScores || {};
-        const manualScore = getManualScore(subjScores) + getManualScore(theoryScores);
-        const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+  //     // ✅ Render each student
+  //     function renderStudentBox(r) {
+  //       const subjScores = r.subjScores || {};
+  //       const theoryScores = r.theoryScores || {};
+  //       const manualScore = getManualScore(subjScores) + getManualScore(theoryScores);
+  //       const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
 
-        const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
-        const mcq = shuffled.filter(q => q.type === "mcq");
+  //       const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+  //       const mcq = shuffled.filter(q => q.type === "mcq");
 
 
 
-        let mcqScore = 0;
-        (r.answers || []).forEach((ans, i) => {
-          if (mcq[i] && mcq[i].answer === ans) mcqScore++;
-        });
+  //       let mcqScore = 0;
+  //       (r.answers || []).forEach((ans, i) => {
+  //         if (mcq[i] && mcq[i].answer === ans) mcqScore++;
+  //       });
 
-        const totalScore = mcqScore + manualScore;
+  //       const totalScore = mcqScore + manualScore;
 
-        return `
-    <details class="student-box" data-key="${key}" open>
-      <summary><strong>${r.name} (${r.class})</strong> — <em>${r.date}</em></summary>
-      <div class="student-info">
-        <p><strong>MCQ Score:</strong> <span class="mcq-score">${mcqScore}</span> / ${mcq.length}</p>
-        <p><strong>Manual Score:</strong> <span class="manual-score">${manualScore}</span></p>
-        <p><strong>Total Score:</strong> <span class="total-score">${totalScore}</span></p>
-      </div>
+  //       return `
+  //   <details class="student-box" data-key="${key}" open>
+  //     <summary><strong>${r.name} (${r.class})</strong> — <em>${r.date}</em></summary>
+  //     <div class="student-info">
+  //       <p><strong>MCQ Score:</strong> <span class="mcq-score">${mcqScore}</span> / ${mcq.length}</p>
+  //       <p><strong>Manual Score:</strong> <span class="manual-score">${manualScore}</span></p>
+  //       <p><strong>Total Score:</strong> <span class="total-score">${totalScore}</span></p>
+  //     </div>
 
-      <div class="table-responsive">
-        <table class="mcq-table">
-          <thead><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th></tr></thead>
-          <tbody>
-            ${mcq.map((q, i) => `
+  //     <div class="table-responsive">
+  //       <table class="mcq-table">
+  //         <thead><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th></tr></thead>
+  //         <tbody>
+  //           ${mcq.map((q, i) => `
           
              
+  //             <tr>
+  //               <td><strong>Q${i + 1}:</strong> ${escapeHTML(q.question || "Unknown")}</td>
+  //               <td>${escapeHTML(r.answers?.[i] || "None")}</td>
+  //               <td style="color:green">${escapeHTML(q.answer || "?")}</td>
+  //             </tr>
+  //           `).join("")}
+  //         </tbody>
+  //       </table>
+  //     </div>
+
+  //     <div>
+  //       <label>Subjective Scores:</label>
+  //       ${Object.entries(r.subjective || {}).map(([id, ans]) => `
+  //         <div>
+  //           <textarea readonly rows="2">${ans}</textarea>
+  //           <input type="number" min="0" max="10" value="${subjScores[id] || 0}"
+  //             data-type="subj" data-id="${id}">
+  //         </div>`).join("")}
+
+  //       <label>Theory Scores:</label>
+  //       ${Object.entries(r.theory || {}).map(([id, ans]) => `
+  //         <div>
+  //           <textarea readonly rows="2">${ans}</textarea>
+  //           <input type="number" min="0" max="10" value="${theoryScores[id] || 0}"
+  //             data-type="theory" data-id="${id}">
+  //         </div>`).join("")}
+  //       <button class="update-btn">Update Score</button>
+  //       <button class="delete-btn" onclick="deleteStudent('${r.name.toLowerCase().trim().replace(/\s+/g, '')}_${r.class.toLowerCase().trim().replace(/\s+/g, '')}')">Delete</button>
+
+  //     </div>
+  //   </details>
+  // `;
+  //     }
+function renderStudentBox(r) {
+  const subjScores = r.subjScores || {};
+  const theoryScores = r.theoryScores || {};
+  const manualScore = getManualScore(subjScores) + getManualScore(theoryScores);
+  const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+
+  const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+  const mcq = shuffled.filter(q => q.type === "mcq");
+  const subjective = shuffled.filter(q => q.type === "subjective");
+  const theory = shuffled.filter(q => q.type === "theory");
+
+  let mcqScore = 0;
+  (r.answers || []).forEach((ans, i) => {
+    if (mcq[i] && mcq[i].answer === ans) mcqScore++;
+  });
+
+  const totalScore = mcqScore + manualScore;
+
+  return `
+  <details class="student-box" data-key="${key}" open>
+    <summary><strong>${r.name} (${r.class})</strong> — <em>${r.date}</em></summary>
+    <div class="student-info">
+      <p><strong>MCQ Score:</strong> <span class="mcq-score">${mcqScore}</span> / ${mcq.length}</p>
+      <p><strong>Manual Score:</strong> <span class="manual-score">${manualScore}</span></p>
+      <p><strong>Total Score:</strong> <span class="total-score">${totalScore}</span></p>
+    </div>
+
+    <div class="table-responsive">
+      <table class="mcq-table">
+        <thead><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th></tr></thead>
+        <tbody>
+          ${mcq.map((q, i) => {
+            const studentAns = r.answers?.[i] || "None";
+            const isCorrect = studentAns === q.answer;
+            const ansColor = studentAns === "None" ? "gray" : isCorrect ? "green" : "red";
+            return `
               <tr>
                 <td><strong>Q${i + 1}:</strong> ${escapeHTML(q.question || "Unknown")}</td>
-                <td>${escapeHTML(r.answers?.[i] || "None")}</td>
+                <td style="color:${ansColor}">${escapeHTML(studentAns)}</td>
                 <td style="color:green">${escapeHTML(q.answer || "?")}</td>
               </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      </div>
+            `;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
 
-      <div>
-        <label>Subjective Scores:</label>
-        ${Object.entries(r.subjective || {}).map(([id, ans]) => `
-          <div>
-            <textarea readonly rows="2">${ans}</textarea>
-            <input type="number" min="0" max="10" value="${subjScores[id] || 0}"
-              data-type="subj" data-id="${id}">
-          </div>`).join("")}
-
-        <label>Theory Scores:</label>
-        ${Object.entries(r.theory || {}).map(([id, ans]) => `
-          <div>
-            <textarea readonly rows="2">${ans}</textarea>
-            <input type="number" min="0" max="10" value="${theoryScores[id] || 0}"
-              data-type="theory" data-id="${id}">
-          </div>`).join("")}
-        <button class="update-btn">Update Score</button>
-        <button class="delete-btn" onclick="deleteStudent()">Delete Student</button>
+    <div class="table-responsive">
+    <h4>Subjective</h4>
+${subjective.map((q, idx) => {
+  const qid = `subj_${idx}`;
+  const ans = r.subjective?.[qid] || "None";
+  const score = subjScores[qid] || 0;
+  const scoreStyle = `border: 2px solid ${score == 0 ? 'red' : 'green'};`;
+  const comment = r.subjComments?.[qid] || "";
+  return `
+    <div style="margin-top: 15px;">
+      <p><strong>Q${idx + 1}:</strong> ${escapeHTML(q.question)}</p>
+      <p style="margin-bottom: -15px;"><strong>Answer:</strong></p>
+      <textarea readonly rows="2" style="width:100%";margin-top: -25px;>${ans}</textarea>
+      <div style="margin-top:-50px;">
+        <label style="font-weight: bold;">Score (10): </label>
+        <input type="number" min="0" max="10" value="${score}"
+          data-type="subj" data-id="${qid}" style="width: 60px; margin-left: 10px; ${scoreStyle}">
       </div>
-    </details>
+    </div>
   `;
-      }
+}).join("")}
+
+<h4 style="margin: 10px 0;">Theory</h4>
+${theory.map((q, idx) => {
+  const qid = `theory_${idx}`;
+  const ans = r.theory?.[qid] || "None";
+  const score = theoryScores[qid] || 0;
+  const scoreStyle = `border: 2px solid ${score == 0 ? 'red' : 'green'};`;
+  const comment = r.theoryComments?.[qid] || "";
+  return `
+    <div style="margin-bottom: 15px;">
+      <p><strong>Q${idx + 1}:</strong> ${escapeHTML(q.question)}</p>
+      <p style="margin-bottom: -15px;"><strong>Answer:</strong></p>
+      <textarea readonly rows="2" style="width:100%";margin-top: -25px;>${ans}</textarea>
+      <div style="margin-top:-50px;">
+        <label style="font-weight: bold;">Score (10): </label>
+        <input type="number" min="0" max="10" value="${score}"
+          data-type="theory" data-id="${qid}" style="width: 60px; margin-left: 10px; ${scoreStyle}">
+      </div>
+    </div>
+  `;
+}).join("")}
+
+    </div>
+
+    <button class="update-btn">Update Score</button>
+    <button class="delete-btn" onclick="deleteStudent('${r.name.toLowerCase().trim().replace(/\s+/g, '')}_${r.class.toLowerCase().trim().replace(/\s+/g, '')}')">Delete</button>
+  </details>
+  `;
+}
 
       // ✅ Update manual score
       function updateManualScore(container) {
@@ -671,12 +775,12 @@ function getManualScore(scores) {
 
         container.querySelectorAll("input[data-type='subj']").forEach(input => {
           const val = parseFloat(input.value);
-subjScores[input.dataset.id] = isNaN(val) ? 0 : val;
+          subjScores[input.dataset.id] = isNaN(val) ? 0 : val;
 
         });
         container.querySelectorAll("input[data-type='theory']").forEach(input => {
           const val = parseFloat(input.value);
- theoryScores[input.dataset.id] = isNaN(val) ? 0 : val;
+          theoryScores[input.dataset.id] = isNaN(val) ? 0 : val;
 
         });
 
@@ -696,9 +800,9 @@ subjScores[input.dataset.id] = isNaN(val) ? 0 : val;
         const totalScore = mcqScore + manualScore;
 
         student.score = mcqScore;
-student.totalScore = totalScore;
+        student.totalScore = totalScore;
 
-localStorage.setItem("quizResults", JSON.stringify(results));
+        localStorage.setItem("quizResults", JSON.stringify(results));
 
 
         // Re-render the updated student box
@@ -710,27 +814,6 @@ localStorage.setItem("quizResults", JSON.stringify(results));
         setTimeout(() => bindUpdateButtons(), 100);
       }
 
-      // ✅ Toast
-      function showToast(msg) {
-        let toast = document.getElementById("toast");
-        if (!toast) {
-          toast = document.createElement("div");
-          toast.id = "toast";
-          toast.style.position = "fixed";
-          toast.style.bottom = "20px";
-          toast.style.left = "50%";
-          toast.style.transform = "translateX(-50%)";
-          toast.style.background = "#333";
-          toast.style.color = "#fff";
-          toast.style.padding = "10px 20px";
-          toast.style.borderRadius = "5px";
-          toast.style.zIndex = "9999";
-          document.body.appendChild(toast);
-        }
-        toast.textContent = msg;
-        toast.style.display = "block";
-        setTimeout(() => toast.style.display = "none", 2000);
-      }
 
       // ✅ Bind update buttons
       function bindUpdateButtons() {
@@ -750,27 +833,49 @@ localStorage.setItem("quizResults", JSON.stringify(results));
         bindUpdateButtons();
       });
 
-      window.deleteStudent = function (key) {
-        const confirmDelete = confirm("Are you sure you want to delete this student's result?");
-        if (!confirmDelete) return;
+     
+ function showToast(message, duration = 3000) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.display = "block";
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, duration);
+  }
 
-        let results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+  window.deleteStudent = function (key) {
+    const confirmDelete = confirm("Are you sure you want to delete this student's result?");
+    if (!confirmDelete) return;
 
-        // Filter out the student by key
-        results = results.filter(r => {
-          const resultKey = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
-          return resultKey !== key;
-        });
+    const normalize = str => (str || "").toLowerCase().trim().replace(/\s+/g, '');
+    const inputKey = normalize(key);
 
-        // Save updated results
-        localStorage.setItem("quizResults", JSON.stringify(results));
+    let results = JSON.parse(localStorage.getItem("quizResults") || "[]");
 
-        // Re-render
-        renderGroupedResultsWithCounts(results);  // Make sure this function is available
-        updateSummary(results);         // Optional: update summary if you have one
-      }
+    const originalLength = results.length;
 
+    results = results.filter(r => {
+      const resultKey = `${normalize(r.name)}_${normalize(r.class)}`;
+      return resultKey !== inputKey;
+    });
 
+    if (results.length === originalLength) {
+      showToast("Student not found or key mismatch");
+      return;
+    }
+
+    localStorage.setItem("quizResults", JSON.stringify(results));
+
+    if (typeof renderGroupedResultsWithCounts === "function") {
+      renderGroupedResultsWithCounts(results);
+    } else {
+      location.reload();
+    }
+
+    if (typeof updateSummary === "function") updateSummary(results);
+
+    showToast("Student deleted successfully!");
+  };
 
       function renderGroupedResultsWithCounts(results) {
         const grouped = groupByClassAndSection(results);
@@ -906,19 +1011,20 @@ localStorage.setItem("quizResults", JSON.stringify(results));
           localStorage.setItem("quizResults", JSON.stringify(results));
         });
       });
-      // Export results by class
-      document.getElementById("download-by-class").onclick = () => {
-        const classVal = normalize(classFilter.value);
-        if (!classVal) return alert("Please enter a class name to filter and download.");
+      
+document.getElementById("download-by-class").onclick = () => {
+  const classVal = normalize(classFilter.value);
+  if (!classVal) return alert("Please enter a class name to filter and download.");
 
-        const filtered = results.filter(r =>
-          normalize(r.class).startsWith(classVal)
-        );
+  const filtered = results.filter(r =>
+    normalize(r.class).startsWith(classVal)
+  );
 
-        if (!filtered.length) return alert("No results found for that class.");
+  if (!filtered.length) return alert("No results found for that class.");
 
-        exportToPDF(filtered, `results_by_class_${classVal}.pdf`);
-      };
+  const classTitle = (filtered[0]?.class?.toUpperCase().split(" ")[0]) || "Class";
+  exportToPDF(filtered, `${classTitle}_results.pdf`, `${classTitle} Student Results`);
+};
 
       // Export results by section
       document.getElementById("download-by-section").onclick = () => {
@@ -934,108 +1040,8 @@ localStorage.setItem("quizResults", JSON.stringify(results));
       };
 
 
-//       window.downloadIndividualPDF = (index) => {
-//         const r = results[index];
-//         const logo = new Image();
-//         logo.src = 'logo-min.png';
-//         logo.onload = () => {
-//           const doc = new jspdf.jsPDF();
 
-//           const schoolFooter = "© Your School Name - All Rights Reserved";
-
-//           const addFooter = () => {
-//             const pageCount = doc.internal.getNumberOfPages();
-//             for (let i = 1; i <= pageCount; i++) {
-//               doc.setPage(i);
-//               const pageHeight = doc.internal.pageSize.height;
-//               doc.setFontSize(9);
-//               doc.setTextColor(150);
-//               doc.text(schoolFooter, 10, pageHeight - 10);
-//               doc.text(`Page ${i} of ${pageCount}`, 180, pageHeight - 10, { align: "right" });
-//             }
-//           };
-
-//           doc.addImage(logo, 'PNG', 10, 10, 30, 15);
-//           doc.setFontSize(14);
-//           doc.text(`Name: ${r.name}`, 10, 30);
-//           doc.text(`Class: ${r.class}`, 10, 38);
-//           doc.text(`Date: ${r.date}`, 10, 46);
-
-//           const subjScore = getManualScore(r.subjScores || {});
-//           const theoryScore = getManualScore(r.theoryScores || {});
-//           const mcqScore = typeof r.score === "number" ? r.score : 0;
-// const total = typeof r.totalScore === "number" ? r.totalScore : (mcqScore + subjScore + theoryScore);
-
-
-//           doc.setFontSize(12);
-//           doc.text(`MCQ Score: ${mcqscore}`, 10, 56);
-//           doc.text(`Manual Score: ${subjScore + theoryScore}`, 10, 64);
-//           doc.text(`Total Score: ${total}`, 10, 72);
-
-//           const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
-//           const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
-//           const mcq = shuffled.filter(q => q.type === "mcq");
-
-//           const mcqData = mcq.map((q, i) => {
-//             const studentAns = r.answers[i] || "None";
-//             return [
-//               `Q${i + 1}: ${q.question || 'Unknown'}`,
-//               studentAns,
-//               q.answer || '?'
-//             ];
-//           });
-
-//           doc.autoTable({
-//             startY: 80,
-//             head: [["Question", "Your Answer", "Correct Answer"]],
-//             body: mcqData,
-//             styles: { fontSize: 9, cellPadding: 3 },
-//             headStyles: { fillColor: [41, 128, 185], textColor: 255, halign: 'center' },
-//             alternateRowStyles: { fillColor: [240, 240, 240] },
-//             margin: { top: 10 },
-//             didDrawPage: function (data) {
-//               if (data.pageCount > 1 && data.cursor.y < 90) {
-//                 doc.setPage(data.pageNumber);
-//                 doc.setFontSize(10);
-//                 doc.text(`Continued...`, 10, 8);
-//               }
-//             }
-//           });
-
-//           let finalY = doc.lastAutoTable.finalY + 5;
-
-//           function renderAnswerTable(title, answers = {}, scores = {}, color = [92, 184, 92]) {
-//             const rows = Object.entries(answers).map(([q, ans]) => [
-//               q,
-//               ans,
-//               scores[q] !== undefined ? scores[q] : '0'
-//             ]);
-
-//             if (!rows.length) return;
-
-//             doc.autoTable({
-//               startY: finalY,
-//               head: [[title + " Question", "Answer", "Score"]],
-//               body: rows,
-//               styles: { fontSize: 9, cellPadding: 3 },
-//               headStyles: { fillColor: color, textColor: 255, halign: 'center' },
-//               alternateRowStyles: { fillColor: [250, 250, 250] },
-//               margin: { top: 10 }
-//             });
-
-//             finalY = doc.lastAutoTable.finalY + 5;
-//           }
-
-//           renderAnswerTable("Subjective", r.subjective, r.subjScores || {}, [52, 152, 219]); // blue header
-//           renderAnswerTable("Theory", r.theory, r.theoryScores || {}, [155, 89, 182]); // purple header
-
-//           addFooter();
-//           console.log("Download clicked for index:", index, "Student:", results[index]);
-
-//           doc.save(`${r.name}_${r.class}_result.pdf`);
-//         };
-//       };
-
+// Final exportToPDF function with class title and average total score fixed
 function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle = "Filtered Student Results") {
   const doc = new jspdf.jsPDF();
   const logo = new Image();
@@ -1048,10 +1054,10 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
     const studentGap = 10;
     let totalScoreSum = 0;
 
-    doc.addImage(logo, 'PNG', 10, y, 25, 12);
+    doc.addImage(logo, 'PNG', 10, y, 35, 20); // Logo on left
     doc.setFontSize(16);
-    doc.text(customTitle, 40, y + 9);
-    y += 25;
+    doc.text(customTitle, 70, y + 9);
+    y += 28;
 
     studentList.forEach((r, index) => {
       if (y > pageHeight - 60) {
@@ -1062,21 +1068,17 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
       doc.setFontSize(13);
       doc.setTextColor(0);
       const leftY = y;
-      doc.text(`Name: ${r.name}`, 10, leftY);
-      doc.text(`Class: ${r.class}`, 10, leftY + lineSpacing);
-      doc.text(`Date: ${r.date}`, 10, leftY + lineSpacing * 2);
+      doc.text(`Name: ${r.name}`, 15, leftY);
+      doc.text(`Class: ${r.class}`, 15, leftY + lineSpacing);
+      doc.text(`Date: ${r.date}`, 15, leftY + lineSpacing * 2);
 
       const getManualScore = obj => Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
-
       const subjScore = getManualScore(r.subjScores || {});
       const theoryScore = getManualScore(r.theoryScores || {});
       const manualScore = subjScore + theoryScore;
-
       const mcqScore = typeof r.score === "number" ? r.score : 0;
-      // const total = typeof r.totalScore === "number" ? r.totalScore : (mcqScore + manualScore);
       const total = mcqScore + manualScore;
-
-      // totalScoreSum += total;
+      totalScoreSum += total;
 
       const scoreLines = [
         `MCQ Score: ${mcqScore}`,
@@ -1089,7 +1091,9 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
         doc.text(line, rightX, leftY + idx * lineSpacing);
       });
 
-      y = leftY + scoreLines.length * lineSpacing + 8;
+      // y = leftY + scoreLines.length * lineSpacing + 8;
+      y = leftY + scoreLines.length * lineSpacing;
+
 
       const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
       const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
@@ -1105,8 +1109,8 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
         startY: y,
         head: [["Question", "Your Answer", "Correct"]],
         body: mcqData,
-        styles: { fontSize: 9, cellPadding: 2 },
-        headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+        styles: { fontSize: 11, cellPadding: 2 },
+        headStyles: { fillColor: [0, 31, 63], textColor: 255 },
         alternateRowStyles: { fillColor: [245, 245, 245] },
         margin: { top: 0 },
         didDrawPage: data => {
@@ -1146,14 +1150,14 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
         if (!rows.length) return;
 
         doc.setFontSize(12);
-        doc.text(`${title} Section`, 10, y + 5);
+        doc.text(`${title} Section`, 15, y + 5);
         y += 8;
 
         doc.autoTable({
           startY: y,
           head: [["Question", "Your Answer", "Score"]],
           body: rows,
-          styles: { fontSize: 9, cellPadding: 2 },
+          styles: { fontSize: 11, cellPadding: 2 },
           headStyles: { fillColor: color, textColor: 255 },
           alternateRowStyles: { fillColor: [250, 250, 250] },
           margin: { top: 0 },
@@ -1164,12 +1168,12 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
 
         doc.setFontSize(10);
         doc.setTextColor(44, 62, 80);
-        doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 10, y);
+        doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 15, y);
         y += 8;
       };
 
-      addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
-      addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
+      addAnswerTable("Subjective", "subjective", r.subjScores || {}, [0, 31, 63]);
+      addAnswerTable("Theory", "theory", r.theoryScores || {}, [0, 31, 63]);
 
       y += studentGap;
 
@@ -1186,7 +1190,7 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
     }
 
     doc.setFontSize(13);
-    doc.text(`Total Students: ${studentList.length}`, 10, y);
+    doc.text(`Total Students: ${studentList.length}`, 15, y);
     doc.text(`Average Total Score: ${avg}`, 100, y);
 
     const pageCount = doc.internal.getNumberOfPages();
@@ -1194,13 +1198,14 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
       doc.setPage(i);
       doc.setFontSize(9);
       doc.setTextColor(150);
-      doc.text("© Your School Name - All Rights Reserved", 10, pageHeight - 10);
+      doc.text("\u00A9 Techxagon Academy - All Rights Reserved", 10, pageHeight - 10);
       doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
     }
 
     doc.save(filename);
   };
-}
+} // end of exportToPDF function
+
 
       window.downloadClasswisePDFs = async () => {
         const classOrder = [
@@ -1214,7 +1219,7 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
 
         const normalize = str => (str || "").toLowerCase().replace(/\s+/g, "");
         const doc = new jspdf.jsPDF();
-        const schoolFooter = "© Your School Name - All Rights Reserved";
+        const schoolFooter = "© Techxagon Academy - All Rights Reserved";
         const logo = new Image();
         logo.src = 'logo-min.png';
 
@@ -1238,16 +1243,16 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
             const filteredResults = results.filter(r => normalize(r.class).includes(normalize(classGroup)));
             if (filteredResults.length === 0) continue;
 
-            y += 15;
-            doc.setFontSize(16);
-            doc.setTextColor(0);
-            doc.addImage(logo, 'PNG', 10, y, 40, 20); // Left-aligned logo
-            y += 25;
+           y += 15;
 
-            doc.setFontSize(14);
-            doc.setTextColor(0);
-            doc.text(`${classGroup.toUpperCase()} RESULTS (Total: ${filteredResults.length})`, 105, y, { align: "center" });
-            y += 12;
+ doc.addImage(logo, 'PNG', 10, y, 35, 20); // Logo on left
+
+doc.setFontSize(16);
+doc.setTextColor(33);
+doc.text(`${classGroup.toUpperCase()} TECHXAGON RESULTS  (Total: ${filteredResults.length})`, 50, y + 8); // Title beside logo
+
+y += 25;
+
 
             for (let i = 0; i < filteredResults.length; i++) {
               const r = filteredResults[i];
@@ -1258,12 +1263,12 @@ function exportToPDF(studentList, filename = "filtered_results.pdf", customTitle
               const theoryScore = getManualScore(r.theoryScores);
 
 
-const mcq = shuffled.filter(q => q.type === "mcq");
-const mcqScore = (r.answers || []).reduce((sum, ans, i) => {
-  return mcq[i] && mcq[i].answer === ans ? sum + 1 : sum;
-}, 0);
-const manualScore = subjScore + theoryScore;
-const totalScore = mcqScore + manualScore;
+              const mcq = shuffled.filter(q => q.type === "mcq");
+              const mcqScore = (r.answers || []).reduce((sum, ans, i) => {
+                return mcq[i] && mcq[i].answer === ans ? sum + 1 : sum;
+              }, 0);
+              const manualScore = subjScore + theoryScore;
+              const totalScore = mcqScore + manualScore;
 
 
               doc.setFontSize(12);
@@ -1295,7 +1300,7 @@ const totalScore = mcqScore + manualScore;
                 head: [["Question", "Your Answer", "Correct Answer"]],
                 body: mcqData,
                 styles: { fontSize: 10, cellPadding: 2 },
-                headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+                headStyles: { fillColor: [0, 31, 63], textColor: 255 },
                 alternateRowStyles: { fillColor: [245, 245, 245] },
                 margin: { top: 8 }
               });
@@ -1356,10 +1361,11 @@ const totalScore = mcqScore + manualScore;
                 y += 6;
               };
 
-              addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
-              addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
+          addAnswerTable("Subjective", "subjective", r.subjScores || {}, [0, 31, 63]);
+addAnswerTable("Theory", "theory", r.theoryScores || {}, [0, 31, 63]);
 
-              y += 6;
+y += 25; // ← increased gap between students
+
             }
 
             if (classGroup !== classOrder[classOrder.length - 1]) {
@@ -1376,172 +1382,172 @@ const totalScore = mcqScore + manualScore;
 
 
 
-document.getElementById("download-csv").onclick = () => {
-  let csv = "Name,Class,MCQ,Manual,Total,Date\n";
+      document.getElementById("download-csv").onclick = () => {
+        let csv = "Name,Class,MCQ,Manual,Total,Date\n";
 
-  const getManualScore = obj =>
-    Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
+        const getManualScore = obj =>
+          Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
 
-  results.forEach(r => {
-    const subjScores = r.subjScores || {};
-    const theoryScores = r.theoryScores || {};
-    const manual = getManualScore(subjScores) + getManualScore(theoryScores);
-    const mcq = typeof r.score === "number" ? r.score : 0;
-    const total = mcq + manual;
+        results.forEach(r => {
+          const subjScores = r.subjScores || {};
+          const theoryScores = r.theoryScores || {};
+          const manual = getManualScore(subjScores) + getManualScore(theoryScores);
+          const mcq = typeof r.score === "number" ? r.score : 0;
+          const total = mcq + manual;
 
-    csv += `${r.name},${r.class},${mcq},${manual},${total},${r.date}\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "quiz_results.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-};
-
-
-
-
-     
-window.downloadAllPDFs = async () => {
-  for (let i = 0; i < results.length; i++) {
-    const r = results[i];
-
-    await new Promise((resolve) => {
-      const logo = new Image();
-      logo.src = 'logo-min.png';
-
-      logo.onload = () => {
-        const doc = new jspdf.jsPDF();
-        const schoolFooter = "© Your School Name - All Rights Reserved";
-
-        const addFooter = () => {
-          const pageCount = doc.internal.getNumberOfPages();
-          for (let p = 1; p <= pageCount; p++) {
-            doc.setPage(p);
-            const pageHeight = doc.internal.pageSize.height;
-            doc.setFontSize(9);
-            doc.setTextColor(150);
-            doc.text(schoolFooter, 10, pageHeight - 10);
-            doc.text(`Page ${p} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
-          }
-        };
-
-        const getManualScore = obj => Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
-
-        const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
-        const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
-
-        const mcq = shuffled.filter(q => q.type === "mcq");
-        const mcqScore = (r.answers || []).reduce((sum, ans, i) => {
-          return mcq[i] && mcq[i].answer === ans ? sum + 1 : sum;
-        }, 0);
-
-        const subjScore = getManualScore(r.subjScores);
-        const theoryScore = getManualScore(r.theoryScores);
-        const totalScore = mcqScore + subjScore + theoryScore;
-
-        doc.addImage(logo, 'PNG', 10, 10, 30, 15);
-        doc.setFontSize(14);
-        doc.text(`Name: ${r.name}`, 10, 30);
-        doc.text(`Class: ${r.class}`, 10, 38);
-        doc.text(`Date: ${r.date}`, 10, 46);
-
-        doc.setFontSize(12);
-        doc.text(`MCQ Score: ${mcqScore}`, 10, 56);
-        doc.text(`Manual Score: ${subjScore + theoryScore}`, 10, 64);
-        doc.text(`Total Score: ${totalScore}`, 10, 72);
-
-        let y = 80;
-
-        const mcqData = mcq.map((q, i) => {
-          const studentAns = r.answers[i] || "Not answered";
-          const correctAns = q.answer || "?";
-          return [
-            `Q${i + 1}: ${q.question || 'Unknown'}`,
-            studentAns,
-            correctAns
-          ];
+          csv += `${r.name},${r.class},${mcq},${manual},${total},${r.date}\n`;
         });
 
-        doc.autoTable({
-          startY: y,
-          head: [["Question", "Your Answer", "Correct Answer"]],
-          body: mcqData,
-          styles: { fontSize: 9, cellPadding: 3 },
-          headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-          alternateRowStyles: { fillColor: [245, 245, 245] },
-          margin: { top: 10 }
-        });
-
-        y = doc.lastAutoTable.finalY + 5;
-
-        const addAnswerTable = (title, typeKey, scores = {}, color) => {
-          const questions = shuffled.filter(q => q.type === typeKey);
-          const answers = typeKey === "subjective" ? r.subjective || {} : r.theory || {};
-
-          let sectionTotalScore = 0;
-
-          const rows = questions.map((q, idx) => {
-            const questionText = q.question || `Q${idx + 1}`;
-            const prefix = typeKey === "subjective" ? "subj" : "theory";
-            const key = `${prefix}_${idx}`;
-
-            const answerRaw = answers[key];
-            const scoreRaw = scores[key];
-
-            const answered = typeof answerRaw !== "undefined" && answerRaw !== "";
-            const scoreNum = typeof scoreRaw === "number" ? scoreRaw : parseInt(scoreRaw) || 0;
-
-            sectionTotalScore += scoreNum;
-
-            const answer = answered ? answerRaw : "Not answered";
-            const scoreDisplay = scoreNum.toString();
-
-            return [
-              questionText,
-              answer,
-              { content: scoreDisplay, styles: { textColor: scoreNum === 0 ? [192, 57, 43] : [39, 174, 96] } }
-            ];
-          });
-
-          if (!rows.length) return;
-
-          doc.setFontSize(12);
-          doc.text(`${title} Section`, 10, y + 5);
-          y += 8;
-
-          doc.autoTable({
-            startY: y,
-            head: [["Question", "Your Answer", "Score"]],
-            body: rows,
-            styles: { fontSize: 9, cellPadding: 2 },
-            headStyles: { fillColor: color, textColor: 255 },
-            alternateRowStyles: { fillColor: [250, 250, 250] },
-            margin: { top: 0 },
-            didDrawPage: data => {
-              y = data.cursor.y + 5;
-            }
-          });
-
-          doc.setFontSize(10);
-          doc.setTextColor(44, 62, 80);
-          doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 10, y);
-          y += 8;
-        };
-
-        addAnswerTable("Subjective", "subjective", r.subjScores || {}, [52, 152, 219]);
-        addAnswerTable("Theory", "theory", r.theoryScores || {}, [155, 89, 182]);
-
-        addFooter();
-        doc.save(`${r.name}_${r.class}_result.pdf`);
-        resolve();
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "quiz_results.csv";
+        a.click();
+        URL.revokeObjectURL(url);
       };
-    });
-  }
-};
+
+
+
+
+
+      window.downloadAllPDFs = async () => {
+        for (let i = 0; i < results.length; i++) {
+          const r = results[i];
+
+          await new Promise((resolve) => {
+            const logo = new Image();
+            logo.src = 'logo-min.png';
+
+            logo.onload = () => {
+              const doc = new jspdf.jsPDF();
+              const schoolFooter = "© Techxagon Academy - All Rights Reserved";
+
+              const addFooter = () => {
+                const pageCount = doc.internal.getNumberOfPages();
+                for (let p = 1; p <= pageCount; p++) {
+                  doc.setPage(p);
+                  const pageHeight = doc.internal.pageSize.height;
+                  doc.setFontSize(9);
+                  doc.setTextColor(150);
+                  doc.text(schoolFooter, 10, pageHeight - 10);
+                  doc.text(`Page ${p} of ${pageCount}`, 200, pageHeight - 10, { align: "right" });
+                }
+              };
+
+              const getManualScore = obj => Object.values(obj || {}).reduce((sum, s) => sum + (+s || 0), 0);
+
+              const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+              const shuffled = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+
+              const mcq = shuffled.filter(q => q.type === "mcq");
+              const mcqScore = (r.answers || []).reduce((sum, ans, i) => {
+                return mcq[i] && mcq[i].answer === ans ? sum + 1 : sum;
+              }, 0);
+
+              const subjScore = getManualScore(r.subjScores);
+              const theoryScore = getManualScore(r.theoryScores);
+              const totalScore = mcqScore + subjScore + theoryScore;
+
+              doc.addImage(logo, 'PNG', 10, 10, 30, 15);
+              doc.setFontSize(14);
+              doc.text(`Name: ${r.name}`, 15, 30);
+              doc.text(`Class: ${r.class}`, 15, 38);
+              doc.text(`Date: ${r.date}`, 15, 46);
+
+              doc.setFontSize(12);
+              doc.text(`MCQ Score: ${mcqScore}`, 15, 56);
+              doc.text(`Manual Score: ${subjScore + theoryScore}`, 15, 64);
+              doc.text(`Total Score: ${totalScore}`, 15, 72);
+
+              let y = 80;
+
+              const mcqData = mcq.map((q, i) => {
+                const studentAns = r.answers[i] || "Not answered";
+                const correctAns = q.answer || "?";
+                return [
+                  `Q${i + 1}: ${q.question || 'Unknown'}`,
+                  studentAns,
+                  correctAns
+                ];
+              });
+
+              doc.autoTable({
+                startY: y,
+                head: [["Question", "Your Answer", "Correct Answer"]],
+                body: mcqData,
+                styles: { fontSize: 9, cellPadding: 3 },
+                headStyles: { fillColor: [0, 31, 63], textColor: 255 },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+                margin: { top: 10 }
+              });
+
+              y = doc.lastAutoTable.finalY + 5;
+
+              const addAnswerTable = (title, typeKey, scores = {}, color) => {
+                const questions = shuffled.filter(q => q.type === typeKey);
+                const answers = typeKey === "subjective" ? r.subjective || {} : r.theory || {};
+
+                let sectionTotalScore = 0;
+
+                const rows = questions.map((q, idx) => {
+                  const questionText = q.question || `Q${idx + 1}`;
+                  const prefix = typeKey === "subjective" ? "subj" : "theory";
+                  const key = `${prefix}_${idx}`;
+
+                  const answerRaw = answers[key];
+                  const scoreRaw = scores[key];
+
+                  const answered = typeof answerRaw !== "undefined" && answerRaw !== "";
+                  const scoreNum = typeof scoreRaw === "number" ? scoreRaw : parseInt(scoreRaw) || 0;
+
+                  sectionTotalScore += scoreNum;
+
+                  const answer = answered ? answerRaw : "Not answered";
+                  const scoreDisplay = scoreNum.toString();
+
+                  return [
+                    questionText,
+                    answer,
+                    { content: scoreDisplay, styles: { textColor: scoreNum === 0 ? [192, 57, 43] : [39, 174, 96] } }
+                  ];
+                });
+
+                if (!rows.length) return;
+
+                doc.setFontSize(12);
+                doc.text(`${title} Section`, 15, y + 5);
+                y += 8;
+
+                doc.autoTable({
+                  startY: y,
+                  head: [["Question", "Your Answer", "Score"]],
+                  body: rows,
+                  styles: { fontSize: 10, cellPadding: 2 },
+                  headStyles: { fillColor: color, textColor: 255 },
+                  alternateRowStyles: { fillColor: [250, 250, 250] },
+                  margin: { top: 0 },
+                  didDrawPage: data => {
+                    y = data.cursor.y + 5;
+                  }
+                });
+
+                doc.setFontSize(10);
+                doc.setTextColor(44, 62, 80);
+                doc.text(`Total Manual Score (${title}): ${sectionTotalScore}`, 15, y);
+                y += 8;
+              };
+
+              addAnswerTable("Subjective", "subjective", r.subjScores || {}, [0, 31, 63]);
+              addAnswerTable("Theory", "theory", r.theoryScores || {}, [0, 31, 63]);
+
+              addFooter();
+              doc.save(`${r.name}_${r.class}_result.pdf`);
+              resolve();
+            };
+          });
+        }
+      };
 
 
       document.getElementById("clear-all-results-btn").onclick = () => {
@@ -1555,6 +1561,7 @@ window.downloadAllPDFs = async () => {
         if (confirm("Logout?")) window.location.href = "login.html";
         localStorage.removeItem("adminLoggedIn");
         location.href = "login.html";
+        
       };
       // 🔧 Utility function to normalize keys
       function normalizeKey(str = "") {
@@ -1627,7 +1634,6 @@ window.downloadAllPDFs = async () => {
     }
 
   </script>
-  <!-- <script src="adminPage.js"></script>  -->
   <div id="toast" style="
   position: fixed;
   bottom: 20px;
