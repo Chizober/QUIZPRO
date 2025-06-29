@@ -1,0 +1,11 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "devDependencies": {
+    "electron-packager": "^17.1.2"
+  },
+  "scripts": {
+   "start": "npx electron ."
+}
+}

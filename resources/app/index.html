@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOME | TECHXAGON CBT-TEST</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Reset */
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.4;
+   font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+
+h3{
+  text-align: left;
+  margin: 6px 0px 6px -40px;
+}
+ul li{
+
+ font-weight: 100;
+}
+/* Theme Toggle Button */
+.theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Dark Theme */
+body.dark {
+  background-color: #1a1a1a;
+  color: #eee;
+}
+body.dark  #welcomeScreen {
+  background-color: #1a1a1a;
+  color: #eee;
+}
+
+body.dark h3, body.dark ul li,body.dark p,  body.dark h1 {
+  color: #ddd;
+  font-weight: 100;
+}
+#welcomeScreen{
+ width:95%; 
+ margin:0 auto;
+ height:100%;
+ color:#333;
+ padding:25px;
+
+}
+#welcomeScreen p,h1{
+  text-align:center;
+   font-weight:bold ;
+}
+#welcomeScreen p{
+  font-style: italic;
+   text-align:center;
+}
+#welcomeScreen div{
+  max-width:1000px;
+   margin:auto;
+}
+.link:hover {
+  background-color: #285a8e;
+}
+
+.instruction{
+font-style:italic; 
+font-size: clamp(0.6rem, 2vw, .9rem);
+margin-top:10px"
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Theme Toggle Button -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌞</button>
+
+  <!-- Header -->
+  
+  <div  id="welcomeScreen">
+
+  <div>
+    <h1>🎓 WELCOME TO TECHXAGON CBT TEST</h1>
+    <p>Please read the instructions carefully before starting.</p>
+
+    <hr/>
+
+    <h3>📘 3rd Term Exams Details</h3>
+    <ul>
+      <li><strong>Number of Questions:</strong> 15</li>
+      <li><strong>Time Limit:</strong> 5 minutes</li>
+      <li><strong>Type:</strong> Multiple choice</li>
+      <li><strong>Scoring:</strong> 1 point per correct answer. No negative marking.</li>
+    </ul>
+
+    <h3>📋 Rules</h3>
+    <ul>
+      <li>Do not refresh or close your browser during the test.</li>
+      <li>Only one attempt is allowed.</li>
+      <li>Make sure your internet connection is stable.</li>
+    </ul>
+
+    <h3>✅ After Submission</h3>
+    <ul>
+      <li>Your score will be shown immediately.</li>
+      <li>You will be able to download your result.</li>
+    </ul>
+  </div>
+    <p class="instruction">By clicking Start Exam, you confirm that you will complete this test honestly and independently.</p>
+    
+
+    <a href="./student.html" class="btn">Start</a>
+
+</div>
+  <script src="./script.js"></script>
+</body>
+</html>
