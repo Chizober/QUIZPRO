@@ -1,7 +1,15 @@
+
+
 body {
+ 
+  padding-left: min(4em, 5%);
+  padding-right: min(4em, 5%);
   font-family: Arial, sans-serif;
-  background: #fff;
-  transition: background .3s;
+  color: #222; 
+  background-color:#f0f0f0;
+  transition: background-color 0.3s, color 0.3s;
+  line-height: 1.6;
+
 }
 
 body.dark {
@@ -118,17 +126,6 @@ button {
   text-decoration: none;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  padding-left: min(4em, 5%);
-  padding-right: min(4em, 5%);
-  font-family: Arial, sans-serif;
-  color: #222; 
-  background-color:#f0f0f0;
-  transition: background-color 0.3s, color 0.3s;
-  line-height: 1.6;
-
-}
 
 body.dark {
   background: #121212;

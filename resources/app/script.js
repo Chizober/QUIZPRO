@@ -82,37 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-// function renderMCQ() {
-//   quizContentMCQ.innerHTML = "<h3 class='mcq'>MCQ Section</h3>";
-//   mcqQuestions.forEach((q, i) => {
-//     const div = document.createElement("div");
-//     div.innerHTML = `<p><strong>Q${i + 1}. ${q.question}</strong></p>`;
-//     q.options.forEach(opt => {
-//       const btn = document.createElement("button");
-//       btn.textContent = opt;
-//       btn.className = "option-btn fade-in";
-//       btn.onclick = () => {
-//         selectedAnswers[i] = opt;
-//         Array.from(div.querySelectorAll("button")).forEach(b => b.classList.remove("selected"));
-//         btn.classList.add("selected");
-//       };
-//       div.appendChild(btn);
-//     });
-//     quizContentMCQ.appendChild(div);
-//   });
 
-//   // Show MCQ section only
-//   quizContentMCQ.classList.remove("hidden");
-//   quizContentSubj.classList.add("hidden");
-//   quizContentTheory.classList.add("hidden");
-
-
-//   updateStep(1);
-
-//   // Show only the "Continue to Subjective" button
-//   btnToSubj.classList.remove("hidden");
-//   btnToTheory.classList.add("hidden");
-// }
 function renderMCQ() {
   quizContentMCQ.innerHTML = "<h3 class='mcq'>MCQ Section</h3>";
 

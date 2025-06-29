@@ -6,6 +6,6 @@
     "electron-packager": "^17.1.2"
   },
   "scripts": {
-   "start": "npx electron ."
+   "start": "electron.exe."
 }
 }

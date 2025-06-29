@@ -1,178 +1,311 @@
 [
   {
     "type": "mcq",
-    "question": "What does AI stand for?",
-    "options": ["Artificial Interface", "Advanced Intelligence", "Artificial Intelligence", "Automated Integration"],
-    "answer": "Artificial Intelligence",
-    "explanation": "AI stands for Artificial Intelligence, which refers to the simulation of human intelligence in machines that are programmed to think and learn."
+    "question": "What is word processing?",
+    "options": ["Browsing the internet", "Editing and formatting text documents", "Calculating numbers", "Drawing pictures"],
+    "answer": "Editing and formatting text documents",
+    "explanation": "Word processing involves creating, editing, and formatting text."
   },
   {
     "type": "mcq",
-    "question": "What is the correct <meta> tag for responsive design?",
-    "options": [
-      "<meta viewport='device-width'>",
-      "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
-      "<meta responsive='true'>",
-      "<meta width='auto'>"
-    ],
-    "answer": "<meta name='viewport' content='width=device-width, initial-scale=1.0'>",
-    "explanation": "The correct <meta> tag for responsive design is <meta name='viewport' content='width=device-width, initial-scale=1.0'>, which ensures that the page scales correctly on different devices."
+    "question": "Which of the following is a word processor?",
+    "options": ["Excel", "Paint", "Microsoft Word", "Chrome"],
+    "answer": "Microsoft Word",
+    "explanation": "Microsoft Word is a popular word processor used for creating documents."
+  },
+ {
+    "type": "mcq",
+    "question": "Which file extension is used for Word documents?",
+    "options": [".ppt", ".docx", ".xls", ".pdf"],
+    "answer": ".docx",
+    "explanation": "The .docx format is the standard extension for Word documents."
   },
   {
     "type": "mcq",
-    "question": "What does 'responsive image' mean?",
-    "options": [
-      "An image that responds to user clicks",
-      "An image that resizes to fit different screen sizes",
-      "An image with a fast loading time",
-      "An image with animation"
-    ],
-    "answer": "An image that resizes to fit different screen sizes",
-    "explanation": "A responsive image is one that resizes to fit different screen sizes, ensuring optimal display on various devices without losing quality."
-  },
-  {
-    "type": "mcq",
-    "question": "What does CSS stand for?",
-    "options": ["Creative Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
-    "answer": "Cascading Style Sheets",
-    "explanation": "CSS stands for Cascading Style Sheets, which is a style sheet language used for describing the presentation of a document written in HTML or XML."
-  },
-  {
-    "type": "mcq",
-    "question": "What is the goal of responsive web design?",
-    "options": [
-      "To make websites load faster",
-      "To support only mobile devices",
-      "To ensure websites look good on all devices",
-      "To use only HTML"
-    ],
-    "answer": "To ensure websites look good on all devices",
-    "explanation": "The goal of responsive web design is to ensure that websites look good and function well on all devices, including desktops, tablets, and smartphones, by adapting the layout and content."
-  },
-  {
-    "type": "mcq",
-    "question": "Which attribute defines alternate text for an image in HTML?",
-    "options": ["alt", "title", "description", "caption"],
-    "answer": "alt",
-    "explanation": "The 'alt' attribute in HTML defines alternate text for an image, which is displayed if the image cannot be loaded and is also used by screen readers for accessibility."
-  },
-  {
-    "type": "mcq",
-    "question": "Which tag is commonly used to wrap navigation menus in HTML?",
-    "options": ["<nav>", "<ul>", "<div>", "<menu>"],
-    "answer": "<nav>",
-    "explanation": "The <nav> tag is commonly used to wrap navigation menus in HTML, providing a semantic way to define navigation links on a webpage."
-  },
-  {
-    "type": "mcq",
-    "question": "AI is like a .........,where humans are the..........,feeding it with ..........,all the time",
-    "options": ["a small house, the builders,concrete", "a giant library,the librarians,information/data", "a pot,potter,clay"],
-    "answer": "a giant library,the librarians,information/data",
-    "explanation": "AI is like a giant library, where humans are the librarians, feeding it with information/data all the time. This analogy illustrates how AI systems learn and improve through continuous input of data."
-  },
-  {
-    "type": "mcq",
-    "question": "Which of the following is NOT an AI assistant?",
-    "options": ["Siri", "Alexa", "Google Assistant", "Excel"],
-    "answer": "Excel",
-    "explanation": "Excel is a spreadsheet application and not an AI assistant. Siri, Alexa, and Google Assistant are examples of AI assistants that use natural language processing to interact with users."
-  },
-  {
-    "type": "mcq",
-    "question": "Which HTML tag is used for dividing content into sections?",
-    "options": ["<br>", "<hr>", "<div>", "<form>"],
-    "answer": "<div>",
-    "explanation": "The <div> tag in HTML is used to divide content into sections, allowing for better organization and styling of web pages."
-  },
-  {
-    "type": "mcq",
-    "question": "Which of these languages is commonly used in AI programming?",
-    "options": ["HTML", "Python", "CSS", "PHP"],
-    "answer": "Python",
-    "explanation": "Python is commonly used in AI programming due to its simplicity, readability, and extensive libraries for machine learning and data analysis."
-  },
-  {
-    "type": "mcq",
-    "question": "AI cannot exist without ..........?",
-    "options": ["Machine and Instrument", "Hardware and data", "Software and internet"],
-    "answer": "Hardware and data",
-    "explanation": "AI cannot exist without hardware, as it requires physical components like processors and memory to run algorithms and process data."
-  },
-  {
-    "type": "mcq",
-    "question": "............is not a types of AI?",
-    "options": ["Weak AI", "Super AI", "Basic AI", "General AI"],
-    "answer": "Basic AI",
-    "explanation": "Basic AI is not a recognized type of AI. The main types of AI include Weak AI (narrow AI), General AI (strong AI), and Super AI (hypothetical future AI that surpasses human intelligence)."
-  },
-  {
-    "type": "mcq",
-    "question": "What type of AI is used in chatbots?",
-    "options": ["Narrow AI", "General AI", "Super AI", "Creative AI"],
-    "answer": "Narrow AI",
-    "explanation": "Chatbots typically use Narrow AI, which is designed to perform specific tasks such as answering questions or providing customer support, rather than possessing general intelligence."
-  },
-  {
-    "type": "mcq",
-    "question": "What is the differnce between AI and Human Intelligence?",
-    "options": [
-      "AI can learn from experience, while human intelligence cannot",
-      "AI can process data faster than humans, but lacks emotional understanding",
-      "AI gets tired, while humans do not"
-    ],
-    "answer": "AI can process data faster than humans, but lacks emotional understanding",
-    "explanation": "AI can process data at much higher speeds than humans, but it lacks the emotional understanding and intuition that characterize human intelligence."
-  },
-  {
-    "type": "mcq",
-    "question": "What is the goal of Artificial Intelligence?",
-    "options": [
-      "To replace all human workers",
-      "To build systems that can perform tasks that require human intelligence",
-      "To automate everything",
-      "To create human clones"
-    ],
-    "answer": "To build systems that can perform tasks that require human intelligence",
-    "explanation": "The goal of Artificial Intelligence is to build systems that can perform tasks that typically require human intelligence, such as understanding natural language, recognizing patterns, and making decisions."
-  },
-  {
-    "type": "mcq",
-    "question": "Why is clamp() useful in responsive design?",
-    "options": [
-      "It locks the font size",
-      "It allows values to scale within limits based on screen size",
-      "It creates gradients",
-      "It adds fixed padding"
-    ],
-    "answer": "It allows values to scale within limits based on screen size",
-    "explanation": "The clamp() function in CSS allows values to scale within specified limits based on the screen size, making it useful for responsive design by ensuring that elements adapt fluidly to different viewport sizes."
-  },
-  {
-    "type": "mcq",
-    "question": "Which of the following is a valid use of clamp()?",
-    "options": [
-      "clamp(16px, 2vw, 24px)",
-      "clamp(2rem; 5rem; 10rem)",
-      "clamp(10px - 100px)",
-      "clamp: 1vw, 2rem, 5rem"
-    ],
-    "answer": "clamp(16px, 2vw, 24px)",
-    "explanation": "The valid use of clamp() is clamp(16px, 2vw, 24px), which sets a minimum value of 16px, a preferred value that scales with the viewport width (2vw), and a maximum value of 24px. This allows for responsive design while maintaining limits on the size."
-  },
+    "question": "To make text bold, you use:",
+    "options": ["Ctrl + U", "Ctrl + B", "Ctrl + I", "Ctrl + A"],
+    "answer": "Ctrl + B",
+    "explanation": "This makes a text bold"
 
-  
+  },
+  {
+    "type": "mcq",
+    "question": "What does 'alignment' mean in word processing?",
+    "options": ["Font style", "Text direction", "Spacing", "Borders"],
+    "answer": "Text direction",
+    "explanation": "This helps give text positions"
+  },
+  {
+    "type": "mcq",
+    "question": "Which tab contains font settings in MS Word?",
+    "options": ["File", "Home", "Insert", "Design"],
+    "answer": "Home",
+    "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "The shortcut to save a document is:",
+    "options": ["Ctrl + C", "Ctrl + V", "Ctrl + S", "Ctrl + Z"],
+    "answer": "Ctrl + S",
+    "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "What does “Justify” do?",
+    "options": ["Aligns text both left and right", "Adds bullet points", "Inserts a table", "Prints the document"],
+    "answer": "Aligns text both left and right",
+    "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Headers appear in the:",
+    "options": ["Middle", "Footer", "Top margin", "Sidebar"],
+    "answer": "Top margin",
+    "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Footers are added at the:",
+    "options": ["Top", "Bottom", "Side", "Margin"],
+    "answer": "Bottom",
+    "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Page orientation can be set to:",
+    "options": ["Horizontal and vertical", "Portrait and landscape", "Bold and italic", "Normal and wide"],
+    "answer": "Portrait and landscape",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "What does the “Undo” command do?",
+    "options": ["Saves the document", "Erases all content", "Reverses last action", "Redoes deleted content"],
+    "answer": "Reverses last action",
+     "explanation":""
+  },
+   {
+    "type": "mcq",
+    "question": "What is a database?",
+    "options": ["A document", "A collection of images", "A collection of related data", "A spreadsheet"],
+    "answer": "A collection of related data",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Which of these is an example of a database software?",
+    "options": ["PowerPoint", "Access", "Word", "Chrome"],
+    "answer": "Access",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "A table in a database contains:",
+    "options": ["Graphics", "Records and fields", "Slides", "Animations"],
+    "answer": "Records and fields",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "A record is:",
+    "options": ["A single piece of data", "A row in a table", "A column", "A document"],
+    "answer": "A row in a table",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "What is a field in a database?",
+    "options": ["A paragraph", "A document", "A column that stores data", "A page number"],
+    "answer": "A column that stores data",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Which data type stores numbers?",
+    "options": ["ShortText", "Date", "Number", "Yes/No"],
+    "answer": "Number",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "How many primary keys can a table have?",
+    "options": ["Unlimited", "Only one", "Two", "None"],
+    "answer": "Only one",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "What does relationship in Access refer to?",
+    "options": ["Matching colors", "Linking tables", "Printing reports", "Merging forms"],
+    "answer": "Linking tables",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "MS Access is best used for:",
+    "options": ["Drawing", "Writing letters", "Managing structured data", "Watching videos"],
+    "answer": "Managing structured data",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "A spreadsheet contains:",
+    "options": ["Slides", "Tables", "Rows and columns", "Pages"],
+    "answer": "Rows and columns",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "The intersection of a row and column is called a:",
+    "options": ["Field", "Cell", "Table", "Box"],
+    "answer": "Cell",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "What is the file extension of an Excel file?",
+    "options": [".xlsx", ".doc", ".ppt", ".txt"],
+    "answer": ".xlsx",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "What symbol starts a formula in Excel?",
+    "options": ["+", "=", "@", "#"],
+    "answer": "=",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Which function adds numbers in Excel?",
+    "options": ["=COUNT", "=SUM", "=IF", "=ADD"],
+    "answer": "=SUM",
+     "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Charts in Excel help you:",
+    "options": ["Format text", "Visualize data", "Print pages", "Count rows"],
+    "answer": "Visualize data",
+    "explanation":""
+  },
+  {
+    "type": "mcq",
+    "question": "Which bar shows the current position in the document?",
+    "options": ["Taskbar", "Toolbar", "Status bar", "Title bar"],
+    "answer": "Status bar",
+    "explanation": "The status bar shows page number, word count, and other information."
+  },
+ {
+    "type": "mcq",
+    "question": "What is the shortcut for copying text?",
+    "options": ["Ctrl + X", "Ctrl + C", "Ctrl + V", "Ctrl + A"],
+    "answer": "Ctrl + C",
+    "explanation": "Ctrl + C copies the selected text or item."
+  },
+   {
+    "type": "mcq",
+    "question": "Which function finds the highest number?",
+    "options": ["=MIN", "=COUNT", "=MAX", "=AVERAGE"],
+    "answer": "=MAX",
+    "explanation": "=MAX returns the largest value in a set of numbers."
+  },
+  {
+    "type": "mcq",
+    "question": "In Excel, what is a formula?",
+    "options": ["A number", "A text", "An equation that calculates values", "A cell format"],
+    "answer": "An equation that calculates values",
+    "explanation": "Formulas in Excel are used for mathematical and logical calculations."
+  },
+  {
+    "type": "mcq",
+    "question": "Which symbol represents multiplication in Excel?",
+    "options": ["x", "*", "/", "+="],
+    "answer": "*",
+    "explanation": "Excel uses * as the operator for multiplication."
+  },
+  {
+    "type": "mcq",
+    "question": "What is a range in Excel?",
+    "options": ["A formula", "A group of selected cells", "A single cell", "A graph"],
+    "answer": "A group of selected cells",
+    "explanation": "A range refers to a selection of two or more cells."
+  },
+  {
+    "type": "mcq",
+    "question": "Which option lets you change the color of text in Word?",
+    "options": ["Font Color", "Page Layout", "Margins", "Header"],
+    "answer": "Font Color",
+    "explanation": "Font Color changes the color of the selected text in Microsoft Word."
+  },
+   {
+    "type": "mcq",
+    "question": "Which section of Word shows the file name?",
+    "options": ["Status Bar", "Title Bar", "Toolbar", "Scroll Bar"],
+    "answer": "Title Bar",
+    "explanation": "The Title Bar displays the current document name at the top of the window."
+  },
+   {
+    "type": "mcq",
+    "question": "Which tab in MS Word contains options for font formatting?",
+    "options": ["Insert", "Layout", "Home", "Review"],
+    "answer": "Home",
+    "explanation": "The Home tab in MS Word includes font, paragraph, and style settings."
+  },
+   {
+    "type": "mcq",
+    "question": "What are columns labeled with in Excel?",
+    "options": ["Numbers", "Letters", "Symbols", "Colors"],
+    "answer": "Letters",
+    "explanation": "Excel columns are labeled A, B, C, and so on."
+  },
+   {
+    "type": "mcq",
+    "question": "In Excel, what is the name of each box where data is entered?",
+    "options": ["Box", "Block", "Cell", "Tab"],
+    "answer": "Cell",
+    "explanation": "A cell is the intersection of a row and a column where data is entered."
+  },
+  {
+    "type": "mcq",
+    "question": "Which tab in Excel allows you to insert charts and images?",
+    "options": ["Formulas", "Insert", "Data", "Review"],
+    "answer": "Insert",
+    "explanation": "The Insert tab provides options to insert charts, tables, pictures, and shapes."
+  },
+  {
+    "type": "mcq",
+    "question": "What does the Name Box in Excel display?",
+    "options": ["Formula result", "File name", "Active cell reference", "Page number"],
+    "answer": "Active cell reference",
+    "explanation": "The Name Box shows the address (like A1) of the selected cell."
+  },
+  {
+    "type": "mcq",
+    "question": "Which Access object is used to present data in a printable format?",
+    "options": ["Table", "Form", "Report", "Query"],
+    "answer": "Report",
+    "explanation": "Reports in Access are used to format, summarize, and print data."
+  },
+  {
+    "type": "mcq",
+    "question": "In MS Access, what object is used to retrieve data based on criteria?",
+    "options": ["Form", "Query", "Report", "Macro"],
+    "answer": "Query",
+    "explanation": "A query is used in Access to filter and retrieve specific data from tables."
+  },
   {
     "type": "subjective",
-    "question": "Explain the importance of accessibility in web development."
+    "question": "---- is a file made up of rows and columns, that help sort,arrrange and calculate numerical data."
   },
 
   
   {
     "type": "theory",
-    "question": "Discuss the advantages and disadvantages of using Artificial Intelligence in education."
+    "question": "Define the following:record, file, and foreign key."
   },
   {
     "type": "theory",
-    "question": "Describe how responsive web design improves the user experience across devices."
+    "question": "Mention four parts of MS Word Environment"
   }
 ]
