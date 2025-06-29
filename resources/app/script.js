@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnFinish = document.getElementById("finish-btn");
   
   const btnReturnHome = document.getElementById("return-home-btn");
+  const errorDisplay = document.getElementById("login-error");
 
   const warningSound = new Audio("./sounds/success.wav");
   const endSound = new Audio("./sounds/wrong.mp3");
@@ -334,15 +335,41 @@ btnToTheory.onclick = () => {
 
   updateStep(3);
 };
-function exportStudentResults() {
-  const results = JSON.parse(localStorage.getItem("quizResults") || "[]");
-  const blob = new Blob([JSON.stringify(results, null, 2)], { type: "application/json" });
+// function exportStudentResults() {
+//   const results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+//   const blob = new Blob([JSON.stringify(results, null, 2)], { type: "application/json" });
 
+//   const link = document.createElement("a");
+//   link.href = URL.createObjectURL(blob);
+//   link.download = "student-results.json"; // You can personalize this by student name
+//   link.click();
+// }
+function exportMyResult() {
+  const name = studentInfo.name.toLowerCase();
+  const className = studentInfo.class.toLowerCase();
+  const key = `${name}_${className}`;
+
+  const questionsUsed = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+  const results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+  const studentResult = results.find(r =>
+    r.name.toLowerCase() === name && r.class.toLowerCase() === className
+  );
+
+  if (!studentResult) return alert("No result found for this student.");
+
+  const fullExport = {
+    ...studentResult,
+    questionsUsed
+  };
+
+  const blob = new Blob([JSON.stringify(fullExport, null, 2)], { type: "application/json" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "student-results.json"; // You can personalize this by student name
+  link.download = `${studentResult.name}_${studentResult.class}_result.json`;
   link.click();
 }
-download.onclick =()=>exportStudentResults();
+
+download.onclick =()=>exportMyResult();
 
 });

@@ -392,7 +392,11 @@
     <button id="download-by-class" class="btn red">Download Class</button>
     <button id="download-by-section" class="btn pdf-sec"> 📥 Download Section</button>
     <button class="btn pdf-sec" onclick="downloadAllPDFs()">Download Individual Scores</button>
-   
+   <button  class="btn pdf-sec" onclick="downloadAllJSONs()">Download Single JSON</button>
+   <button  class="btn red" onclick="exportAllResultsAsOneMergedJSON()">Export All Results (One JSON)</button>
+
+
+
 
 
     <button id="clear-all-results-btn" class="btn red"> 🗑️ Clear All</button>
@@ -409,6 +413,7 @@
     <div id="toast"
       style="position:fixed; bottom:20px; right:20px; background:green; color:#fff; padding:10px 20px; border-radius:5px; display:none; z-index:1000;">
     </div>
+    
     <div id="admin-panel"></div>
 
   </main>
@@ -1711,6 +1716,34 @@ ${theory.map((q, idx) => {
           });
         }
       };
+window.downloadAllJSONs = () => {
+  const results = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+  results.forEach(r => {
+    const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+    const quizData = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+
+    const jsonToSave = {
+      name: r.name,
+      class: r.class,
+      date: r.date,
+      answers: r.answers,
+      subjective: r.subjective,
+      theory: r.theory,
+      subjScores: r.subjScores || {},
+      theoryScores: r.theoryScores || {},
+      questionsUsed: quizData
+    };
+
+    const blob = new Blob([JSON.stringify(jsonToSave, null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${r.name}_${r.class}_result.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+};
 
 
       document.getElementById("clear-all-results-btn").onclick = () => {
@@ -1795,38 +1828,108 @@ ${theory.map((q, idx) => {
       localStorage.removeItem("quizResults"); // use your unified key
       alert("All quiz results have been cleared.");
     }
+// function handleImportFiles(fileList) {
+//   const mergedResults = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+//   Array.from(fileList).forEach(file => {
+//     const reader = new FileReader();
+//     reader.onload = (e) => {
+//       try {
+//         const newResults = JSON.parse(e.target.result);
+
+//         if (Array.isArray(newResults)) {
+//           // If file contains an array of results
+//           newResults.forEach(result => {
+//             if (!mergedResults.some(r => r.name === result.name && r.class === result.class)) {
+//               mergedResults.push(result);
+//             }
+//           });
+//         } else {
+//           // If file contains a single result object
+//           if (!mergedResults.some(r => r.name === newResults.name && r.class === newResults.class)) {
+//             mergedResults.push(newResults);
+//           }
+//         }
+
+//         localStorage.setItem("quizResults", JSON.stringify(mergedResults));
+//         alert(`Imported ${file.name} successfully`);
+//       } catch (err) {
+//         alert(`Failed to import ${file.name}: ${err.message}`);
+//       }
+//     };
+//     reader.readAsText(file);
+//   });
+// }
 function handleImportFiles(fileList) {
-  const mergedResults = JSON.parse(localStorage.getItem("quizResults") || "[]");
+  let mergedResults = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+  const mergedMap = new Map();
+  // Preload existing results into map
+  mergedResults.forEach(r => {
+    const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+    mergedMap.set(key, r);
+  });
 
   Array.from(fileList).forEach(file => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const newResults = JSON.parse(e.target.result);
+        const newData = JSON.parse(e.target.result);
 
-        if (Array.isArray(newResults)) {
-          // If file contains an array of results
-          newResults.forEach(result => {
-            if (!mergedResults.some(r => r.name === result.name && r.class === result.class)) {
-              mergedResults.push(result);
+        const handleSingle = (result) => {
+          const key = `${result.name.toLowerCase()}_${result.class.toLowerCase()}`;
+          if (!mergedMap.has(key)) {
+            mergedMap.set(key, result);
+
+            // ✅ Save questionsUsed separately
+            if (Array.isArray(result.questionsUsed)) {
+              localStorage.setItem(`quiz_${key}`, JSON.stringify(result.questionsUsed));
             }
-          });
-        } else {
-          // If file contains a single result object
-          if (!mergedResults.some(r => r.name === newResults.name && r.class === newResults.class)) {
-            mergedResults.push(newResults);
           }
+        };
+
+        if (Array.isArray(newData)) {
+          newData.forEach(handleSingle);
+        } else {
+          handleSingle(newData);
         }
 
-        localStorage.setItem("quizResults", JSON.stringify(mergedResults));
         alert(`Imported ${file.name} successfully`);
       } catch (err) {
         alert(`Failed to import ${file.name}: ${err.message}`);
       }
+
+      // ✅ Save merged results back to localStorage
+      const mergedArray = Array.from(mergedMap.values());
+      localStorage.setItem("quizResults", JSON.stringify(mergedArray));
     };
     reader.readAsText(file);
   });
 }
+window.exportAllResultsAsOneMergedJSON = () => {
+  // 1. Load existing results in localStorage
+  const existingResults = JSON.parse(localStorage.getItem("quizResults") || "[]");
+
+  // 2. Create a Map to avoid duplicates (key: name_class)
+  const mergedMap = new Map();
+
+  existingResults.forEach(r => {
+    const key = `${r.name.toLowerCase()}_${r.class.toLowerCase()}`;
+    const questionsUsed = JSON.parse(localStorage.getItem(`quiz_${key}`)) || [];
+    mergedMap.set(key, { ...r, questionsUsed });
+  });
+
+  // 3. Convert mergedMap back to array
+  const mergedResults = Array.from(mergedMap.values());
+
+  // 4. Download as one JSON file
+  const blob = new Blob([JSON.stringify(mergedResults, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "all-student-results.json";
+  link.click();
+};
+
 
 
   </script>
