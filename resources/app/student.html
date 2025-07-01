@@ -6,16 +6,21 @@
   <title>Student Quiz</title>
   <!-- <link rel="stylesheet" href="style.css"> -->
   <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box
+    }
     body {
       font-family: sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f9f9f9;
       color: #222;
       padding: 20px;
       transition: background-color 0.3s, color 0.3s;
       display: flex;
       justify-content: center;
       height: 100vh; 
-      line-height: 1.4;
+      line-height: 1.2;
        padding-left: min(2em, 5%);
       padding-right: min(2em, 5%);
     }
@@ -267,14 +272,12 @@
       margin-bottom: 20px;
       position: fixed;
       top: 2rem;
-      right: 5rem;
+      right: 6rem;
       font-size: 1.5rem;
       font-weight: bold;
       margin: 10px auto;
       width: 150px;
-      padding:5px;
       color: green;
-      background:#ddd;
       transition: color 0.5s, transform 0.3s;
       text-align: center;
 
@@ -288,63 +291,6 @@
       background-color: #4b5563;
     }
 
-    /* .progress-container {
-  position: fixed;
-   top: 3rem;
-   right: 0px;
-  width: 60%;
-  background: #ddd;
-  height: 10px;
-  border-radius: 6px;
-  overflow: hidden;
-  margin: 10px auto;
-}
-
-#progressBar {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(to right, #337ab7, #3498db);
-  transition: width 0.5s;
-} */
-
-
-    /* .circle-timer {
-  position: fixed;
-  top: 2rem;
-  right:4rem;
-  width: 120px;
-  height: 120px;
-  margin: 0 auto;
-}
-
-.circle-timer svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-} 
- .circle-timer circle {
-  fill: none;
-  stroke-width: 10;
-  stroke: #ddd;
-}
-
-#circleProgress {
-  stroke: #2196f3;
-  stroke-dasharray: 283;
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 1s linear;
-}
-
-.circle-label {
-  position: absolute;
-  top: 35%;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  transform: rotate(90deg);
-}  */
     select#student-class {
       width: 100%;
       padding: 12px 14px;
@@ -363,7 +309,7 @@
       background-size: 12px;
     }
 
-    select#student-class:focus {
+    select#student-class:focus, textarea:focus {
       outline: none;
       box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
     }
@@ -377,10 +323,6 @@
       margin-top: 2.5rem;
     }
 
-    /* .hidden {
-      display: none;
-    } */
-
     .btn {
       padding: 10px 15px;
       margin: 10px 5px;
@@ -388,13 +330,13 @@
       cursor: pointer;
       border-radius: 5px;
       font-weight: bold;
-      background-color: dodgerblue;
+      background-color:#337ab7;
       color: white;
       transition: 0.3s;
     }
 
     .btn:hover {
-      background-color: royalblue;
+      background-color:#3498db;
     }
 .options{
   margin-bottom: 20px;
@@ -426,6 +368,7 @@
       margin-bottom: 15px;
       padding: 8px;
       font-size: 1em;
+      border:none;
     }
 
     .controls {
@@ -443,12 +386,10 @@
       position: fixed;
       font-weight: bold;
       bottom: .5rem;
-      right: 3rem;
+      right: 7rem;
       font-size: 1.3rem;
-      background: #ddd;
       color: green;
       border-radius: 4px;
-      padding: 6px;
     }
 
     @keyframes fadeIn {
@@ -490,22 +431,9 @@
       color: #222;
     }
 
-    .header-grid {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 10px; /* Reduced gap here */
-      align-items: flex-start;
-      padding: 10px;
-      border-radius: 12px;
-       width:800px !important;
-        margin:0 auto;
-         max-width: 100%;
-         font-size: clamp(.9em, 2vw,1em);
-      /* box-shadow: 0 2px 8px rgba(0,0,0,0.1); */
-    }
 
     .logo-section img {
-      width: clamp(180px, 2vw,200px);
+      width: clamp(80px, 2vw,100px);
       height: auto;
     }
 
@@ -548,11 +476,12 @@
         margin:15px 0 5px 0px !important;
        }
     @media (max-width: 600px) {
-      .header-grid {
-        grid-template-columns: 1fr;
-        width:100%;
-        text-align: left;
-      }
+    .section{
+      flex-direction: column;
+    }
+    .name{
+  margin-bottom:10px;
+    }
 .logo-section {
       text-align: center;
     }
@@ -576,6 +505,29 @@
       margin-top: 5px;
       color: #666;
        font-size: clamp(.9em, 2vw,1em);
+    }
+    .lina{
+      color:red;
+    }
+    .found{
+      background-color: #285a8e;
+      text-decoration: underline;
+      padding:10px;
+      color:white;
+      border-radius: 5px;
+    }
+    .name{
+      font-size:clamp(2rem,2vw,2.5rem)
+    }
+    .section img{
+      display: block;
+      margin-right:10px;
+    }
+    .na{
+      color:skyblue;
+    }
+    .sec{
+      margin-top: -15px;
     }
   </style>
 </head>
@@ -605,9 +557,10 @@
           <option value="SS2 Gratitude">SS2 Gratitude</option>
           <option value="SS2 Virtuous">SS2 Virtuous</option>
           <option value="SS3 Chastity">SS3 Chastity</option>
-
-
         </select>
+<div id="start-error" style="color: red; font-weight: light; margin: 5px 0px;text-align:center"></div>
+
+
       </div>
 
       <button class="btn" id="start-btn">🚀 Start Quiz</button>
@@ -615,20 +568,24 @@
     </div>
   </div>
   <div id="quiz-screen" class="hidden">
-     <div class="main-title">LINA TERESA FOUNDATION COLLEGE</div>
-
-  <div class="header-grid">
-    <div class="logo-section">
-      <img src="./logo-min.png" alt="School Logo">
+     <div id="quiz-error" style="color: red; font-weight: light; margin-bottom:2px;"></div>
+    <div class="section"style="display:flex; align-items: center;justify-content: center; margin-top:10px;">
+     <div class="logo-section">
+      <img src="./logo.jpg" alt="School Logo">
+    </div>
+     <div class="main-title"><p class="name"><span class="lina">LI</span><span class="na">NA</span> <span class="lina">TERESA</span> <span class="found">FOUNDATION</span></p><br><p class="sec">SECONDARY SCHOOL</p>
+    </div>
     </div>
 
     <div class="info-section">
       <p>NO 16 GEO NWOSU AVENUE CORRIDOR L/O, ENUGU</p>
       <p><small>LinateresafSS360@gmail.com</small></p>
       <p class="numbers"><small>07030168785, 08064376241, 08035092149</small></p>
+      <p><small></small></p>
+      <p><small>MOTTO: SCIENTIA ET MORIBUS: KNOWLEDGE AND MORALITY</small></p>
       <h3 class="term">THIRD TERM EXAMINATION, 2024/2025 SESSION</h3>
     </div>
-  </div>
+
 
   <div class="bottom-row">
     <p>Subject: Data Processing</p>
@@ -650,8 +607,9 @@
     <div id="quiz-content-mcq" class="quiz-section"></div>
     <div style="text-align:center; margin-top: 20px;" id="step-buttons">
       <div id="quiz-controls" class="controls">
-        <button id="continue-subjective-btn" class="btn hidden">Continue to Subjective</button>
-        <button id="continue-theory-btn" class="btn hidden">Continue to Theory</button>
+        <button id="continue-subjective-btn" class="btn hidden" style="margin-bottom:20px;">Continue to Subjective</button>
+        <div id="mcq-error" style="color: red; font-weight: light; margin-bottom:2px;position:fixed;bottom:5.5rem;right:40%;"></div>
+        <button id="continue-theory-btn" class="btn hidden" style="margin-bottom:5px;">Continue to Theory</button>
         <button id="finish-btn" class="btn">Finish Quiz</button>
       </div>
 
@@ -665,6 +623,7 @@
   </div>
 
   <div id="result-screen" class="hidden">
+     <div id="result-error" style="color: red; font-weight: bold; margin: 10px 0;"></div>
     <div id="result-summary"></div>
     <div style="text-align:center; margin-top: 20px;">
       <button class="btn pdf-btn" id="download"> 📊 Download Result</button>

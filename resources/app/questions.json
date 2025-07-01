@@ -13,13 +13,7 @@
     "answer": "Microsoft Word",
     "explanation": "Microsoft Word is a popular word processor used for creating documents."
   },
- {
-    "type": "mcq",
-    "question": "Which file extension is used for Word documents?",
-    "options": [".ppt", ".docx", ".xls", ".pdf"],
-    "answer": ".docx",
-    "explanation": "The .docx format is the standard extension for Word documents."
-  },
+ 
   {
     "type": "mcq",
     "question": "To make text bold, you use:",
@@ -56,13 +50,7 @@
     "answer": "Aligns text both left and right",
     "explanation":""
   },
-  {
-    "type": "mcq",
-    "question": "Headers appear in the:",
-    "options": ["Middle", "Footer", "Top margin", "Sidebar"],
-    "answer": "Top margin",
-    "explanation":""
-  },
+ 
   {
     "type": "mcq",
     "question": "Footers are added at the:",
@@ -140,20 +128,7 @@
     "answer": "Linking tables",
      "explanation":""
   },
-  {
-    "type": "mcq",
-    "question": "MS Access is best used for:",
-    "options": ["Drawing", "Writing letters", "Managing structured data", "Watching videos"],
-    "answer": "Managing structured data",
-     "explanation":""
-  },
-  {
-    "type": "mcq",
-    "question": "A spreadsheet contains:",
-    "options": ["Slides", "Tables", "Rows and columns", "Pages"],
-    "answer": "Rows and columns",
-     "explanation":""
-  },
+  
   {
     "type": "mcq",
     "question": "The intersection of a row and column is called a:",
@@ -203,13 +178,7 @@
     "answer": "Ctrl + C",
     "explanation": "Ctrl + C copies the selected text or item."
   },
-   {
-    "type": "mcq",
-    "question": "Which function finds the highest number?",
-    "options": ["=MIN", "=COUNT", "=MAX", "=AVERAGE"],
-    "answer": "=MAX",
-    "explanation": "=MAX returns the largest value in a set of numbers."
-  },
+  
   {
     "type": "mcq",
     "question": "In Excel, what is a formula?",
@@ -231,13 +200,7 @@
     "answer": "A group of selected cells",
     "explanation": "A range refers to a selection of two or more cells."
   },
-  {
-    "type": "mcq",
-    "question": "Which option lets you change the color of text in Word?",
-    "options": ["Font Color", "Page Layout", "Margins", "Header"],
-    "answer": "Font Color",
-    "explanation": "Font Color changes the color of the selected text in Microsoft Word."
-  },
+ 
    {
     "type": "mcq",
     "question": "Which section of Word shows the file name?",
@@ -259,13 +222,7 @@
     "answer": "Letters",
     "explanation": "Excel columns are labeled A, B, C, and so on."
   },
-   {
-    "type": "mcq",
-    "question": "In Excel, what is the name of each box where data is entered?",
-    "options": ["Box", "Block", "Cell", "Tab"],
-    "answer": "Cell",
-    "explanation": "A cell is the intersection of a row and a column where data is entered."
-  },
+   
   {
     "type": "mcq",
     "question": "Which tab in Excel allows you to insert charts and images?",
@@ -273,13 +230,7 @@
     "answer": "Insert",
     "explanation": "The Insert tab provides options to insert charts, tables, pictures, and shapes."
   },
-  {
-    "type": "mcq",
-    "question": "What does the Name Box in Excel display?",
-    "options": ["Formula result", "File name", "Active cell reference", "Page number"],
-    "answer": "Active cell reference",
-    "explanation": "The Name Box shows the address (like A1) of the selected cell."
-  },
+ 
   {
     "type": "mcq",
     "question": "Which Access object is used to present data in a printable format?",

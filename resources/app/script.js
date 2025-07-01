@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedAnswers = [], subjectiveAnswers = {}, theoryAnswers = {};
   let studentInfo = null;
 
-  const QUIZ_TIME = 300;
+  const QUIZ_TIME = 2400;
   let timer = QUIZ_TIME, timerInterval = null;
 
   const quizContentMCQ = document.getElementById("quiz-content-mcq");
@@ -22,9 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnToSubj = document.getElementById("continue-subjective-btn");
   const btnToTheory = document.getElementById("continue-theory-btn");
   const btnFinish = document.getElementById("finish-btn");
-  
+  const quizError = document.getElementById("quiz-error");
+  const StartError = document.getElementById("start-error");
+  const resultError = document.getElementById("result-error");
+  const mcqError = document.getElementById("mcq-error");
   const btnReturnHome = document.getElementById("return-home-btn");
-  const errorDisplay = document.getElementById("login-error");
 
   const warningSound = new Audio("./sounds/success.wav");
   const endSound = new Audio("./sounds/wrong.mp3");
@@ -38,6 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
   btnReturnHome.classList.add("hidden");
   btnToSubj.classList.add("hidden");
   btnToTheory.classList.add("hidden");
+quizError.textContent = "";
+StartError.textContent.textContent = "";
+mcqError.textContent.textContent = "";
+
 
   function updateStep(step) {
     stepIndicator.textContent = `Step ${step} of 3`;
@@ -47,18 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
     return [...arr].sort(() => Math.random() - 0.5);
   }
 
-  function updateTimer() {
-    timerDisplay.textContent = `Time: ${timer}s`;
-    if (timer <= 10) {
-      timerDisplay.style.color = "red";
-      warningSound.play();
-    } else if (timer <= 30) {
-      timerDisplay.style.color = "orange";
-    } else {
-      timerDisplay.style.color = "";
-    }
-  }
 
+function updateTimer() {
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
+  timerDisplay.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+  if (timer <= 10) {
+    timerDisplay.style.color = "red";
+    warningSound.play();
+  } else if (timer <= 30) {
+    timerDisplay.style.color = "orange";
+  } else {
+    timerDisplay.style.color = "";
+  }
+}
 
   function startQuiz() {
     timer = QUIZ_TIME;
@@ -165,10 +174,13 @@ function renderTextArea(section, data, answers, prefix) {
       r.class.toLowerCase() === result.class.toLowerCase()
     );
 
-    if (exists) {
-      alert("Duplicate entry detected! You have already submitted this quiz.");
-      return;
-    }
+   if (exists) {
+  quizError.textContent = "Duplicate entry detected! You have already submitted this quiz.";
+  setTimeout(() => quizError.textContent = "", 3000);
+
+  return;
+}
+
 
     all.push(result);
     localStorage.setItem("quizResults", JSON.stringify(all));
@@ -180,7 +192,7 @@ btnFinish.onclick = () => finishQuiz();
   function showResult(result) {
     let html = `
       <div style="text-align:center">
-        <img src="logo-min.png" alt="School Logo" width="100" /><br>
+        <img src="logo.jpg" alt="School Logo" width="100" /><br>
         <h3>Result Summary</h3>
       </div>
       <p><strong>Name:</strong> ${result.name}</p>
@@ -192,15 +204,15 @@ btnFinish.onclick = () => finishQuiz();
   const isCorrect = result.answers[i] === q.answer;
   const answerColor = isCorrect ? "green" : "red";
   const correctness = isCorrect ? "✔ Correct" : "✘ Incorrect";
-  html += `<p class="fade-in"><strong style="color:black">${q.question}</strong><br>
-  <span style="color:black">Your Answer: ${result.answers[i] || 'None'}</span> | 
+  html += `<p class="fade-in"><strong style="color:#222;margin-bottom:5px;">${q.question}</strong><br>
+  <span style="color:#222;margin-bottom:5px;">Your Answer: ${result.answers[i] || 'None'}</span> | 
   <span style="color:${answerColor}">${correctness}</span> | 
   <span style="color:green">Correct: ${q.answer}</span></p>`;
 });
 html += `<h4>Subjective</h4>`;
 subjectiveQuestions.forEach(q => {
-  html += `<p class="fade-in"><strong style="color:black">${q.question}</strong><br>
-  <span style="color:black">Answer: ${result.subjective[q.id] || 'None'}</span></p>`;
+  html += `<p class="fade-in"><strong style="color:#222;">${q.question}</strong><br>
+  <span style="color:#222;">Answer: ${result.subjective[q.id] || 'None'}</span></p>`;
 });
 
 html += `<h4>Theory</h4>`;
@@ -230,14 +242,23 @@ theoryQuestions.forEach(q => {
   document.getElementById("start-btn").onclick = () => {
     const name = document.getElementById("student-name").value.trim();
     const cls = document.getElementById("student-class").value.trim();
-    if (!name || !cls) return alert("Enter name and class");
+   if (!name || !cls) {
+ StartError.textContent = "Please enter name and class.";
+setTimeout(() => StartError.textContent = "", 3000);
+  
+  return;
+}
+
+
     studentInfo = { name, class: cls };
 
     const key = `${name.toLowerCase()}_${cls.toLowerCase()}`;
-    if (localStorage.getItem(`quizResult_${key}`)) {
-      alert("You have already attempted this quiz.");
-      return;
-    }
+   if (localStorage.getItem(`quizResult_${key}`)) {
+  StartError.textContent = "You have already attempted this quiz.";
+  setTimeout(() => StartError.textContent = "", 3000);
+  return;
+}
+
 
     fetch("questions.json").then(res => res.json()).then(data => {
       const stored = localStorage.getItem(`quiz_${key}`);
@@ -262,17 +283,21 @@ theoryQuestions.forEach(q => {
 btnFinish.classList.add("hidden");
 
       startQuiz();
-    }).catch(err => {
-      alert("Failed to load questions.");
-      console.error(err);
-    });
+   }).catch(err => {
+  quizError.textContent = "Failed to load questions.";
+  setTimeout(() => quizError.textContent = "", 3000);
+  console.error(err);
+});
+
   };
 
   btnToSubj.onclick = () => {
-  if (selectedAnswers.length < mcqQuestions.length || selectedAnswers.includes(undefined)) {
-    alert("Please answer all MCQ questions.");
-    return;
-  }
+ if (selectedAnswers.length < mcqQuestions.length || selectedAnswers.includes(undefined)) {
+  mcqError.textContent= "Please answer all MCQ questions.";
+  setTimeout(() => mcqError.textContent = "", 3000);
+  return;
+}
+
   quizContentMCQ.classList.add("hidden");
   quizContentSubj.classList.remove("hidden");
   quizContentTheory.classList.add("hidden");
@@ -285,7 +310,11 @@ btnFinish.classList.add("hidden");
 
 btnToTheory.onclick = () => {
   const empty = subjectiveQuestions.some(q => !subjectiveAnswers[q.id]);
-  if (empty) return alert("Answer all subjective questions.");
+if (empty) {
+  quizError.textContent = "Answer all subjective questions.";
+  setTimeout(() => quizError.textContent = "", 3000);
+  return;
+}
 
   // Show only theory section
   quizContentSubj.classList.add("hidden");
@@ -326,7 +355,12 @@ function exportMyResult() {
     r.name.toLowerCase() === name && r.class.toLowerCase() === className
   );
 
-  if (!studentResult) return alert("No result found for this student.");
+if (!studentResult) {
+  resultError.textContent = "No result found for this student.";
+  setTimeout(() => resultError.textContent = "", 3000);
+  return;
+}
+
 
   const fullExport = {
     ...studentResult,
